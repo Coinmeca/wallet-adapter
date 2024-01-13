@@ -1,9 +1,9 @@
-import type {Connection, TransactionSignature, Signer} from '@coinmeca/wallet-base';
-import type {SendTransactionOptions, WalletAdapter, WalletAdapterProps} from './adapter';
-import {BaseWalletAdapter} from './adapter';
-import {WalletSendTransactionError, WalletSignTransactionError} from './errors';
-import type {TransactionOrVersionedTransaction} from './types';
-import {isVersionedTransaction} from './types';
+import type { Connection, TransactionSignature, Signer } from 'base';
+import type { SendTransactionOptions, WalletAdapter, WalletAdapterProps } from './adapter';
+import { BaseWalletAdapter } from './adapter';
+import { WalletSendTransactionError, WalletSignTransactionError } from './errors';
+import type { TransactionOrVersionedTransaction } from './types';
+import { isVersionedTransaction } from './types';
 
 export interface SignerWalletAdapterProps<Name extends string = string> extends WalletAdapterProps<Name> {
     signTransaction<T extends TransactionOrVersionedTransaction<this['supportedTransactionVersions']>>(
@@ -54,7 +54,7 @@ export abstract class BaseSignerWalletAdapter<Name extends string = string>
                 }
             } else {
                 try {
-                    const {signers, ...sendOptions} = options;
+                    const { signers, ...sendOptions } = options;
 
                     transaction = await this.prepareTransaction(transaction, connection, sendOptions);
 

@@ -1,6 +1,6 @@
-import type {Transaction, TransactionVersion, VersionedTransaction} from '@coinmeca/wallet-base';
-import type {WalletAdapter} from './adapter';
-import type {MessageSignerWalletAdapter, SignerWalletAdapter} from './signer';
+import type { Transaction, TransactionVersion, VersionedTransaction } from 'base';
+import type { WalletAdapter } from './adapter';
+import type { MessageSignerWalletAdapter, SignerWalletAdapter } from './signer';
 
 export type Adapter = WalletAdapter | SignerWalletAdapter | MessageSignerWalletAdapter;
 
