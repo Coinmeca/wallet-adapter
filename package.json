@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "keywords": [
         "coinmeca",
         "web3",
@@ -46,6 +46,7 @@
     },
     "devDependencies": {
         "@coinbase/wallet-sdk": "^3.7.2",
+        "@coinmeca/wallet-adapter": "^0.0.0",
         "@commitlint/cli": "^18.4.2",
         "@commitlint/config-conventional": "^18.4.2",
         "@metamask/detect-provider": "^2.0.0",

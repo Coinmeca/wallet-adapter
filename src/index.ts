@@ -1,2 +1,5 @@
-export * from './providers/MetaMask';
-export * from './providers/CoinbaseWallet';
+export * as adapters from './adapters';
+export * as base from './base';
+export * as chains from './chains';
+export * as providers from './providers';
+export * as types from './types';

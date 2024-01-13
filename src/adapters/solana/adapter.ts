@@ -1,31 +1,31 @@
-import { getNetworksById } from 'chains';
+import type { PublicKey } from '@solana/web3.js';
 import { providers } from './providers';
 
 export function adapter() {
 
-    async function Connect({ chainId, name }: { chainId: number; name: string }, auto?: boolean) {
+    async function Connect(name: string, auto?: boolean) {
         const wallet = providers[name].adapter(providers[name].url);
         try {
-            // const provider = (window as any)[chain].providerMap.get(name);
-            if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && wallet.address[0])) {
-                const chain = getNetworksById(chainId);
-                await wallet.connect({
-                    chainId: '0x' + chainId.toString(16),
-                    chainName: chain?.name,
-                    rpcUrls: chain?.rpc,
-                    blockExplorerUrls: chain?.explorer,
-                    nativeCurrency: chain?.nativeCurrency
-                });
-                if (wallet.connected && wallet.address[0]) {
+            if (!wallet.publicKey) {
+                await wallet.connect();
+                const publicKey: string = wallet.publicKey.toBase58();
+                if (wallet.connected && publicKey) {
+                    // adapter.on('ready', onReady);
+                    // adapter.on('connect', onConnect);
+                    // adapter.on('disconnect', onDisconnect);
+                    // adapter.on('error', onError);
+
+                    // localStorage.setItem('walletName', JSON.stringify(name));
                     localStorage.setItem('wallet', wallet.name);
                     return {
-                        provider: wallet.name,
-                        address: wallet.address[0],
-                        chainId: chain?.id
-                        // adapter
+                        provider: name,
+                        publicKey: <PublicKey>wallet.publicKey,
+                        address: publicKey,
+                        ...providers[name]
                     };
                 }
             }
+            // return () => {};
         } catch (error) {
             let msg = '';
             console.log('Wallet Connecting Error: \n', error);
@@ -62,11 +62,13 @@ export function adapter() {
         const wallet = providers[name].adapter(providers[name].url);
 
         try {
-            if (wallet.address) {
+            if (wallet.publicKey) {
                 await wallet.disconnect();
-                if (!wallet.connected && !wallet.address) {
-                    wallet.disconnect();
+                const publicKey = wallet.publicKey;
+                if (!publicKey && !wallet.connected) {
+                    // localStorage.removeItem('walletName');
                     localStorage.removeItem('wallet');
+                    wallet.disconnect();
                 }
             }
         } catch (error) {
@@ -99,4 +101,3 @@ export function adapter() {
 
     return { Connect, Disconnect };
 }
-
