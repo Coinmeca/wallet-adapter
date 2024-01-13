@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "rootDir": "src",
+        "baseUrl": "src",
+        "outDir": "dist",
+        "target": "esnext",
+        "module": "commonjs",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowSyntheticDefaultImports": true,
+        "noEmit": false,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
+        "composite": true,
+        "declaration": true,
+        "declarationDir": "dist",
+        "declarationMap": true,
+        "paths": {
+            "": ["./*"],
+            "~/*": ["./*"]
+        },
+        "typeRoots": ["src/types"]
+    },
+    "include": ["src", "**/*.ts"],
+    "exclude": ["node_modules", "dist", "hardhat.config.ts"]
+}
