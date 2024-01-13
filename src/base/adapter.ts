@@ -1,5 +1,5 @@
 import { type Connection, type Account, type Signer, type SendOptions, type Transaction, type TransactionSignature, PublicKey } from 'base';
-import EventEmitter from './eventemitter';
+import EventEmitter from 'eventemitter3';
 import type { WalletError } from './errors';
 import { WalletNotConnectedError } from './errors';
 import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from './types';

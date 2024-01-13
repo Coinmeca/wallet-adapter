@@ -22,7 +22,7 @@ export function isVersionedTransaction(
     return 'version' in transaction;
 }
 
-export interface ChainNativeCurrency {
+export interface NativeCurrency {
     symbol: string;
     decimals: number;
 }
@@ -31,6 +31,6 @@ export interface Chain {
     id: number;
     name: string;
     rpc: string[];
-    nativeCurrency?: ChainNativeCurrency;
+    nativeCurrency?: NativeCurrency;
     explorer?: string;
 }
