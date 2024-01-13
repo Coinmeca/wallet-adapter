@@ -1,22 +1,14 @@
 import {
-    BackpackWalletAdapter,
     BitKeepWalletAdapter,
-    BitpieWalletAdapter,
-    BraveWalletAdapter,
-    CloverWalletAdapter,
+    BitpieWalletAdapter, CloverWalletAdapter,
     Coin98WalletAdapter,
     CoinbaseWalletAdapter,
     CoinhubWalletAdapter,
-    ExodusWalletAdapter,
-    GlowWalletAdapter,
     LedgerWalletAdapter,
     MathWalletAdapter,
     PhantomWalletAdapter,
     SafePalWalletAdapter,
-    SlopeWalletAdapter,
     SolflareWalletAdapter,
-    SolletExtensionWalletAdapter,
-    SolletWalletAdapter,
     SolongWalletAdapter,
     TokenPocketWalletAdapter,
     TorusWalletAdapter,
@@ -26,22 +18,22 @@ import {
 import { Providers } from 'types';
 
 export const providers: Providers = {
-    'Sollet Web': {
-        name: 'Sollet Web',
-        website: 'https://www.sollet.io',
-        url: 'https://www.sollet.io',
-        adapter(url?: string) {
-            return new SolletWalletAdapter({ provider: url });
-        }
-    },
-    'Sollet Extension': {
-        name: 'Sollet Extension',
-        website: 'https://www.sollet.io',
-        url: 'https://chrome.google.com/webstore/detail/sollet/fhmfendgdocmcbmfikdcogofphimnkno',
-        adapter() {
-            return new SolletWalletAdapter({ provider: (window as any).sollet });
-        }
-    },
+    // 'Sollet Web': {
+    //     name: 'Sollet Web',
+    //     website: 'https://www.sollet.io',
+    //     url: 'https://www.sollet.io',
+    //     adapter(url?: string) {
+    //         return new SolletWalletAdapter({ provider: url });
+    //     }
+    // },
+    // 'Sollet Extension': {
+    //     name: 'Sollet Extension',
+    //     website: 'https://www.sollet.io',
+    //     url: 'https://chrome.google.com/webstore/detail/sollet/fhmfendgdocmcbmfikdcogofphimnkno',
+    //     adapter() {
+    //         return new SolletWalletAdapter({ provider: (window as any).sollet });
+    //     }
+    // },
     Phantom: {
         name: 'Phantom',
         website: 'https://phantom.app',
@@ -50,14 +42,6 @@ export const providers: Providers = {
             return new PhantomWalletAdapter();
             // getPhantomWallet();
             // return new PhantomWalletAdapter();
-        }
-    },
-    'Solflare Web': {
-        name: 'Solflare Web',
-        website: 'https://solflare.com',
-        url: 'https://solflare.com/access-wallet',
-        adapter(url?: string) {
-            return new SolletWalletAdapter({ provider: url });
         }
     },
     'Solflare Extension': {

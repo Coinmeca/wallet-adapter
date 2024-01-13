@@ -1,6 +1,6 @@
 // import type { EventEmitter, WalletName } from './index';
-import type EventEmitter from 'base/index';
-import { BaseWalletAdapter, isIosAndRedirectable, scopePollingDetectionStrategy, WalletName, WalletReadyState } from 'base/adapter';
+
+import { EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, WalletName, WalletReadyState } from 'base/adapter';
 import type MetaMaskEthereumProvider from '@metamask/detect-provider';
 import {
     WalletNetworkError,
@@ -187,18 +187,17 @@ export class MetaMaskWalletAdapter {
     }
 
     async disconnect(): Promise<void> {
-        const listener = window.metamask?.ethereum || window.ethereum!;
-        const wallet = this._wallet;
+        const wallet = this._wallet || window.metamask?.ethereum || window.ethereum!;
 
         if (wallet) {
-            listener?.off('disconnect', this._disconnected);
-            listener?.off('accountsChanged', this._accountChanged);
+            wallet?.off('disconnect' as never, this._disconnected);
+            wallet?.off('accountsChanged' as never, this._accountChanged);
 
             this._wallet = null;
             this._address = null;
 
             try {
-                await wallet.on('disconnect', (error: WalletError) => {
+                await wallet.on('disconnect' as never, (error: WalletError) => {
                     new WalletDisconnectionError(error?.message, error);
                 });
             } catch (error: any) {
@@ -212,16 +211,16 @@ export class MetaMaskWalletAdapter {
     async message(msg: string, fn?: Function): Promise<void> {
         const listener = window.metamask?.ethereum || window.ethereum!;
         const wallet = (listener as any).providerMap.get('MetaMask')!;
-        listener.on('message', (message: ProviderMessage) => {
+        wallet.on('message', (message: ProviderMessage) => {
             if (typeof fn === 'function') fn;
         });
     }
 
     private _disconnected = () => {
-        const listener = window.metamask?.ethereum || window.ethereum!;
-        if (listener) {
-            listener.off('disconnect', this._disconnected);
-            listener.off('accountsChanged', this._accountChanged);
+        const wallet = this._wallet || window.metamask?.ethereum || window.ethereum!;
+        if (wallet) {
+            wallet.off('disconnect' as never, this._disconnected);
+            wallet.off('accountsChanged' as never, this._accountChanged);
 
             this._wallet = null;
             this._address = null;
