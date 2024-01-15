@@ -10,10 +10,10 @@ export const adapter = {
                 const chain = getNetworksById(chainId);
                 await wallet.connect({
                     chainId: '0x' + chainId.toString(16),
-                    chainName: chain?.name,
-                    rpcUrls: chain?.rpc,
-                    blockExplorerUrls: chain?.explorer,
-                    nativeCurrency: chain?.nativeCurrency
+                    ...(chain?.name && { chainName: chain?.name }),
+                    ...(chain?.rpc && { rpcUrls: chain?.rpc }),
+                    ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
+                    ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency })
                 });
                 if (wallet.connected && wallet.address[0]) {
                     localStorage.setItem('wallet', wallet.name);
