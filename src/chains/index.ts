@@ -14,13 +14,21 @@ export const chainlist: any = {
                 // "Fallback" URLs
                 'https://rpc.ankr.com/eth',
                 'https://eth-mainnet.public.blastapi.io'
-            ]
+            ],
+            nativeCurrency: {
+                "symbol": "ETH",
+                "decimals": 18
+            }
         },
         devnet: {
             ropsten: <Chain>{
                 id: 3,
                 name: 'Ropsten',
-                rpc: ['https://rpc.ankr.com/eth_ropsten']
+                rpc: ['https://rpc.ankr.com/eth_ropsten'],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
             },
             rinkeby: <Chain>{
                 id: 4,
@@ -31,7 +39,11 @@ export const chainlist: any = {
             goerli: <Chain>{
                 id: 5,
                 name: 'Goerli',
-                rpc: ['https://rpc.goerli.mudit.blog/', 'https://rpc.ankr.com/eth_goerli']
+                rpc: ['https://rpc.goerli.mudit.blog/', 'https://rpc.ankr.com/eth_goerli'],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
             },
             kovan: <Chain>{
                 id: 42,
@@ -41,7 +53,11 @@ export const chainlist: any = {
                     'https://kovan.poa.network',
                     // "Fallback" URLs
                     'https://eth-kovan.public.blastapi.io'
-                ]
+                ],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
             }
         }
     },
@@ -71,13 +87,21 @@ export const chainlist: any = {
                     "https://arbitrum-goerli.public.blastapi.io",
                     "https://arbitrum-goerli.publicnode.com",
                     "https://endpoints.omniatech.io/v1/arbitrum/goerli/public"
-                ]
+                ],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
             },
             sepolia: {
                 id: 421614,
                 name: "Arbitrum Sepolia Testnet",
                 rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
-                explorer: ["https://sepolia.arbiscan.io/"]
+                explorer: ["https://sepolia.arbiscan.io/"],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                },
             },
             runkeby: <Chain>{
                 id: 421611,
@@ -136,7 +160,11 @@ export const chainlist: any = {
                 'https://rpc-mainnet.matic.quiknode.pro',
                 'https://matic-mainnet-full-rpc.bwarelabs.com'
             ],
-            logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp'
+            logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp',
+            nativeCurrency: {
+                symbol: 'MATIC',
+                decimals: 18
+            },
         },
         testnet: <Chains>{
             mumbai: <Chain>{
