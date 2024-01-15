@@ -59,6 +59,26 @@ export const chainlist: any = {
             logo: 'https://l2beat.com/icons/arbitrum.png'
         },
         testnet: {
+            goerli: {
+                id: 421613,
+                name: "Arbitrum Goerli",
+                rpc: [
+                    "wss://arbitrum-goerli.publicnode.com",
+                    "https://api.zan.top/node/v1/arb/goerli/public",
+                    "https://goerli-rollup.arbitrum.io/rpc",
+                    "https://arbitrum-goerli.blockpi.network/v1/rpc/public",
+                    "https://rpc.goerli.arbitrum.gateway.fm",
+                    "https://arbitrum-goerli.public.blastapi.io",
+                    "https://arbitrum-goerli.publicnode.com",
+                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public"
+                ]
+            },
+            sepolia: {
+                id: 421614,
+                name: "Arbitrum Sepolia Testnet",
+                rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
+                explorer: ["https://sepolia.arbiscan.io/"]
+            },
             runkeby: <Chain>{
                 id: 421611,
                 name: 'Arbitrum Rinkeby',
@@ -290,12 +310,12 @@ export function getChainNames(type: 'mainnet' | 'testnet' | 'devnet') {
 }
 
 export function getNetworkByName(name: string) {
-    return Object.values(chainlist).flatMap((chains) => chains).map((types) => Object.values(types as any)).flatMap((networks) => networks)?.flatMap((c: any) => c?.filter((c: any) => c?.name === name))[0];
+    return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.name === name);
 
 }
 
 export function getNetworksById(id: number) {
-    return Object.values(chainlist).flatMap((chains) => chains).map((types) => Object.values(types as any)).flatMap((networks) => networks)?.flatMap((c: any) => c?.filter((c: any) => c?.id === id))[0];
+    return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.id === id);
 }
 
 export function getNetworks(type: 'mainnet' | 'testnet' | 'devnet') {

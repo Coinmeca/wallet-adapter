@@ -1,9 +1,8 @@
 import type { PublicKey } from '@solana/web3.js';
 import { providers } from './providers';
 
-export function adapter() {
-
-    async function Connect(name: string, auto?: boolean) {
+export const adapter = {
+    connect: async (name: string, auto?: boolean) => {
         const wallet = providers[name].adapter(providers[name].url);
         try {
             if (!wallet.publicKey) {
@@ -53,9 +52,8 @@ export function adapter() {
             }
             return undefined;
         }
-    }
-
-    async function Disconnect() {
+    },
+    disconnect: async () => {
         const name = localStorage.getItem('wallet');
 
         if (!name) return;
@@ -98,6 +96,4 @@ export function adapter() {
             return undefined;
         }
     }
-
-    return { Connect, Disconnect };
 }

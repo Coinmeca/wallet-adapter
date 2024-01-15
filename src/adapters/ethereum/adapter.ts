@@ -1,9 +1,8 @@
 import { getNetworksById } from 'chains';
 import { providers } from './providers';
 
-export function adapter() {
-
-    async function Connect({ chainId, name }: { chainId: number; name: string }, auto?: boolean) {
+export const adapter = {
+    connect: async (chainId: number, name: string, auto?: boolean) => {
         const wallet = providers[name].adapter(providers[name].url);
         try {
             // const provider = (window as any)[chain].providerMap.get(name);
@@ -53,9 +52,8 @@ export function adapter() {
             }
             return undefined;
         }
-    }
-
-    async function Disconnect() {
+    },
+    disconnect: async () => {
         const name = localStorage.getItem('wallet');
 
         if (!name) return;
@@ -96,7 +94,5 @@ export function adapter() {
             return undefined;
         }
     }
-
-    return { Connect, Disconnect };
 }
 
