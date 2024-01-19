@@ -189,19 +189,6 @@ export const chainlist: any = {
                 explorer: ['https://mumbai.polygonscan.com/'],
                 logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp'
             },
-            team: <Chain>{
-                id: 100,
-                name: 'Polygon Team',
-                rpc: [
-                    // "Safe" URLs
-                    'https://104.199.239.170:10002'
-                ],
-                nativeCurrency: {
-                    symbol: 'MATIC',
-                    decimals: 18
-                },
-                logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp'
-            }
         },
         localnet: <Chain>{
             id: 999999,
@@ -334,12 +321,11 @@ export function getChainNames(type: 'mainnet' | 'testnet' | 'devnet') {
         })
         .map((c: string) => {
             return c?.split(' ')?.map((v: string) => [...v]?.map((n: string, i: number) => i === 0 ? n?.toUpperCase() : n).join(''));
-        });
+        }).flatMap((f) => f);
 }
 
 export function getNetworkByName(name: string) {
     return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.name === name);
-
 }
 
 export function getNetworksById(id: number) {
@@ -355,56 +341,3 @@ export function getNetworks(type: 'mainnet' | 'testnet' | 'devnet') {
             if (c) return c;
         });
 }
-
-// const INFURA_KEY = process.env.REACT_APP_INFURA_KEY;
-// if (typeof INFURA_KEY === 'undefined') {
-//     throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`);
-// }
-
-// To do
-/**
- * Known JSON-RPC endpoints.
- * These are the URLs used by the interface when there is not another available source of chain data.
- */
-// export const RPC_URLS: {[key in SupportedChainId]: string[]} = {
-//     [SupportedChainId.MAINNET]: [
-//         `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.MAINNET]
-//     ],
-//     [SupportedChainId.RINKEBY]: [
-//         `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.RINKEBY]
-//     ],
-//     [SupportedChainId.ROPSTEN]: [
-//         `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.ROPSTEN]
-//     ],
-//     [SupportedChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.GOERLI]],
-//     [SupportedChainId.KOVAN]: [`https://kovan.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[SupportedChainId.KOVAN]],
-//     [SupportedChainId.OPTIMISM]: [
-//         `https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.OPTIMISM]
-//     ],
-//     [SupportedChainId.OPTIMISM_GOERLI]: [
-//         `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.OPTIMISM_GOERLI]
-//     ],
-//     [SupportedChainId.ARBITRUM_ONE]: [
-//         `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.ARBITRUM_ONE]
-//     ],
-//     [SupportedChainId.ARBITRUM_RINKEBY]: [
-//         `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.ARBITRUM_RINKEBY]
-//     ],
-//     [SupportedChainId.POLYGON]: [
-//         `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.POLYGON]
-//     ],
-//     [SupportedChainId.POLYGON_MUMBAI]: [
-//         `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
-//         ...FALLBACK_URLS[SupportedChainId.POLYGON_MUMBAI]
-//     ],
-//     [SupportedChainId.CELO]: FALLBACK_URLS[SupportedChainId.CELO],
-//     [SupportedChainId.CELO_ALFAJORES]: FALLBACK_URLS[SupportedChainId.CELO_ALFAJORES]
-// };
