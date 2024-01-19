@@ -1,5 +1,8 @@
 import { getNetworksById } from 'chains';
+import { useWalletStore } from 'stores';
 import { providers } from './providers';
+
+const { connection, initialize } = useWalletStore();
 
 export const adapter = {
     connect: async (chainId: number, name: string, auto?: boolean) => {
@@ -16,13 +19,14 @@ export const adapter = {
                     ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency })
                 });
                 if (wallet.connected && wallet.address[0]) {
-                    localStorage.setItem('wallet', wallet.name);
-                    return {
+                    const data = {
                         provider: wallet.name,
                         address: wallet.address[0],
-                        chainId: chain?.id
-                        // adapter
+                        chain
                     };
+                    connection(data);
+                    localStorage.setItem('wallet', JSON.stringify(data));
+                    return data;
                 }
             }
         } catch (error) {
@@ -93,6 +97,7 @@ export const adapter = {
             }
             return undefined;
         }
+        initialize();
     }
 }
 

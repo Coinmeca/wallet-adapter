@@ -44,7 +44,7 @@ export const providers: Providers = {
             // return new PhantomWalletAdapter();
         }
     },
-    'Solflare Extension': {
+    SolflareExtension: {
         name: 'Solflare Extension',
         website: 'https://solflare.com',
         url: 'https://addons.mozilla.org/en-US/firefox/addon/solflare-wallet',

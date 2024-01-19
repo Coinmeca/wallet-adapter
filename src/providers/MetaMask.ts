@@ -1,6 +1,6 @@
 // import type { EventEmitter, WalletName } from './index';
 
-import { EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, WalletName, WalletReadyState } from 'base/adapter';
+import { BaseWalletAdapter, EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, SendTransactionOptions, WalletName, WalletReadyState } from 'base/adapter';
 import type MetaMaskEthereumProvider from '@metamask/detect-provider';
 import {
     WalletNetworkError,
@@ -13,8 +13,8 @@ import {
     WalletError
 } from 'base/errors';
 // } from '@solana/wallet-adapter-base';
-import { SendOptions, Transaction, TransactionSignature, VersionedTransaction } from 'base';
-import type { WalletAdapterNetwork } from 'base/types';
+import { Connection, SendOptions, Transaction, TransactionSignature, VersionedTransaction } from 'base';
+import type { SupportedTransactionVersions, TransactionOrVersionedTransaction, WalletAdapterNetwork } from 'base/types';
 import type { Chain } from 'types';
 
 interface ProviderMessage {
@@ -51,7 +51,7 @@ interface MetaMaskWallet extends EventEmitter<typeof MetaMaskEthereumProvider> {
     isMetaMask?: boolean;
     selectedAddress?: string[];
     isConnected(): boolean;
-    // providerMap? : Map<K ,V>
+    providers?: any[];
     providerMap?: any;
 
     request(args: MetaMaskArguments): Promise<unknown>;
@@ -70,8 +70,8 @@ export interface MetaMaskWalletAdapterConfig { }
 
 export const MetaMaskWalletName = 'MetaMask' as WalletName<'MetaMask'>;
 
-// export class MetaMaskWalletAdapter extends BaseMessageSignerWalletAdapter {
-export class MetaMaskWalletAdapter {
+export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
+    // export class MetaMaskWalletAdapter {
     name = MetaMaskWalletName;
     url = 'https://metamask.io/';
     icon = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/800px-MetaMask_Fox.svg.png';
@@ -85,7 +85,7 @@ export class MetaMaskWalletAdapter {
             : WalletReadyState.NotDetected;
 
     constructor(config: MetaMaskWalletAdapterConfig = {}) {
-        // super();
+        super();
 
         this._connecting = false;
         this._wallet = null;
@@ -127,6 +127,8 @@ export class MetaMaskWalletAdapter {
         return this._readyState;
     }
 
+    public supportedTransactionVersions?: SupportedTransactionVersions;
+
     async chain(chain: Chain): Promise<void> {
         const wallet = window.ethereum?.providerMap?.get('MetaMask') || window.ethereum;
         return wallet.request({ method: 'wallet_addEthereumChain', params: [chain as Chain] }).then((resp: any) => {
@@ -142,11 +144,8 @@ export class MetaMaskWalletAdapter {
 
     async connect(chain?: any): Promise<void> {
         try {
-            const wallet = window.ethereum?.providerMap?.get('MetaMask') || window.ethereum;
-            if (!wallet?.isMetaMask) return;
+            const wallet = window.ethereum?.providers?.find((provider) => provider.isMetaMask);
             if (this.connected || this.connecting) return;
-
-            console.log('readyis', this.readyState);
             if (this.readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
             this._connecting = true;
@@ -187,7 +186,7 @@ export class MetaMaskWalletAdapter {
     }
 
     async disconnect(): Promise<void> {
-        const wallet = this._wallet || window.metamask?.ethereum || window.ethereum!;
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('MetaMask') || window.ethereum;
 
         if (wallet) {
             wallet?.off('disconnect' as never, this._disconnected);
@@ -197,7 +196,7 @@ export class MetaMaskWalletAdapter {
             this._address = null;
 
             try {
-                await wallet.on('disconnect' as never, (error: WalletError) => {
+                wallet.on('disconnect' as never, (error: WalletError) => {
                     new WalletDisconnectionError(error?.message, error);
                 });
             } catch (error: any) {
@@ -214,6 +213,10 @@ export class MetaMaskWalletAdapter {
         wallet.on('message', (message: ProviderMessage) => {
             if (typeof fn === 'function') fn;
         });
+    }
+
+    async sendTransaction(transaction: TransactionOrVersionedTransaction<this['supportedTransactionVersions']>, connection: Connection, options?: SendTransactionOptions | undefined): Promise<any> {
+
     }
 
     private _disconnected = () => {
