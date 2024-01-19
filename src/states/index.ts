@@ -1,5 +1,12 @@
 ﻿import { create } from "zustand";
-import { Chain } from "../types";
+import { Chain } from "types";
+
+const initial: WalletStore = {
+    info: undefined,
+    provider: undefined,
+    address: undefined,
+    chain: undefined,
+};
 
 export interface Wallet {
     provider?: string;
@@ -21,10 +28,3 @@ export const useWallet = create<WalletStore & WalletStoreAction>((set) => ({
     connection: (wallet: WalletStore) => set(() => ({ info: wallet, ...wallet })),
     initialize: () => set((state: WalletStore & WalletStoreAction) => ({ ...state, ...initial })),
 }));
-
-const initial: WalletStore = {
-    info: undefined,
-    provider: undefined,
-    address: undefined,
-    chain: undefined,
-};

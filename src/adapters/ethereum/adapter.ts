@@ -1,12 +1,11 @@
 import { getNetworksById } from "chains";
 import { providers } from "./providers";
-import { useWallet } from "stores";
+import { useWallet } from "states";
 
-const { connection, initialize } = useWallet();
+export const adapter = () => {
+    const { connection, initialize } = useWallet();
 
-export const adapter = {
-    connect: async (chainId: number, name: string, auto?: boolean) => {
-        const { connection } = useWallet();
+    const connect = async (chainId: number, name: string, auto?: boolean) => {
         const wallet = providers[name].adapter(providers[name].url);
         const chain = getNetworksById(chainId);
         const c = {
@@ -18,7 +17,6 @@ export const adapter = {
         };
 
         try {
-            // const provider = (window as any)[chain].providerMap.get(name);
             if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && wallet.address[0])) {
                 await wallet.connect(c).then(() => {
                     if (wallet.connected && wallet.address[0]) {
@@ -60,9 +58,9 @@ export const adapter = {
             }
             return undefined;
         }
-    },
-    disconnect: async () => {
-        const { initialize } = useWallet();
+    };
+
+    const disconnect = async () => {
         const name = localStorage.getItem("wallet");
 
         if (!name) return;
@@ -103,5 +101,7 @@ export const adapter = {
             }
             return undefined;
         }
-    },
+    };
+
+    return { connect, disconnect }
 };
