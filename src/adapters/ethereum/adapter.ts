@@ -2,6 +2,8 @@ import { getNetworksById } from "chains";
 import { providers } from "./providers";
 import { useWallet } from "stores";
 
+const { connection, initialize } = useWalletStore();
+
 export const adapter = {
 	connect: async (chainId: number, name: string, auto?: boolean) => {
 		const { connection } = useWallet();
