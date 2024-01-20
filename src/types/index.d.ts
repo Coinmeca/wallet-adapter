@@ -18,10 +18,15 @@ export interface Chains {
 export interface Providers {
     [key: string]: Provider;
 }
+
 export interface Provider {
     name?: string;
     logo?: string;
     website: string;
     url: string;
     adapter?: any;
+}
+
+export interface Adapter{
+    connect: (chainId: number, name: string, auto?: boolean) => Promise<void>
 }

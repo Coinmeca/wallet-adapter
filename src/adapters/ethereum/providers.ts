@@ -5,7 +5,7 @@ export const providers: Providers = {
     MetaMask: <Provider>{
         name: "MetaMask",
         url: "https://metamask.io/",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/MetaMask_Fox.svg/120px-MetaMask_Fox.svg.png",
+        logo: "https://coinmeca-web3/wallets/MetaMask/logo.svg",
         adapter(url?: string) {
             return new MetaMaskWalletAdapter();
         }
