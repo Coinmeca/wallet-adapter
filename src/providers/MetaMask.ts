@@ -127,7 +127,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
     public supportedTransactionVersions?: SupportedTransactionVersions;
 
     async chain(chain: Chain): Promise<void> {
-        const wallet = window.ethereum?.providerMap?.get('MetaMask') || window.ethereum;
+        const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
         return wallet.request({ method: 'wallet_addEthereumChain', params: [chain as Chain] }).then((resp: any) => {
             return resp;
         });
@@ -184,7 +184,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
     }
 
     async disconnect(): Promise<void> {
-        const wallet = this._wallet || window.ethereum?.providerMap?.get('MetaMask') || window.ethereum;
+        const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
 
         if (wallet) {
             wallet?.off('disconnect' as never, this._disconnected);
@@ -203,6 +203,11 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
         }
 
         // this.emit('disconnect');
+    }
+
+    async getAddress() {
+        const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
+        return await wallet.request({ method: 'eth_accounts' });
     }
 
     async message(msg: string, fn?: Function): Promise<void> {

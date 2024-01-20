@@ -60,21 +60,21 @@ export const adapter = () => {
         }
     };
 
-    const disconnect = async (): Promise<boolean | undefined> => {
+    const disconnect = async (): Promise<boolean> => {
+        console.log(info?.provider);
+        console.log(JSON.parse(localStorage.getItem("wallet") || '')?.name);
+
         const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || '')?.name;
 
-        if (!name) return;
+        if (!name) return false;
         const wallet = providers[name].adapter(providers[name].url);
+        console.log(wallet);
 
         try {
-            const address = await wallet.request({ method: 'eth_accounts' })
-            if (address) {
-                if (!wallet.connected && address) {
-                    await wallet.disconnect();
-                    localStorage.removeItem("wallet");
-                }
-                initialize();
-            }
+            const address = (await wallet.getAddress())?.find((f: string) => f === info?.provider);
+            if (!wallet.connected && address) await wallet.disconnect();
+            localStorage.removeItem("wallet");
+            initialize();
             return true;
         } catch (error) {
             let msg = "";
