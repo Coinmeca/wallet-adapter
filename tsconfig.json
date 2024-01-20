@@ -4,7 +4,7 @@
         "baseUrl": "src",
         "outDir": "dist",
         "target": "esnext",
-        "module": "commonjs",
+        "module": "CommonJS",
         "lib": ["dom", "dom.iterable", "esnext"],
         "allowJs": true,
         "skipLibCheck": true,

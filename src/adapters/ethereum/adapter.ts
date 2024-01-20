@@ -1,11 +1,12 @@
 import { getNetworksById } from "chains";
 import { providers } from "./providers";
-import { useWallet } from "states";
+import { useWallet, type WalletStore } from "states";
 
 export const adapter = () => {
-    const { connection, initialize } = useWallet();
+    const { info, connection, initialize } = useWallet();
 
-    const connect = async (chainId: number, name: string, auto?: boolean) => {
+    const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | undefined> => {
+        name = name.replaceAll(' ', '');
         const wallet = providers[name].adapter(providers[name].url);
         const chain = getNetworksById(chainId);
         const c = {
@@ -15,15 +16,14 @@ export const adapter = () => {
             ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
             ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
         };
-
         try {
             if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && wallet.address[0])) {
                 await wallet.connect(c).then(() => {
                     if (wallet.connected && wallet.address[0]) {
-                        const w = {
+                        const w: WalletStore = {
                             provider: wallet.name,
                             address: wallet.address[0],
-                            chain: c,
+                            chain,
                         };
                         connection(w);
                         localStorage.setItem("wallet", JSON.stringify(w));
@@ -60,21 +60,22 @@ export const adapter = () => {
         }
     };
 
-    const disconnect = async () => {
-        const name = localStorage.getItem("wallet");
+    const disconnect = async (): Promise<boolean | undefined> => {
+        const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || '')?.name;
 
         if (!name) return;
         const wallet = providers[name].adapter(providers[name].url);
 
         try {
-            if (wallet.address) {
-                await wallet.disconnect();
-                if (!wallet.connected && !wallet.address) {
-                    wallet.disconnect();
+            const address = await wallet.request({ method: 'eth_accounts' })
+            if (address) {
+                if (!wallet.connected && address) {
+                    await wallet.disconnect();
                     localStorage.removeItem("wallet");
                 }
                 initialize();
             }
+            return true;
         } catch (error) {
             let msg = "";
             console.log("Wallet Disconnecting Error: ", error);
@@ -99,7 +100,7 @@ export const adapter = () => {
                     msg = "An unknown error occurred while in disconnecting a wallet.";
                 }
             }
-            return undefined;
+            return false;
         }
     };
 

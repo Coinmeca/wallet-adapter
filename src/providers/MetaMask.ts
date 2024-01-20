@@ -1,72 +1,69 @@
-// import type { EventEmitter, WalletName } from './index';
-
 import { BaseWalletAdapter, EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, SendTransactionOptions, WalletName, WalletReadyState } from 'base/adapter';
 import type MetaMaskEthereumProvider from '@metamask/detect-provider';
 import {
-	WalletNetworkError,
-	WalletAccountError,
-	WalletDisconnectedError,
-	WalletDisconnectionError,
-	WalletNotConnectedError,
-	WalletNotReadyError,
-	WalletAddressError,
-	WalletError,
+    WalletNetworkError,
+    WalletAccountError,
+    WalletDisconnectedError,
+    WalletDisconnectionError,
+    WalletNotConnectedError,
+    WalletNotReadyError,
+    WalletAddressError,
+    WalletError,
 } from "base/errors";
-// } from '@solana/wallet-adapter-base';
-import { Connection, SendOptions, Transaction, TransactionSignature, VersionedTransaction } from 'base';
-import type { SupportedTransactionVersions, TransactionOrVersionedTransaction, WalletAdapterNetwork } from 'base/types';
-import type { Chain } from 'types';
+import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from 'base/transaction';
+import type { Connection } from 'base/module';
+import type { Chain } from 'base/types';
+
 
 interface ProviderMessage {
-	type: string;
-	data: unknown;
+    type: string;
+    data: unknown;
 }
 
 interface MetaMaskArguments {
-	method: string;
-	params?: unknown[] | object;
+    method: string;
+    params?: unknown[] | object;
 }
 
 interface MetaMaskTransaction {
-	nonce?: string; // '0x00' ignored by MetaMask
-	gasPrice?: string; // '0x09184e72a000' customizable by user during MetaMask confirmation.
-	gas?: string; // '0x2710' customizable by user during MetaMask confirmation.
-	to?: string; // '0x0000000000000000000000000000000000000000' Required except during contract publications.
-	from: string; // ethereum.selectedAddress // must match user's active address.
-	value?: string; // '0x00' Only required to send ether to the recipient from the initiating external account.
-	data?: string;
-	// '0x7f7465737432000000000000000000000000000000000000000000000000000000600057' // Optional, but used for defining smart contract creation and interaction.
-	chainId?: string; // '0x3' Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
-	hardfork?: string;
-	returnTransaction?: boolean;
+    nonce?: string; // '0x00' ignored by MetaMask
+    gasPrice?: string; // '0x09184e72a000' customizable by user during MetaMask confirmation.
+    gas?: string; // '0x2710' customizable by user during MetaMask confirmation.
+    to?: string; // '0x0000000000000000000000000000000000000000' Required except during contract publications.
+    from: string; // ethereum.selectedAddress // must match user's active address.
+    value?: string; // '0x00' Only required to send ether to the recipient from the initiating external account.
+    data?: string;
+    // '0x7f7465737432000000000000000000000000000000000000000000000000000000600057' // Optional, but used for defining smart contract creation and interaction.
+    chainId?: string; // '0x3' Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+    hardfork?: string;
+    returnTransaction?: boolean;
 }
 
 interface MetaMaskWalletEvents {
-	connect(...args: unknown[]): unknown;
-	disconnect(...args: unknown[]): unknown;
-	accountChanged(newAddress: unknown): unknown;
+    connect(...args: unknown[]): unknown;
+    disconnect(...args: unknown[]): unknown;
+    accountChanged(newAddress: unknown): unknown;
 }
 
 interface MetaMaskWallet extends EventEmitter<typeof MetaMaskEthereumProvider> {
     isMetaMask?: boolean;
-    selectedAddress?: string[];
     isConnected(): boolean;
     providers?: any[];
     providerMap?: any;
 
-	request(args: MetaMaskArguments): Promise<unknown>;
+    request(args: MetaMaskArguments): Promise<unknown>;
 }
 
 interface MetaMaskWindow extends Window {
-	metamask?: {
-		ethereum?: MetaMaskWallet;
-	};
-	ethereum?: MetaMaskWallet;
+    metamask?: {
+        ethereum?: MetaMaskWallet;
+    };
+    ethereum?: MetaMaskWallet;
 }
 
 declare const window: MetaMaskWindow;
 
-export interface MetaMaskWalletAdapterConfig {}
+export interface MetaMaskWalletAdapterConfig { }
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
 
@@ -160,9 +157,10 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
                 }
                 await wallet
                     .request({ method: 'eth_requestAccounts' })
-                    .then((selectedAddress: string[] | null) => {
-                        if (wallet.selectedAddress?.length === 0) throw new WalletAccountError();
-                        address = selectedAddress;
+                    .then(async () => {
+                        const addresses = await wallet.request({ method: 'eth_accounts' })
+                        if (addresses?.length === 0) throw new WalletAccountError();
+                        address = addresses;
                     })
                     .catch((error: any) => {
                         throw new WalletAddressError();

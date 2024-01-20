@@ -1,25 +1,17 @@
-import type { Transaction, TransactionVersion, VersionedTransaction } from 'base';
-import type { WalletAdapter } from './adapter';
-import type { MessageSignerWalletAdapter, SignerWalletAdapter } from './signer';
+import type { BaseWalletAdapter, WalletAdapter } from './adapter';
+import type { MessageSignerWalletAdapter, SignerWalletAdapter, SignInMessageSignerWalletAdapter } from './signer';
 
-export type Adapter = WalletAdapter | SignerWalletAdapter | MessageSignerWalletAdapter;
+export type Adapter =
+    | BaseWalletAdapter
+    | WalletAdapter
+    | SignerWalletAdapter
+    | MessageSignerWalletAdapter
+    | SignInMessageSignerWalletAdapter;
 
 export enum WalletAdapterNetwork {
     Mainnet = 'mainnet-beta',
     Testnet = 'testnet',
-    Devnet = 'devnet'
-}
-
-export type SupportedTransactionVersions = ReadonlySet<TransactionVersion> | null | undefined;
-
-export type TransactionOrVersionedTransaction<S extends SupportedTransactionVersions> = S extends null | undefined
-    ? Transaction
-    : Transaction | VersionedTransaction;
-
-export function isVersionedTransaction(
-    transaction: Transaction | VersionedTransaction
-): transaction is VersionedTransaction {
-    return 'version' in transaction;
+    Devnet = 'devnet',
 }
 
 export interface NativeCurrency {

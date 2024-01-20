@@ -1,19 +1,19 @@
-import { type Connection, type Account, type Signer, type SendOptions, type Transaction, type TransactionSignature, PublicKey } from 'base';
 import EventEmitter from 'eventemitter3';
-import type { WalletError } from './errors';
-import { WalletNotConnectedError } from './errors';
-import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from './types';
+import { WalletError, WalletNotConnectedError } from './errors';
+import type { Connection, Account, Signer, SendOptions, Transaction, TransactionSignature, PublicKey } from './module';
+import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from './transaction';
 
 export { EventEmitter };
+
 export interface WalletAdapterEvents {
-    connect(address: Account): void;
+    connect(Account: Account): void;
     disconnect(): void;
     error(error: WalletError): void;
     readyStateChange(readyState: WalletReadyState): void;
 }
 
 export interface SendTransactionOptions extends SendOptions {
-    signers?: Signer[];
+    signers?: string[] | Signer[];
 }
 
 // WalletName is a nominal type that wallet adapters should use, e.g. `'MyCryptoWallet' as WalletName<'MyCryptoWallet'>`
@@ -33,7 +33,6 @@ export interface WalletAdapterProps<Name extends string = string> {
     autoConnect(): Promise<void>;
     connect(): Promise<void>;
     disconnect(): Promise<void>;
-
     sendTransaction(
         transaction: TransactionOrVersionedTransaction<this['supportedTransactionVersions']>,
         connection: Connection,
@@ -69,7 +68,7 @@ export enum WalletReadyState {
      * If a wallet is not supported on a given platform (eg. server-rendering, or
      * mobile) then it will stay in the `Unsupported` state.
      */
-    Unsupported = 'Unsupported'
+    Unsupported = 'Unsupported',
 }
 
 export abstract class BaseWalletAdapter<Name extends string = string>
@@ -109,13 +108,13 @@ export abstract class BaseWalletAdapter<Name extends string = string>
         const address = this.address;
         if (!address) throw new WalletNotConnectedError();
 
-        transaction.feePayer = transaction.feePayer || new PublicKey(address[0]);
+        transaction.feePayer = transaction.feePayer as PublicKey || address[0] as string;
         transaction.recentBlockhash =
             transaction.recentBlockhash ||
             (
                 await connection.getLatestBlockhash({
                     commitment: options.preflightCommitment,
-                    minContextSlot: options.minContextSlot
+                    minContextSlot: options.minContextSlot,
                 })
             ).blockhash;
 

@@ -12,9 +12,8 @@ import {
     WalletAddressError,
     WalletError
 } from 'base/errors';
-// } from '@solana/wallet-adapter-base';
-import { SendOptions, Transaction, TransactionSignature, VersionedTransaction } from 'base';
-import type { WalletAdapterNetwork } from 'base/types';
+import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from 'base/transaction';
+import type { Connection } from 'base/module';
 import type { Chain } from 'types';
 
 interface ProviderMessage {

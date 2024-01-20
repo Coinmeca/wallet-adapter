@@ -3,17 +3,17 @@ import { Agent } from 'http';
 import { Agent as Agent$1 } from 'https';
 import * as nodeFetch from 'node-fetch';
 
-export class Struct {
-    constructor(properties: any);
+export interface Struct {
+    constructor(properties: any): any;
     encode(): Buffer;
-    static decode(data: Buffer): any;
-    static decodeUnchecked(data: Buffer): any;
+    decode(data: Buffer): any;
+    decodeUnchecked(data: Buffer): any;
 }
-export class Enum extends Struct {
+export interface Enum extends Struct {
     enum: string;
-    constructor(properties: any);
+    constructor(properties: any): any;
 }
-export const SCHEMA: Map<Function, any>;
+export const SCHEMA: Map<Function, any> = new Map();
 
 /**
  * Maximum length of derived pubkey seed
@@ -34,21 +34,21 @@ type PublicKeyData = {};
 /**
  * A public key
  */
-export class PublicKey extends Struct {
+export interface PublicKey extends Struct {
     /**
      * Create a new PublicKey object
      * @param value ed25519 public key as buffer or base-58 encoded string
      */
-    constructor(value: PublicKeyInitData);
+    constructor(value: PublicKeyInitData): any;
     /**
      * Returns a unique PublicKey for tests and benchmarks using a counter
      */
-    static unique(): PublicKey;
+    unique(): PublicKey;
     /**
      * Default public key value. The base58-encoded string representation is all ones (as seen below)
      * The underlying BN number is 32 bytes that are all zeros
      */
-    static default: PublicKey;
+    default: PublicKey;
     /**
      * Checks if two publicKeys are equal
      */
@@ -76,18 +76,18 @@ export class PublicKey extends Struct {
      * The program ID will also serve as the owner of the public key, giving
      * it permission to write data to the account.
      */
-    static createWithSeed(fromPublicKey: PublicKey, seed: string, programId: PublicKey): Promise<PublicKey>;
+    createWithSeed(fromPublicKey: PublicKey, seed: string, programId: PublicKey): Promise<PublicKey>;
     /**
      * Derive a program address from seeds and a program ID.
      */
-    static createProgramAddressSync(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): PublicKey;
+    createProgramAddressSync(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): PublicKey;
     /**
      * Async version of createProgramAddressSync
      * For backwards compatibility
      *
      * @deprecated Use {@link createProgramAddressSync} instead
      */
-    static createProgramAddress(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): Promise<PublicKey>;
+    createProgramAddress(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): Promise<PublicKey>;
     /**
      * Find a valid program address
      *
@@ -95,21 +95,21 @@ export class PublicKey extends Struct {
      * iterates a nonce until it finds one that when combined with the seeds
      * results in a valid program address.
      */
-    static findProgramAddressSync(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): [PublicKey, number];
+    findProgramAddressSync(seeds: Array<Buffer | Uint8Array>, programId: PublicKey): [PublicKey, number];
     /**
      * Async version of findProgramAddressSync
      * For backwards compatibility
      *
      * @deprecated Use {@link findProgramAddressSync} instead
      */
-    static findProgramAddress(
+    findProgramAddress(
         seeds: Array<Buffer | Uint8Array>,
         programId: PublicKey
     ): Promise<[PublicKey, number]>;
     /**
      * Check that a pubkey is on the ed25519 curve.
      */
-    static isOnCurve(pubkeyData: PublicKeyInitData): boolean;
+    isOnCurve(pubkeyData: PublicKeyInitData): boolean;
 }
 
 /**
@@ -117,7 +117,8 @@ export class PublicKey extends Struct {
  *
  * @deprecated since v1.10.0, please use {@link Keypair} instead.
  */
-export class Account extends PublicKey {
+// export interface Account extends PublicKey {
+export interface Account {
     /**
      * Create a new Account object
      *
@@ -126,14 +127,14 @@ export class Account extends PublicKey {
      *
      * @param privateKey Secret key for the account
      */
-    constructor(privateKey?: Uint8Array | Array<number>);
+    constructor(privateKey?: Uint8Array | Array<number>): any;
     /**
      * The public key for this account
      */
     get publicKey(): PublicKey;
     /**
      * The **unencrypted** secret key for this account. The first 32 bytes
-     * is the private scalar and the last 32 bytes is the public key.
+     * is the  scalar and the last 32 bytes is the public key.
      * Read more: https://blog.mozilla.org/warner/2011/11/29/ed25519-keys/
      */
     get privateKey(): Buffer;
@@ -144,14 +145,14 @@ export class Account extends PublicKey {
  */
 type Blockhash = string;
 
-export const BPF_LOADER_DEPRECATED_PROGRAM_ID: PublicKey;
+// export const BPF_LOADER_DEPRECATED_PROGRAM_ID: PublicKey = new PublicKey('');
 
 /**
  * Epoch schedule
  * (see https://docs.solana.com/terminology#epoch)
  * Can be retrieved with the {@link Connection.getEpochSchedule} method
  */
-export class EpochSchedule {
+export interface EpochSchedule {
     /** The maximum number of slots in each epoch */
     slotsPerEpoch: number;
     /** The number of slots before beginning of an epoch to calculate a leader schedule for that epoch */
@@ -168,7 +169,7 @@ export class EpochSchedule {
         warmup: boolean,
         firstNormalEpoch: number,
         firstNormalSlot: number
-    );
+    ): any;
     getEpoch(slot: number): number;
     getEpochAndSlotIndex(slot: number): [number, number];
     getFirstSlotInEpoch(epoch: number): number;
@@ -176,10 +177,10 @@ export class EpochSchedule {
     getSlotsInEpoch(epoch: number): number;
 }
 
-export function export_default(
+export type export_default = (
     input: nodeFetch.RequestInfo,
     init?: nodeFetch.RequestInit
-): Promise<nodeFetch.Response>;
+) => Promise<nodeFetch.Response>;
 
 /**
  * Calculator for transaction fees.
@@ -191,7 +192,7 @@ interface FeeCalculator {
     lamportsPerSignature: number;
 }
 
-export const NONCE_ACCOUNT_LENGTH: number;
+export const NONCE_ACCOUNT_LENGTH: number = (2 ** 256) - 1;
 /**
  * A durable nonce is a 32 byte value encoded as a base58 string.
  */
@@ -199,7 +200,7 @@ type DurableNonce = string;
 /**
  * NonceAccount class
  */
-export class NonceAccount {
+export interface NonceAccount {
     authorizedPubkey: PublicKey;
     nonce: DurableNonce;
     feeCalculator: FeeCalculator;
@@ -209,12 +210,12 @@ export class NonceAccount {
      * @param buffer account data
      * @return NonceAccount
      */
-    static fromAccountData(buffer: Buffer | Uint8Array | Array<number>): NonceAccount;
+    fromAccountData(buffer: Buffer | Uint8Array | Array<number>): NonceAccount;
 }
 
 /**
  * A 64 byte secret key, the first 32 bytes of which is the
- * private scalar and the last 32 bytes is the public key.
+ *  scalar and the last 32 bytes is the public key.
  * Read more: https://blog.mozilla.org/warner/2011/11/29/ed25519-keys/
  */
 type Ed25519SecretKey = Uint8Array;
@@ -229,26 +230,26 @@ interface Ed25519Keypair {
 /**
  * Keypair signer interface
  */
-interface Signer {
+export interface Signer {
     publicKey: PublicKey;
     privateKey: Uint8Array;
 }
 /**
  * An account keypair used for signing transactions.
  */
-export class Keypair {
-    private _keypair;
+export interface Keypair {
+    _keypair: any;
     /**
      * Create a new keypair instance.
      * Generate random keypair if no {@link Ed25519Keypair} is provided.
      *
      * @param keypair ed25519 keypair
      */
-    constructor(keypair?: Ed25519Keypair);
+    constructor(keypair?: Ed25519Keypair): any;
     /**
      * Generate a new random keypair
      */
-    static generate(): Keypair;
+    generate(): Keypair;
     /**
      * Create a keypair from a raw secret key byte array.
      *
@@ -261,7 +262,7 @@ export class Keypair {
      * @param privateKey secret key byte array
      * @param options: skip secret key validation
      */
-    static fromSecretKey(
+    fromSecretKey(
         privateKey: Uint8Array,
         options?: {
             skipValidation?: boolean;
@@ -272,7 +273,7 @@ export class Keypair {
      *
      * @param seed seed byte array
      */
-    static fromSeed(seed: Uint8Array): Keypair;
+    fromSeed(seed: Uint8Array): Keypair;
     /**
      * The public key for this keypair
      */
@@ -290,28 +291,28 @@ export class Keypair {
  * 40 bytes is the size of the IPv6 header
  * 8 bytes is the size of the fragment header
  */
-export const PACKET_DATA_SIZE: number;
+export const PACKET_DATA_SIZE = 255;
 export const VERSION_PREFIX_MASK = 127;
 export const SIGNATURE_LENGTH_IN_BYTES = 64;
 
-export class TransactionExpiredBlockheightExceededError extends Error {
+export interface TransactionExpiredBlockheightExceededError extends Error {
     signature: string;
-    constructor(signature: string);
+    constructor(signature: string): any;
 }
-export class TransactionExpiredTimeoutError extends Error {
+export interface TransactionExpiredTimeoutError extends Error {
     signature: string;
-    constructor(signature: string, timeoutSeconds: number);
+    constructor(signature: string, timeoutSeconds: number): any;
 }
-export class TransactionExpiredNonceInvalidError extends Error {
+export interface TransactionExpiredNonceInvalidError extends Error {
     signature: string;
-    constructor(signature: string);
+    constructor(signature: string): any;
 }
 
 type AccountKeysFromLookups = LoadedAddresses;
-export class MessageAccountKeys {
+export interface MessageAccountKeys {
     staticAccountKeys: Array<PublicKey>;
     accountKeysFromLookups?: AccountKeysFromLookups;
-    constructor(staticAccountKeys: Array<PublicKey>, accountKeysFromLookups?: AccountKeysFromLookups);
+    constructor(staticAccountKeys: Array<PublicKey>, accountKeysFromLookups?: AccountKeysFromLookups): any;
     keySegments(): Array<Array<PublicKey>>;
     get(index: number): PublicKey | undefined;
     get length(): number;
@@ -354,19 +355,19 @@ type CompileLegacyArgs = {
 /**
  * List of instructions to be processed atomically
  */
-export class Message {
+export interface Message {
     header: MessageHeader;
     accountKeys: PublicKey[];
     recentBlockhash: Blockhash;
     instructions: CompiledInstruction[];
-    private indexToProgramIds;
-    constructor(args: MessageArgs);
+    indexToProgramIds: any;
+    constructor(args: MessageArgs): any;
     get version(): 'legacy';
     get staticAccountKeys(): Array<PublicKey>;
     get compiledInstructions(): Array<MessageCompiledInstruction>;
     get addressTableLookups(): Array<MessageAddressTableLookup>;
     getAccountKeys(): MessageAccountKeys;
-    static compile(args: CompileLegacyArgs): Message;
+    compile(args: CompileLegacyArgs): Message;
     isAccountSigner(index: number): boolean;
     isAccountWritable(index: number): boolean;
     isProgramId(index: number): boolean;
@@ -376,7 +377,7 @@ export class Message {
     /**
      * Decode a compiled message into a Message object.
      */
-    static from(buffer: Buffer | Uint8Array | Array<number>): Message;
+    from(buffer: Buffer | Uint8Array | Array<number>): Message;
 }
 
 type AddressLookupTableState = {
@@ -390,12 +391,12 @@ type AddressLookupTableAccountArgs = {
     key: PublicKey;
     state: AddressLookupTableState;
 };
-export class AddressLookupTableAccount {
+export interface AddressLookupTableAccount {
     key: PublicKey;
     state: AddressLookupTableState;
-    constructor(args: AddressLookupTableAccountArgs);
+    constructor(args: AddressLookupTableAccountArgs): any;
     isActive(): boolean;
-    static deserialize(accountData: Uint8Array): AddressLookupTableState;
+    deserialize(accountData: Uint8Array): AddressLookupTableState;
 }
 
 type CreateLookupTableParams = {
@@ -446,47 +447,47 @@ type LookupTableInstructionType =
     | 'CloseLookupTable'
     | 'FreezeLookupTable'
     | 'DeactivateLookupTable';
-export class AddressLookupTableInstruction {
-    static decodeInstructionType(instruction: TransactionInstruction): LookupTableInstructionType;
-    static decodeCreateLookupTable(instruction: TransactionInstruction): CreateLookupTableParams;
-    static decodeExtendLookupTable(instruction: TransactionInstruction): ExtendLookupTableParams;
-    static decodeCloseLookupTable(instruction: TransactionInstruction): CloseLookupTableParams;
-    static decodeFreezeLookupTable(instruction: TransactionInstruction): FreezeLookupTableParams;
-    static decodeDeactivateLookupTable(instruction: TransactionInstruction): DeactivateLookupTableParams;
+export interface AddressLookupTableInstruction {
+    decodeInstructionType(instruction: TransactionInstruction): LookupTableInstructionType;
+    decodeCreateLookupTable(instruction: TransactionInstruction): CreateLookupTableParams;
+    decodeExtendLookupTable(instruction: TransactionInstruction): ExtendLookupTableParams;
+    decodeCloseLookupTable(instruction: TransactionInstruction): CloseLookupTableParams;
+    decodeFreezeLookupTable(instruction: TransactionInstruction): FreezeLookupTableParams;
+    decodeDeactivateLookupTable(instruction: TransactionInstruction): DeactivateLookupTableParams;
 }
-export class AddressLookupTableProgram {
-    static programId: PublicKey;
-    static createLookupTable(params: CreateLookupTableParams): [TransactionInstruction, PublicKey];
-    static freezeLookupTable(params: FreezeLookupTableParams): TransactionInstruction;
-    static extendLookupTable(params: ExtendLookupTableParams): TransactionInstruction;
-    static deactivateLookupTable(params: DeactivateLookupTableParams): TransactionInstruction;
-    static closeLookupTable(params: CloseLookupTableParams): TransactionInstruction;
+export interface AddressLookupTableProgram {
+    programId: PublicKey;
+    createLookupTable(params: CreateLookupTableParams): [TransactionInstruction, PublicKey];
+    freezeLookupTable(params: FreezeLookupTableParams): TransactionInstruction;
+    extendLookupTable(params: ExtendLookupTableParams): TransactionInstruction;
+    deactivateLookupTable(params: DeactivateLookupTableParams): TransactionInstruction;
+    closeLookupTable(params: CloseLookupTableParams): TransactionInstruction;
 }
 
 /**
  * Compute Budget Instruction class
  */
-export class ComputeBudgetInstruction {
+export interface ComputeBudgetInstruction {
     /**
      * Decode a compute budget instruction and retrieve the instruction type.
      */
-    static decodeInstructionType(instruction: TransactionInstruction): ComputeBudgetInstructionType;
+    decodeInstructionType(instruction: TransactionInstruction): ComputeBudgetInstructionType;
     /**
      * Decode request units compute budget instruction and retrieve the instruction params.
      */
-    static decodeRequestUnits(instruction: TransactionInstruction): RequestUnitsParams;
+    decodeRequestUnits(instruction: TransactionInstruction): RequestUnitsParams;
     /**
      * Decode request heap frame compute budget instruction and retrieve the instruction params.
      */
-    static decodeRequestHeapFrame(instruction: TransactionInstruction): RequestHeapFrameParams;
+    decodeRequestHeapFrame(instruction: TransactionInstruction): RequestHeapFrameParams;
     /**
      * Decode set compute unit limit compute budget instruction and retrieve the instruction params.
      */
-    static decodeSetComputeUnitLimit(instruction: TransactionInstruction): SetComputeUnitLimitParams;
+    decodeSetComputeUnitLimit(instruction: TransactionInstruction): SetComputeUnitLimitParams;
     /**
      * Decode set compute unit price compute budget instruction and retrieve the instruction params.
      */
-    static decodeSetComputeUnitPrice(instruction: TransactionInstruction): SetComputeUnitPriceParams;
+    decodeSetComputeUnitPrice(instruction: TransactionInstruction): SetComputeUnitPriceParams;
 }
 /**
  * An enumeration of valid ComputeBudgetInstructionType's
@@ -527,20 +528,20 @@ interface SetComputeUnitPriceParams {
     microLamports: number | bigint;
 }
 /**
- * Factory class for transaction instructions to interact with the Compute Budget program
+ * Factory interface for transaction instructions to interact with the Compute Budget program
  */
-export class ComputeBudgetProgram {
+export interface ComputeBudgetProgram {
     /**
      * Public key that identifies the Compute Budget program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * @deprecated Instead, call {@link setComputeUnitLimit} and/or {@link setComputeUnitPrice}
      */
-    static requestUnits(params: RequestUnitsParams): TransactionInstruction;
-    static requestHeapFrame(params: RequestHeapFrameParams): TransactionInstruction;
-    static setComputeUnitLimit(params: SetComputeUnitLimitParams): TransactionInstruction;
-    static setComputeUnitPrice(params: SetComputeUnitPriceParams): TransactionInstruction;
+    requestUnits(params: RequestUnitsParams): TransactionInstruction;
+    requestHeapFrame(params: RequestHeapFrameParams): TransactionInstruction;
+    setComputeUnitLimit(params: SetComputeUnitLimitParams): TransactionInstruction;
+    setComputeUnitPrice(params: SetComputeUnitPriceParams): TransactionInstruction;
 }
 
 /**
@@ -553,31 +554,31 @@ type CreateEd25519InstructionWithPublicKeyParams = {
     instructionIndex?: number;
 };
 /**
- * Params for creating an ed25519 instruction using a private key
+ * Params for creating an ed25519 instruction using a  key
  */
 type CreateEd25519InstructionWithPrivateKeyParams = {
     privateKey: Uint8Array;
     message: Uint8Array;
     instructionIndex?: number;
 };
-export class Ed25519Program {
+export interface Ed25519Program {
     /**
      * Public key that identifies the ed25519 program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * Create an ed25519 instruction with a public key and signature. The
      * public key must be a buffer that is 32 bytes long, and the signature
      * must be a buffer of 64 bytes.
      */
-    static createInstructionWithPublicKey(
+    createInstructionWithPublicKey(
         params: CreateEd25519InstructionWithPublicKeyParams
     ): TransactionInstruction;
     /**
-     * Create an ed25519 instruction with a private key. The private key
+     * Create an ed25519 instruction with a  key. The  key
      * must be a buffer that is 64 bytes long.
      */
-    static createInstructionWithPrivateKey(
+    createInstructionWithPrivateKey(
         params: CreateEd25519InstructionWithPrivateKeyParams
     ): TransactionInstruction;
 }
@@ -603,42 +604,42 @@ type CreateSecp256k1InstructionWithEthAddressParams = {
     instructionIndex?: number;
 };
 /**
- * Params for creating an secp256k1 instruction using a private key
+ * Params for creating an secp256k1 instruction using a  key
  */
 type CreateSecp256k1InstructionWithPrivateKeyParams = {
     privateKey: Buffer | Uint8Array | Array<number>;
     message: Buffer | Uint8Array | Array<number>;
     instructionIndex?: number;
 };
-export class Secp256k1Program {
+export interface Secp256k1Program {
     /**
      * Public key that identifies the secp256k1 program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * Construct an Ethereum address from a secp256k1 public key buffer.
      * @param {Buffer} publicKey a 64 byte secp256k1 public key buffer
      */
-    static publicKeyToEthAddress(publicKey: Buffer | Uint8Array | Array<number>): Buffer;
+    publicKeyToEthAddress(publicKey: Buffer | Uint8Array | Array<number>): Buffer;
     /**
      * Create an secp256k1 instruction with a public key. The public key
      * must be a buffer that is 64 bytes long.
      */
-    static createInstructionWithPublicKey(
+    createInstructionWithPublicKey(
         params: CreateSecp256k1InstructionWithPublicKeyParams
     ): TransactionInstruction;
     /**
      * Create an secp256k1 instruction with an Ethereum address. The address
      * must be a hex string or a buffer that is 20 bytes long.
      */
-    static createInstructionWithEthAddress(
+    createInstructionWithEthAddress(
         params: CreateSecp256k1InstructionWithEthAddressParams
     ): TransactionInstruction;
     /**
-     * Create an secp256k1 instruction with a private key. The private key
+     * Create an secp256k1 instruction with a  key. The  key
      * must be a buffer that is 32 bytes long.
      */
-    static createInstructionWithPrivateKey(
+    createInstructionWithPrivateKey(
         params: CreateSecp256k1InstructionWithPrivateKeyParams
     ): TransactionInstruction;
 }
@@ -647,11 +648,11 @@ export class Secp256k1Program {
  * Address of the stake config account which configures the rate
  * of stake warmup and cooldown as well as the slashing penalty.
  */
-export const STAKE_CONFIG_ID: PublicKey;
+export type STAKE_CONFIG_ID = PublicKey;
 /**
  * Stake account authority info
  */
-export class Authorized {
+export interface Authorized {
     /** stake authority */
     staker: PublicKey;
     /** withdraw authority */
@@ -661,12 +662,12 @@ export class Authorized {
      * @param staker the stake authority
      * @param withdrawer the withdraw authority
      */
-    constructor(staker: PublicKey, withdrawer: PublicKey);
+    constructor(staker: PublicKey, withdrawer: PublicKey): any;
 }
 /**
  * Stake account lockup info
  */
-export class Lockup {
+export interface Lockup {
     /** Unix timestamp of lockup expiration */
     unixTimestamp: number;
     /** Epoch of lockup expiration */
@@ -676,11 +677,11 @@ export class Lockup {
     /**
      * Create a new Lockup object
      */
-    constructor(unixTimestamp: number, epoch: number, custodian: PublicKey);
+    constructor(unixTimestamp: number, epoch: number, custodian: PublicKey): any;
     /**
      * Default, inactive Lockup value
      */
-    static default: Lockup;
+    default: Lockup;
 }
 /**
  * Create stake account transaction params
@@ -795,43 +796,43 @@ type MergeStakeParams = {
 /**
  * Stake Instruction class
  */
-export class StakeInstruction {
+export interface StakeInstruction {
     /**
      * Decode a stake instruction and retrieve the instruction type.
      */
-    static decodeInstructionType(instruction: TransactionInstruction): StakeInstructionType;
+    decodeInstructionType(instruction: TransactionInstruction): StakeInstructionType;
     /**
      * Decode a initialize stake instruction and retrieve the instruction params.
      */
-    static decodeInitialize(instruction: TransactionInstruction): InitializeStakeParams;
+    decodeInitialize(instruction: TransactionInstruction): InitializeStakeParams;
     /**
      * Decode a delegate stake instruction and retrieve the instruction params.
      */
-    static decodeDelegate(instruction: TransactionInstruction): DelegateStakeParams;
+    decodeDelegate(instruction: TransactionInstruction): DelegateStakeParams;
     /**
      * Decode an authorize stake instruction and retrieve the instruction params.
      */
-    static decodeAuthorize(instruction: TransactionInstruction): AuthorizeStakeParams;
+    decodeAuthorize(instruction: TransactionInstruction): AuthorizeStakeParams;
     /**
      * Decode an authorize-with-seed stake instruction and retrieve the instruction params.
      */
-    static decodeAuthorizeWithSeed(instruction: TransactionInstruction): AuthorizeWithSeedStakeParams;
+    decodeAuthorizeWithSeed(instruction: TransactionInstruction): AuthorizeWithSeedStakeParams;
     /**
      * Decode a split stake instruction and retrieve the instruction params.
      */
-    static decodeSplit(instruction: TransactionInstruction): SplitStakeParams;
+    decodeSplit(instruction: TransactionInstruction): SplitStakeParams;
     /**
      * Decode a merge stake instruction and retrieve the instruction params.
      */
-    static decodeMerge(instruction: TransactionInstruction): MergeStakeParams;
+    decodeMerge(instruction: TransactionInstruction): MergeStakeParams;
     /**
      * Decode a withdraw stake instruction and retrieve the instruction params.
      */
-    static decodeWithdraw(instruction: TransactionInstruction): WithdrawStakeParams;
+    decodeWithdraw(instruction: TransactionInstruction): WithdrawStakeParams;
     /**
      * Decode a deactivate stake instruction and retrieve the instruction params.
      */
-    static decodeDeactivate(instruction: TransactionInstruction): DeactivateStakeParams;
+    decodeDeactivate(instruction: TransactionInstruction): DeactivateStakeParams;
 }
 /**
  * An enumeration of valid StakeInstructionType's
@@ -855,7 +856,7 @@ type StakeAuthorizationType = {
 /**
  * An enumeration of valid StakeAuthorizationLayout's
  */
-export const StakeAuthorizationLayout: Readonly<{
+export type StakeAuthorizationLayout = Readonly<{
     Staker: {
         index: number;
     };
@@ -864,13 +865,13 @@ export const StakeAuthorizationLayout: Readonly<{
     };
 }>;
 /**
- * Factory class for transactions to interact with the Stake program
+ * Factory interface for transactions to interact with the Stake program
  */
-export class StakeProgram {
+export interface StakeProgram {
     /**
      * Public key that identifies the Stake program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * Max space of a Stake account
      *
@@ -878,57 +879,57 @@ export class StakeProgram {
      * `StakeState::size_of()`:
      * https://docs.rs/solana-stake-program/latest/solana_stake_program/stake_state/enum.StakeState.html
      */
-    static space: number;
+    space: number;
     /**
      * Generate an Initialize instruction to add to a Stake Create transaction
      */
-    static initialize(params: InitializeStakeParams): TransactionInstruction;
+    initialize(params: InitializeStakeParams): TransactionInstruction;
     /**
      * Generate a Transaction that creates a new Stake account at
      *   an address generated with `from`, a seed, and the Stake programId
      */
-    static createAccountWithSeed(params: CreateStakeAccountWithSeedParams): Transaction;
+    createAccountWithSeed(params: CreateStakeAccountWithSeedParams): Transaction;
     /**
      * Generate a Transaction that creates a new Stake account
      */
-    static createAccount(params: CreateStakeAccountParams): Transaction;
+    createAccount(params: CreateStakeAccountParams): Transaction;
     /**
      * Generate a Transaction that delegates Stake tokens to a validator
      * Vote PublicKey. This transaction can also be used to redelegate Stake
      * to a new validator Vote PublicKey.
      */
-    static delegate(params: DelegateStakeParams): Transaction;
+    delegate(params: DelegateStakeParams): Transaction;
     /**
      * Generate a Transaction that authorizes a new PublicKey as Staker
      * or Withdrawer on the Stake account.
      */
-    static authorize(params: AuthorizeStakeParams): Transaction;
+    authorize(params: AuthorizeStakeParams): Transaction;
     /**
      * Generate a Transaction that authorizes a new PublicKey as Staker
      * or Withdrawer on the Stake account.
      */
-    static authorizeWithSeed(params: AuthorizeWithSeedStakeParams): Transaction;
+    authorizeWithSeed(params: AuthorizeWithSeedStakeParams): Transaction;
     /**
      * Generate a Transaction that splits Stake tokens into another stake account
      */
-    static split(params: SplitStakeParams): Transaction;
+    split(params: SplitStakeParams): Transaction;
     /**
      * Generate a Transaction that splits Stake tokens into another account
      * derived from a base public key and seed
      */
-    static splitWithSeed(params: SplitStakeWithSeedParams): Transaction;
+    splitWithSeed(params: SplitStakeWithSeedParams): Transaction;
     /**
      * Generate a Transaction that merges Stake accounts.
      */
-    static merge(params: MergeStakeParams): Transaction;
+    merge(params: MergeStakeParams): Transaction;
     /**
      * Generate a Transaction that withdraws deactivated Stake tokens.
      */
-    static Withdraw(params: WithdrawStakeParams): Transaction;
+    Withdraw(params: WithdrawStakeParams): Transaction;
     /**
      * Generate a Transaction that deactivates Stake tokens.
      */
-    static deactivate(params: DeactivateStakeParams): Transaction;
+    deactivate(params: DeactivateStakeParams): Transaction;
 }
 
 /**
@@ -1138,59 +1139,59 @@ type DecodedTransferWithSeedInstruction = {
 /**
  * System Instruction class
  */
-export class SystemInstruction {
+export interface SystemInstruction {
     /**
      * Decode a system instruction and retrieve the instruction type.
      */
-    static decodeInstructionType(instruction: TransactionInstruction): SystemInstructionType;
+    decodeInstructionType(instruction: TransactionInstruction): SystemInstructionType;
     /**
      * Decode a create account system instruction and retrieve the instruction params.
      */
-    static decodeCreateAccount(instruction: TransactionInstruction): CreateAccountParams;
+    decodeCreateAccount(instruction: TransactionInstruction): CreateAccountParams;
     /**
      * Decode a transfer system instruction and retrieve the instruction params.
      */
-    static decodeTransfer(instruction: TransactionInstruction): DecodedTransferInstruction;
+    decodeTransfer(instruction: TransactionInstruction): DecodedTransferInstruction;
     /**
      * Decode a transfer with seed system instruction and retrieve the instruction params.
      */
-    static decodeTransferWithSeed(instruction: TransactionInstruction): DecodedTransferWithSeedInstruction;
+    decodeTransferWithSeed(instruction: TransactionInstruction): DecodedTransferWithSeedInstruction;
     /**
      * Decode an allocate system instruction and retrieve the instruction params.
      */
-    static decodeAllocate(instruction: TransactionInstruction): AllocateParams;
+    decodeAllocate(instruction: TransactionInstruction): AllocateParams;
     /**
      * Decode an allocate with seed system instruction and retrieve the instruction params.
      */
-    static decodeAllocateWithSeed(instruction: TransactionInstruction): AllocateWithSeedParams;
+    decodeAllocateWithSeed(instruction: TransactionInstruction): AllocateWithSeedParams;
     /**
      * Decode an assign system instruction and retrieve the instruction params.
      */
-    static decodeAssign(instruction: TransactionInstruction): AssignParams;
+    decodeAssign(instruction: TransactionInstruction): AssignParams;
     /**
      * Decode an assign with seed system instruction and retrieve the instruction params.
      */
-    static decodeAssignWithSeed(instruction: TransactionInstruction): AssignWithSeedParams;
+    decodeAssignWithSeed(instruction: TransactionInstruction): AssignWithSeedParams;
     /**
      * Decode a create account with seed system instruction and retrieve the instruction params.
      */
-    static decodeCreateWithSeed(instruction: TransactionInstruction): CreateAccountWithSeedParams;
+    decodeCreateWithSeed(instruction: TransactionInstruction): CreateAccountWithSeedParams;
     /**
      * Decode a nonce initialize system instruction and retrieve the instruction params.
      */
-    static decodeNonceInitialize(instruction: TransactionInstruction): InitializeNonceParams;
+    decodeNonceInitialize(instruction: TransactionInstruction): InitializeNonceParams;
     /**
      * Decode a nonce advance system instruction and retrieve the instruction params.
      */
-    static decodeNonceAdvance(instruction: TransactionInstruction): AdvanceNonceParams;
+    decodeNonceAdvance(instruction: TransactionInstruction): AdvanceNonceParams;
     /**
      * Decode a nonce withdraw system instruction and retrieve the instruction params.
      */
-    static decodeNonceWithdraw(instruction: TransactionInstruction): WithdrawNonceParams;
+    decodeNonceWithdraw(instruction: TransactionInstruction): WithdrawNonceParams;
     /**
      * Decode a nonce authorize system instruction and retrieve the instruction params.
      */
-    static decodeNonceAuthorize(instruction: TransactionInstruction): AuthorizeNonceParams;
+    decodeNonceAuthorize(instruction: TransactionInstruction): AuthorizeNonceParams;
 }
 /**
  * An enumeration of valid SystemInstructionType's
@@ -1210,61 +1211,61 @@ type SystemInstructionType =
     | 'WithdrawNonceAccount'
     | 'UpgradeNonceAccount';
 /**
- * Factory class for transactions to interact with the System program
+ * Factory interface for transactions to interact with the System program
  */
-export class SystemProgram {
+export interface SystemProgram {
     /**
      * Public key that identifies the System program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * Generate a transaction instruction that creates a new account
      */
-    static createAccount(params: CreateAccountParams): TransactionInstruction;
+    createAccount(params: CreateAccountParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that transfers lamports from one account to another
      */
-    static transfer(params: TransferParams | TransferWithSeedParams): TransactionInstruction;
+    transfer(params: TransferParams | TransferWithSeedParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that assigns an account to a program
      */
-    static assign(params: AssignParams | AssignWithSeedParams): TransactionInstruction;
+    assign(params: AssignParams | AssignWithSeedParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that creates a new account at
      *   an address generated with `from`, a seed, and programId
      */
-    static createAccountWithSeed(params: CreateAccountWithSeedParams): TransactionInstruction;
+    createAccountWithSeed(params: CreateAccountWithSeedParams): TransactionInstruction;
     /**
      * Generate a transaction that creates a new Nonce account
      */
-    static createNonceAccount(params: CreateNonceAccountParams | CreateNonceAccountWithSeedParams): Transaction;
+    createNonceAccount(params: CreateNonceAccountParams | CreateNonceAccountWithSeedParams): Transaction;
     /**
      * Generate an instruction to initialize a Nonce account
      */
-    static nonceInitialize(params: InitializeNonceParams): TransactionInstruction;
+    nonceInitialize(params: InitializeNonceParams): TransactionInstruction;
     /**
      * Generate an instruction to advance the nonce in a Nonce account
      */
-    static nonceAdvance(params: AdvanceNonceParams): TransactionInstruction;
+    nonceAdvance(params: AdvanceNonceParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that withdraws lamports from a Nonce account
      */
-    static nonceWithdraw(params: WithdrawNonceParams): TransactionInstruction;
+    nonceWithdraw(params: WithdrawNonceParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that authorizes a new PublicKey as the authority
      * on a Nonce account.
      */
-    static nonceAuthorize(params: AuthorizeNonceParams): TransactionInstruction;
+    nonceAuthorize(params: AuthorizeNonceParams): TransactionInstruction;
     /**
      * Generate a transaction instruction that allocates space in an account without funding
      */
-    static allocate(params: AllocateParams | AllocateWithSeedParams): TransactionInstruction;
+    allocate(params: AllocateParams | AllocateWithSeedParams): TransactionInstruction;
 }
 
 /**
  * Vote account info
  */
-export class VoteInit {
+export interface VoteInit {
     nodePubkey: PublicKey;
     authorizedVoter: PublicKey;
     authorizedWithdrawer: PublicKey;
@@ -1274,7 +1275,7 @@ export class VoteInit {
         authorizedVoter: PublicKey,
         authorizedWithdrawer: PublicKey,
         commission: number
-    );
+    ): any;
 }
 /**
  * Create vote account transaction params
@@ -1326,27 +1327,27 @@ type WithdrawFromVoteAccountParams = {
 /**
  * Vote Instruction class
  */
-export class VoteInstruction {
+export interface VoteInstruction {
     /**
      * Decode a vote instruction and retrieve the instruction type.
      */
-    static decodeInstructionType(instruction: TransactionInstruction): VoteInstructionType;
+    decodeInstructionType(instruction: TransactionInstruction): VoteInstructionType;
     /**
      * Decode an initialize vote instruction and retrieve the instruction params.
      */
-    static decodeInitializeAccount(instruction: TransactionInstruction): InitializeAccountParams;
+    decodeInitializeAccount(instruction: TransactionInstruction): InitializeAccountParams;
     /**
      * Decode an authorize instruction and retrieve the instruction params.
      */
-    static decodeAuthorize(instruction: TransactionInstruction): AuthorizeVoteParams;
+    decodeAuthorize(instruction: TransactionInstruction): AuthorizeVoteParams;
     /**
      * Decode an authorize instruction and retrieve the instruction params.
      */
-    static decodeAuthorizeWithSeed(instruction: TransactionInstruction): AuthorizeVoteWithSeedParams;
+    decodeAuthorizeWithSeed(instruction: TransactionInstruction): AuthorizeVoteWithSeedParams;
     /**
      * Decode a withdraw instruction and retrieve the instruction params.
      */
-    static decodeWithdraw(instruction: TransactionInstruction): WithdrawFromVoteAccountParams;
+    decodeWithdraw(instruction: TransactionInstruction): WithdrawFromVoteAccountParams;
 }
 /**
  * An enumeration of valid VoteInstructionType's
@@ -1362,7 +1363,7 @@ type VoteAuthorizationType = {
 /**
  * An enumeration of valid VoteAuthorization layouts.
  */
-export const VoteAuthorizationLayout: Readonly<{
+export type VoteAuthorizationLayout = Readonly<{
     Voter: {
         index: number;
     };
@@ -1371,13 +1372,13 @@ export const VoteAuthorizationLayout: Readonly<{
     };
 }>;
 /**
- * Factory class for transactions to interact with the Vote program
+ * Factory interface for transactions to interact with the Vote program
  */
-export class VoteProgram {
+export interface VoteProgram {
     /**
      * Public key that identifies the Vote program
      */
-    static programId: PublicKey;
+    programId: PublicKey;
     /**
      * Max space of a Vote account
      *
@@ -1385,28 +1386,28 @@ export class VoteProgram {
      * `VoteState::size_of()`:
      * https://docs.rs/solana-vote-program/1.9.5/solana_vote_program/vote_state/struct.VoteState.html#method.size_of
      */
-    static space: number;
+    space: number;
     /**
      * Generate an Initialize instruction.
      */
-    static initializeAccount(params: InitializeAccountParams): TransactionInstruction;
+    initializeAccount(params: InitializeAccountParams): TransactionInstruction;
     /**
      * Generate a transaction that creates a new Vote account.
      */
-    static createAccount(params: CreateVoteAccountParams): Transaction;
+    createAccount(params: CreateVoteAccountParams): Transaction;
     /**
      * Generate a transaction that authorizes a new Voter or Withdrawer on the Vote account.
      */
-    static authorize(params: AuthorizeVoteParams): Transaction;
+    authorize(params: AuthorizeVoteParams): Transaction;
     /**
      * Generate a transaction that authorizes a new Voter or Withdrawer on the Vote account
      * where the current Voter or Withdrawer authority is a derived key.
      */
-    static authorizeWithSeed(params: AuthorizeVoteWithSeedParams): Transaction;
+    authorizeWithSeed(params: AuthorizeVoteWithSeedParams): Transaction;
     /**
      * Generate a transaction to withdraw from a Vote account.
      */
-    static Withdraw(params: WithdrawFromVoteAccountParams): Transaction;
+    Withdraw(params: WithdrawFromVoteAccountParams): Transaction;
     /**
      * Generate a transaction to withdraw safely from a Vote account.
      *
@@ -1415,7 +1416,7 @@ export class VoteProgram {
      * to cover rent. If you wish to close the vote account by withdrawing the full amount, call the
      * `withdraw` method directly.
      */
-    static safeWithdraw(
+    safeWithdraw(
         params: WithdrawFromVoteAccountParams,
         currentVoteAccountBalance: number,
         rentExemptMinimum: number
@@ -1428,7 +1429,7 @@ export class VoteProgram {
 type MessageV0Args = {
     /** The message header, identifying signed and read-only `accountKeys` */
     header: MessageHeader;
-    /** The static account keys used by this transaction */
+    /** The  account keys used by this transaction */
     staticAccountKeys: PublicKey[];
     /** The hash of a recent ledger block */
     recentBlockhash: Blockhash;
@@ -1450,30 +1451,30 @@ type GetAccountKeysArgs =
     | {
         addressLookupTableAccounts?: AddressLookupTableAccount[] | null;
     };
-export class MessageV0 {
+export interface MessageV0 {
     header: MessageHeader;
     staticAccountKeys: Array<PublicKey>;
     recentBlockhash: Blockhash;
     compiledInstructions: Array<MessageCompiledInstruction>;
     addressTableLookups: Array<MessageAddressTableLookup>;
-    constructor(args: MessageV0Args);
+    constructor(args: MessageV0Args): any;
     get version(): 0;
     get numAccountKeysFromLookups(): number;
     getAccountKeys(args?: GetAccountKeysArgs): MessageAccountKeys;
     isAccountSigner(index: number): boolean;
     isAccountWritable(index: number): boolean;
     resolveAddressTableLookups(addressLookupTableAccounts: AddressLookupTableAccount[]): AccountKeysFromLookups;
-    static compile(args: CompileV0Args): MessageV0;
+    compile(args: CompileV0Args): MessageV0;
     serialize(): Uint8Array;
-    private serializeInstructions;
-    private serializeAddressTableLookups;
-    static deserialize(serializedMessage: Uint8Array): MessageV0;
+    serializeInstructions: any;
+    serializeAddressTableLookups: any;
+    deserialize(serializedMessage: Uint8Array): MessageV0;
 }
 
 type VersionedMessage = Message | MessageV0;
-export const VersionedMessage: {
-    deserializeMessageVersion(serializedMessage: Uint8Array): 'legacy' | number;
-    deserialize: (serializedMessage: Uint8Array) => VersionedMessage;
+export interface VersionedMessageDeserialize {
+    deserializeMessageVersion(serializedMessage: Uint8Array): 'legacy' | number,
+    deserialize: (serializedMessage: Uint8Array) => VersionedMessage
 };
 
 /**
@@ -1517,7 +1518,7 @@ type MessageCompiledInstruction = {
 /**
  * Transaction signature as base-58 encoded string
  */
-type TransactionSignature = string;
+export type TransactionSignature = string;
 export const enum TransactionStatus {
     BLOCKHEIGHT_EXCEEDED = 0,
     PROCESSED = 1,
@@ -1555,7 +1556,7 @@ type SerializeConfig = {
 /**
  * Transaction Instruction class
  */
-export class TransactionInstruction {
+export interface TransactionInstruction {
     /**
      * Public keys to include in this transaction
      * Boolean represents whether this pubkey needs to sign the transaction
@@ -1569,7 +1570,7 @@ export class TransactionInstruction {
      * Program input
      */
     data: Buffer;
-    constructor(opts: TransactionInstructionCtorFields);
+    constructor(opts: TransactionInstructionCtorFields): any;
 }
 /**
  * Pair of signature and corresponding public key
@@ -1630,7 +1631,7 @@ type NonceInformation = {
 /**
  * Transaction class
  */
-export class Transaction {
+export interface Transaction {
     /**
      * Signatures for the transaction.  Typically created by invoking the
      * `sign()` method
@@ -1643,7 +1644,7 @@ export class Transaction {
     /**
      * The transaction fee payer
      */
-    feePayer?: PublicKey;
+    feePayer?: PublicKey | string;
     /**
      * The instructions to atomically execute
      */
@@ -1669,13 +1670,13 @@ export class Transaction {
      * nonce value implies that the nonce has been advanced.
      */
     minNonceContextSlot?: number;
-    constructor(opts?: TransactionBlockhashCtor);
-    constructor(opts?: TransactionNonceCtor);
+    constructor(opts?: TransactionBlockhashCtor): any;
+    constructor(opts?: TransactionNonceCtor): any;
     /**
      * @deprecated `TransactionCtorFields` has been deprecated and will be removed in a future version.
      * Please supply a `TransactionBlockhashCtor` instead.
      */
-    constructor(opts?: TransactionCtorFields_DEPRECATED);
+    constructor(opts?: TransactionCtorFields_DEPRECATED): any;
     /**
      * Add one or more instructions to this Transaction
      */
@@ -1743,11 +1744,11 @@ export class Transaction {
     /**
      * Parse a wire transaction into a Transaction object.
      */
-    static from(buffer: Buffer | Uint8Array | Array<number>): Transaction;
+    from(buffer: Buffer | Uint8Array | Array<number>): Transaction;
     /**
      * Populate Transaction object from message and signatures
      */
-    static populate(message: Message, signatures?: Array<string>): Transaction;
+    populate(message: Message, signatures?: Array<string>): Transaction;
 }
 
 type TransactionMessageArgs = {
@@ -1762,27 +1763,27 @@ type DecompileArgs =
     | {
         addressLookupTableAccounts: AddressLookupTableAccount[];
     };
-export class TransactionMessage {
+export interface TransactionMessage {
     payerKey: PublicKey;
     instructions: Array<TransactionInstruction>;
     recentBlockhash: Blockhash;
-    constructor(args: TransactionMessageArgs);
-    static decompile(message: VersionedMessage, args?: DecompileArgs): TransactionMessage;
+    constructor(args: TransactionMessageArgs): any;
+    decompile(message: VersionedMessage, args?: DecompileArgs): TransactionMessage;
     compileToLegacyMessage(): Message;
     compileToV0Message(addressLookupTableAccounts?: AddressLookupTableAccount[]): MessageV0;
 }
 
-type TransactionVersion = 'legacy' | 0;
+export type TransactionVersion = 'legacy' | 0;
 /**
  * Versioned transaction class
  */
-export class VersionedTransaction {
+export interface VersionedTransaction {
     signatures: Array<Uint8Array>;
     message: VersionedMessage;
     get version(): TransactionVersion;
-    constructor(message: VersionedMessage, signatures?: Array<Uint8Array>);
+    constructor(message: VersionedMessage, signatures?: Array<Uint8Array>): any;
     serialize(): Uint8Array;
-    static deserialize(serializedTransaction: Uint8Array): VersionedTransaction;
+    deserialize(serializedTransaction: Uint8Array): VersionedTransaction;
     sign(signers: Array<Signer>): void;
     addSignature(publicKey: PublicKey, signature: Uint8Array): void;
 }
@@ -1804,7 +1805,7 @@ type Context = {
 /**
  * Options for sending transactions
  */
-type SendOptions = {
+export type SendOptions = {
     /** disable transaction verification step */
     skipPreflight?: boolean;
     /** preflight commitment level */
@@ -3091,7 +3092,7 @@ type HttpHeaders = {
 /**
  * The type of the JavaScript `fetch()` API
  */
-type FetchFn = typeof export_default;
+type FetchFn = export_default;
 /**
  * A callback used to augment the outgoing HTTP request
  */
@@ -3128,14 +3129,14 @@ type ConnectionConfig = {
 /**
  * A connection to a fullnode JSON RPC endpoint
  */
-export class Connection {
+export interface Connection {
     /**
      * Establish a JSON RPC connection
      *
      * @param endpoint URL to the fullnode JSON RPC endpoint
      * @param commitmentOrConfig optional default commitment level or optional ConnectionConfig configuration object
      */
-    constructor(endpoint: string, commitmentOrConfig?: Commitment | ConnectionConfig);
+    constructor(endpoint: string, commitmentOrConfig?: Commitment | ConnectionConfig): any;
     /**
      * The default commitment used for requests
      */
@@ -3321,11 +3322,11 @@ export class Connection {
         strategy: TransactionSignature,
         commitment?: Commitment
     ): Promise<RpcResponseAndContext<SignatureResult>>;
-    private getCancellationPromise;
-    private getTransactionConfirmationPromise;
-    private confirmTransactionUsingBlockHeightExceedanceStrategy;
-    private confirmTransactionUsingDurableNonceStrategy;
-    private confirmTransactionUsingLegacyTimeoutStrategy;
+    getCancellationPromise: any;
+    getTransactionConfirmationPromise: any;
+    confirmTransactionUsingBlockHeightExceedanceStrategy: any;
+    confirmTransactionUsingDurableNonceStrategy: any;
+    confirmTransactionUsingLegacyTimeoutStrategy: any;
     /**
      * Return the list of nodes that are currently participating in the cluster
      */
@@ -3883,18 +3884,17 @@ export class Connection {
     removeRootChangeListener(clientSubscriptionId: ClientSubscriptionId): Promise<void>;
 }
 
-export const BPF_LOADER_PROGRAM_ID: PublicKey;
 /**
- * Factory class for transactions to interact with a program loader
+ * Factory interface for transactions to interact with a program loader
  */
-export class BpfLoader {
+export interface BpfLoader {
     /**
      * Minimum number of signatures required to load a program not including
      * retries
      *
      * Can be used to calculate transaction fees
      */
-    static getMinNumSignatures(dataLength: number): number;
+    getMinNumSignatures(dataLength: number): number;
     /**
      * Load a SBF program
      *
@@ -3905,7 +3905,7 @@ export class BpfLoader {
      * @param loaderProgramId The program id of the BPF loader to use
      * @return true if program was loaded successfully, false if program was already loaded
      */
-    static load(
+    load(
         connection: Connection,
         payer: Signer,
         program: Signer,
@@ -3914,30 +3914,30 @@ export class BpfLoader {
     ): Promise<boolean>;
 }
 
-export class SendTransactionError extends Error {
+export interface SendTransactionError extends Error {
     logs: string[] | undefined;
-    constructor(message: string, logs?: string[]);
+    constructor(message: string, logs?: string[]): any;
 }
-export const SolanaJSONRPCErrorCode: {
-    readonly JSON_RPC_SERVER_ERROR_BLOCK_CLEANED_UP: -32001;
-    readonly JSON_RPC_SERVER_ERROR_SEND_TRANSACTION_PREFLIGHT_FAILURE: -32002;
-    readonly JSON_RPC_SERVER_ERROR_TRANSACTION_SIGNATURE_VERIFICATION_FAILURE: -32003;
-    readonly JSON_RPC_SERVER_ERROR_BLOCK_NOT_AVAILABLE: -32004;
-    readonly JSON_RPC_SERVER_ERROR_NODE_UNHEALTHY: -32005;
-    readonly JSON_RPC_SERVER_ERROR_TRANSACTION_PRECOMPILE_VERIFICATION_FAILURE: -32006;
-    readonly JSON_RPC_SERVER_ERROR_SLOT_SKIPPED: -32007;
-    readonly JSON_RPC_SERVER_ERROR_NO_SNAPSHOT: -32008;
-    readonly JSON_RPC_SERVER_ERROR_LONG_TERM_STORAGE_SLOT_SKIPPED: -32009;
-    readonly JSON_RPC_SERVER_ERROR_KEY_EXCLUDED_FROM_SECONDARY_INDEX: -32010;
-    readonly JSON_RPC_SERVER_ERROR_TRANSACTION_HISTORY_NOT_AVAILABLE: -32011;
-    readonly JSON_RPC_SCAN_ERROR: -32012;
-    readonly JSON_RPC_SERVER_ERROR_TRANSACTION_SIGNATURE_LEN_MISMATCH: -32013;
-    readonly JSON_RPC_SERVER_ERROR_BLOCK_STATUS_NOT_AVAILABLE_YET: -32014;
-    readonly JSON_RPC_SERVER_ERROR_UNSUPPORTED_TRANSACTION_VERSION: -32015;
-    readonly JSON_RPC_SERVER_ERROR_MIN_CONTEXT_SLOT_NOT_REACHED: -32016;
+export const SolanaJSONRPCErrorCode = {
+    JSON_RPC_SERVER_ERROR_BLOCK_CLEANED_UP: -32001,
+    JSON_RPC_SERVER_ERROR_SEND_TRANSACTION_PREFLIGHT_FAILURE: -32002,
+    JSON_RPC_SERVER_ERROR_TRANSACTION_SIGNATURE_VERIFICATION_FAILURE: -32003,
+    JSON_RPC_SERVER_ERROR_BLOCK_NOT_AVAILABLE: -32004,
+    JSON_RPC_SERVER_ERROR_NODE_UNHEALTHY: -32005,
+    JSON_RPC_SERVER_ERROR_TRANSACTION_PRECOMPILE_VERIFICATION_FAILURE: -32006,
+    JSON_RPC_SERVER_ERROR_SLOT_SKIPPED: -32007,
+    JSON_RPC_SERVER_ERROR_NO_SNAPSHOT: -32008,
+    JSON_RPC_SERVER_ERROR_LONG_TERM_STORAGE_SLOT_SKIPPED: -32009,
+    JSON_RPC_SERVER_ERROR_KEY_EXCLUDED_FROM_SECONDARY_INDEX: -32010,
+    JSON_RPC_SERVER_ERROR_TRANSACTION_HISTORY_NOT_AVAILABLE: -32011,
+    JSON_RPC_SCAN_ERROR: -32012,
+    JSON_RPC_SERVER_ERROR_TRANSACTION_SIGNATURE_LEN_MISMATCH: -32013,
+    JSON_RPC_SERVER_ERROR_BLOCK_STATUS_NOT_AVAILABLE_YET: -32014,
+    JSON_RPC_SERVER_ERROR_UNSUPPORTED_TRANSACTION_VERSION: -32015,
+    JSON_RPC_SERVER_ERROR_MIN_CONTEXT_SLOT_NOT_REACHED: -32016,
 };
 type SolanaJSONRPCErrorCodeEnum = typeof SolanaJSONRPCErrorCode[keyof typeof SolanaJSONRPCErrorCode];
-export class SolanaJSONRPCError extends Error {
+export interface SolanaJSONRPCError extends Error {
     code: SolanaJSONRPCErrorCodeEnum | unknown;
     data?: any;
     constructor(
@@ -3951,24 +3951,24 @@ export class SolanaJSONRPCError extends Error {
             data?: any;
         }>,
         customMessage?: string
-    );
+    ): any;
 }
 
 /**
  * Program loader interface
  */
-export class Loader {
+export interface Loader {
     /**
      * Amount of program data placed in each load Transaction
      */
-    static chunkSize: number;
+    chunkSize: number;
     /**
      * Minimum number of signatures required to load a program not including
      * retries
      *
      * Can be used to calculate transaction fees
      */
-    static getMinNumSignatures(dataLength: number): number;
+    getMinNumSignatures(dataLength: number): number;
     /**
      * Loads a generic program
      *
@@ -3979,7 +3979,7 @@ export class Loader {
      * @param data Program octets
      * @return true if program was loaded successfully, false if program was already loaded
      */
-    static load(
+    load(
         connection: Connection,
         payer: Signer,
         program: Signer,
@@ -3988,7 +3988,6 @@ export class Loader {
     ): Promise<boolean>;
 }
 
-export const VALIDATOR_INFO_KEY: PublicKey;
 /**
  * Info used to identity validators.
  */
@@ -4005,7 +4004,7 @@ type Info = {
 /**
  * ValidatorInfo class
  */
-export class ValidatorInfo {
+export interface ValidatorInfo {
     /**
      * validator public key
      */
@@ -4020,7 +4019,7 @@ export class ValidatorInfo {
      * @param key validator public key
      * @param info validator information
      */
-    constructor(key: PublicKey, info: Info);
+    constructor(key: PublicKey, info: Info): any;
     /**
      * Deserialize ValidatorInfo from the config account data. Exactly two config
      * keys are required in the data.
@@ -4028,10 +4027,9 @@ export class ValidatorInfo {
      * @param buffer config account data
      * @return null if info was not found
      */
-    static fromConfigData(buffer: Buffer | Uint8Array | Array<number>): ValidatorInfo | null;
+    fromConfigData(buffer: Buffer | Uint8Array | Array<number>): ValidatorInfo | null;
 }
 
-export const VOTE_PROGRAM_ID: PublicKey;
 type Lockout = {
     slot: number;
     confirmationCount: number;
@@ -4060,7 +4058,7 @@ type BlockTimestamp = Readonly<{
 /**
  * VoteAccount class
  */
-export class VoteAccount {
+export interface VoteAccount {
     nodePubkey: PublicKey;
     authorizedWithdrawer: PublicKey;
     commission: number;
@@ -4076,24 +4074,24 @@ export class VoteAccount {
      * @param buffer account data
      * @return VoteAccount
      */
-    static fromAccountData(buffer: Buffer | Uint8Array | Array<number>): VoteAccount;
+    fromAccountData(buffer: Buffer | Uint8Array | Array<number>): VoteAccount;
 }
 
-export const SYSVAR_CLOCK_PUBKEY: PublicKey;
-export const SYSVAR_EPOCH_SCHEDULE_PUBKEY: PublicKey;
-export const SYSVAR_INSTRUCTIONS_PUBKEY: PublicKey;
-export const SYSVAR_RECENT_BLOCKHASHES_PUBKEY: PublicKey;
-export const SYSVAR_RENT_PUBKEY: PublicKey;
-export const SYSVAR_REWARDS_PUBKEY: PublicKey;
-export const SYSVAR_SLOT_HASHES_PUBKEY: PublicKey;
-export const SYSVAR_SLOT_HISTORY_PUBKEY: PublicKey;
-export const SYSVAR_STAKE_HISTORY_PUBKEY: PublicKey;
+// export const SYSVAR_CLOCK_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_EPOCH_SCHEDULE_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_INSTRUCTIONS_PUBKEY: PublicKey = new PublicKey('');
+// // export const SYSVAR_RECENT_BLOCKHASHES_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_RENT_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_REWARDS_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_SLOT_HASHES_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_SLOT_HISTORY_PUBKEY: PublicKey = new PublicKey('');
+// export const SYSVAR_STAKE_HISTORY_PUBKEY: PublicKey = new PublicKey('');
 
 type Cluster = 'devnet' | 'testnet' | 'mainnet-beta';
 /**
  * Retrieves the RPC API URL for the specified cluster
  */
-export function clusterApiUrl(cluster?: Cluster, tls?: boolean): string;
+export type clusterApiUrl = (cluster?: Cluster, tls?: boolean) => string;
 
 /**
  * Send and confirm a raw transaction
@@ -4106,21 +4104,20 @@ export function clusterApiUrl(cluster?: Cluster, tls?: boolean): string;
  * @param {ConfirmOptions} [options]
  * @returns {Promise<TransactionSignature>}
  */
-export function sendAndConfirmRawTransaction(
+export type sendAndConfirmRawTransaction = ((
     connection: Connection,
     rawTransaction: Buffer,
     confirmationStrategy: TransactionConfirmationStrategy,
     options?: ConfirmOptions
-): Promise<TransactionSignature>;
+) => Promise<TransactionSignature>) | ((
+    connection: Connection,
+    rawTransaction: Buffer,
+    options?: ConfirmOptions
+) => Promise<TransactionSignature>);
 /**
  * @deprecated Calling `sendAndConfirmRawTransaction()` without a `confirmationStrategy`
  * is no longer supported and will be removed in a future version.
  */
-export function sendAndConfirmRawTransaction(
-    connection: Connection,
-    rawTransaction: Buffer,
-    options?: ConfirmOptions
-): Promise<TransactionSignature>;
 
 /**
  * Sign, send and confirm a transaction.
@@ -4133,7 +4130,7 @@ export function sendAndConfirmRawTransaction(
  * @param {ConfirmOptions} [options]
  * @returns {Promise<TransactionSignature>}
  */
-export function sendAndConfirmTransaction(
+export type sendAndConfirmTransaction = (
     connection: Connection,
     transaction: Transaction,
     signers: Array<Signer>,
@@ -4141,7 +4138,7 @@ export function sendAndConfirmTransaction(
         Readonly<{
             abortSignal?: AbortSignal;
         }>
-): Promise<TransactionSignature>;
+) => Promise<TransactionSignature>;
 
 /**
  * There are 1-billion lamports in one SOL

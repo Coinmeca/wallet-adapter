@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.182",
+    "version": "0.1.23",
     "keywords": [
         "coinmeca",
         "web3",
@@ -15,8 +15,12 @@
     },
     "author": "Coinmeca Team <dev@coinmeca.net>",
     "license": "MIT",
+    "scripts": {
+        "watch": "tsc --watch",
+        "build": "tsc --build && tsc-alias && tscp",
+        "clean": "rimraf ./dist ./build ./tsconfig.tsbuildinfo ./node_modules/.cache"
+    },
     "sideEffects": false,
-    "type": "commonjs",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "typings": "./dist/index.d.js",
@@ -32,31 +36,28 @@
     },
     "typesVersions": {
         "*": {
+            ".": [
+                "./dist/index"
+            ],
             "*": [
                 "./dist/*",
-                "./dist/index",
                 "./dist/*/index"
             ]
         }
     },
-    "scripts": {
-        "watch": "tsc --watch",
-        "build": "tsc --build && tsc-alias && tscp",
-        "clean": "rimraf ./dist ./build ./tsconfig.tsbuildinfo ./node_modules/.cache"
-    },
     "dependencies": {
+        "@coinbase/wallet-sdk": "^3.7.2",
+        "@metamask/detect-provider": "^2.0.0",
+        "@solana/wallet-adapter-wallets": "^0.19.25",
+        "@solana/web3.js": "^1.89.0",
+        "ethers": "^6.8.1",
         "eventemitter3": "^5.0.1",
         "node-fetch": "^3.3.2",
         "zustand": "^4.4.7"
     },
     "devDependencies": {
-        "@coinbase/wallet-sdk": "^3.7.2",
         "@commitlint/cli": "^18.4.2",
         "@commitlint/config-conventional": "^18.4.2",
-        "@metamask/detect-provider": "^2.0.0",
-        "@solana/wallet-adapter-wallets": "^0.19.25",
-        "@solana/web3.js": "^1.89.0",
-        "ethers": "^6.8.1",
         "tsc-alias": "^1.8.7",
         "tscp": "^1.0.0",
         "typescript": "^5.2.2",
