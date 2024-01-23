@@ -3,7 +3,7 @@ import type { Cluster } from '@solana/web3.js';
 // import { Capitalize } from 'utils/Libs';
 
 export const chainlist: any = {
-    ethereum: <Chains>{
+    ethereum: {
         mainnet: <Chain>{
             id: 1,
             name: 'Ethereum',
@@ -61,7 +61,7 @@ export const chainlist: any = {
             }
         }
     },
-    arbitrum: <Chains>{
+    arbitrum: {
         mainnet: <Chain>{
             id: 42161,
             name: 'Arbitrum One',
@@ -124,7 +124,7 @@ export const chainlist: any = {
             }
         }
     },
-    optimism: <Chains>{
+    optimism: {
         mainnet: <Chain>{
             id: 10,
             name: 'Optimism',
@@ -136,7 +136,7 @@ export const chainlist: any = {
                 'https://optimism-mainnet.infura.io'
             ]
         },
-        devnet: <Chains>{
+        devnet: {
             goerli: <Chain>{
                 id: 420,
                 name: 'Optimism Goerli',
@@ -147,7 +147,7 @@ export const chainlist: any = {
             }
         }
     },
-    polygon: <Chains>{
+    polygon: {
         mainnet: <Chain>{
             id: 137,
             name: 'Polygon',
@@ -166,7 +166,7 @@ export const chainlist: any = {
                 decimals: 18
             },
         },
-        testnet: <Chains>{
+        testnet: {
             mumbai: <Chain>{
                 id: 80001,
                 name: 'Polygon Mumbai',
@@ -196,7 +196,7 @@ export const chainlist: any = {
             rpc: ['127.0.0.1:3000']
         }
     },
-    polygon_zkevm: <Chains>{
+    polygon_zkevm: {
         mainnet: <Chain>{
             id: 1101,
             name: 'Polygon zkEVM',
@@ -206,7 +206,7 @@ export const chainlist: any = {
             ],
             logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAJ1BMVEVHcEx7P+R7P+R7P+R7P+R7P+V7P+R7PuR7P+R7P+R7P+Z7P+R7P+Wom7PeAAAADXRSTlMAH7P/o22SP+3LFX5Vbg7mjAAAALBJREFUeAFjIBYwKhsJoAg4GxubIPODjR3YjE0R/ArjiQwMK43bITwwEyI8C8JnM7aGaUwA05NNGE7vXgDEDM6WID6PsQCrsbEBCDMaHwAKsJgycJrsMAdhhmAHoACTDQOnOQQyHFZAEwiGCvBshECGyVABGFhkDBYwdTaGAYgAgmsSDBHQgmmB2mIJNxQqYIrhDmQBDKdjeA7q/Wq49zEDCDMIMQMZEQ3oEYUZlUQCAHdePrGmeAqLAAAAAElFTkSuQmCC'
         },
-        testnet: <Chains>{
+        testnet: {
             testnet: <Chain>{
                 id: 1442,
                 name: 'Polygon zkEVM Testnet',
@@ -215,7 +215,7 @@ export const chainlist: any = {
             }
         }
     },
-    celo: <Chains>{
+    celo: {
         mainnet: <Chain>{
             id: 42220,
             name: 'Celo',
@@ -236,14 +236,14 @@ export const chainlist: any = {
             }
         }
     },
-    bsc: <Chains>{
+    bsc: {
         mainnet: <Chain>{
             id: 56,
             name: 'BNB Chain',
             rpc: ['https://bsc-dataseed.binance.org/']
         }
     },
-    avalanche: <Chains>{
+    avalanche: {
         mainnet: {
             id: 43114,
             name: 'Avalanche C-chain',
@@ -260,7 +260,7 @@ export const chainlist: any = {
             }
         }
     },
-    solana: <Chains>{
+    solana: {
         mainnet: <Chain>{
             id: 101,
             name: 'Solana',
