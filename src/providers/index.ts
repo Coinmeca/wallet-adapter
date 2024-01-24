@@ -1,4 +1,5 @@
 import { MetaMaskWalletAdapter } from "./MetaMask";
 import { CoinbaseWalletAdapter } from "./CoinbaseWallet";
+import { RainbowWalletAdapter } from "./Rainbow";
 
-export { MetaMaskWalletAdapter, CoinbaseWalletAdapter };
+export { MetaMaskWalletAdapter, CoinbaseWalletAdapter, RainbowWalletAdapter };
