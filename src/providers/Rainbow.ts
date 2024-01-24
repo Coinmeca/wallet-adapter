@@ -133,7 +133,7 @@ export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 
 	async chain(chain: Chain): Promise<void> {
 		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
-		return wallet.request({ method: "wallet_addEthereumChain", params: [chain as Chain] }).then((resp: any) => {
+		return wallet.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
 			return resp;
 		});
 	}

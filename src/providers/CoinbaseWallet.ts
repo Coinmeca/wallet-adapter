@@ -136,8 +136,8 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 	public supportedTransactionVersions?: SupportedTransactionVersions;
 
 	async chain(chain: Chain): Promise<void> {
-		const wallet = window.ethereum?.providerMap?.get("CoinbaseWallet") || window.coinbaseWalletExtension;
-		return wallet.request({ method: "wallet_addEthereumChain", params: [<Chain>chain] }).then((resp: any) => {
+		const wallet = this._wallet || window.ethereum?.providerMap?.get("CoinbaseWallet") || window.coinbaseWalletExtension;
+		return wallet.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
 			return resp;
 		});
 	}

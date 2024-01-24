@@ -133,7 +133,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 	async chain(chain: Chain): Promise<void> {
 		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
-		return wallet.request({ method: "wallet_addEthereumChain", params: [chain as Chain] }).then((resp: any) => {
+		return wallet.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
 			return resp;
 		});
 	}
