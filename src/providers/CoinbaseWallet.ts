@@ -1,6 +1,6 @@
 // import type { EventEmitter, WalletName } from './index';
 
-import { EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, WalletName, WalletReadyState } from 'base/adapter';
+import { BaseWalletAdapter, EventEmitter, isIosAndRedirectable, scopePollingDetectionStrategy, SendTransactionOptions, WalletName, WalletReadyState } from 'base/adapter';
 import type { CoinbaseWalletProvider } from '@coinbase/wallet-sdk';
 import {
     WalletNetworkError,
@@ -67,10 +67,9 @@ declare const window: CoinbaseWindow;
 
 export interface CoinbaseWalletAdapterConfig { }
 
-export const CoinbaseWalletName = 'Coinbase' as WalletName<'Coinbase'>;
+export const CoinbaseWalletName = 'CoinbaseWallet' as WalletName<'CoinbaseWallet'>;
 
-// export class CoinbaseWalletAdapter extends BaseMessageSignerWalletAdapter {
-export class CoinbaseWalletAdapter {
+export class CoinbaseWalletAdapter extends BaseWalletAdapter<'CoinbaseWallet'> {
     name = CoinbaseWalletName;
     url = 'https://www.coinbase.com/wallet';
     icon = 'https://avatars.githubusercontent.com/u/18060234?s=280&v=4';
@@ -85,6 +84,8 @@ export class CoinbaseWalletAdapter {
             : WalletReadyState.NotDetected;
 
     constructor(config: CoinbaseWalletAdapterConfig = {}) {
+        super();
+
         this._connecting = false;
         this._wallet = null;
         this._address = null;
@@ -125,6 +126,8 @@ export class CoinbaseWalletAdapter {
         return this._readyState;
     }
 
+    public supportedTransactionVersions?: SupportedTransactionVersions;
+
     async chain(chain: Chain): Promise<void> {
         const wallet = window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
         return wallet.request({ method: 'wallet_addEthereumChain', params: [<Chain>chain] }).then((resp: any) => {
@@ -152,16 +155,18 @@ export class CoinbaseWalletAdapter {
 
             let address: string[] | null = null;
             try {
-                if (chain) {
-                    this.chain(chain).catch((error) => {
-                        throw new WalletNetworkError(error?.message, error);
-                    });
-                }
                 await wallet
                     .request({ method: 'eth_requestAccounts' })
-                    .then((selectedAddress: string[] | null) => {
-                        if (wallet.selectedAddress?.length === 0) throw new WalletAccountError();
+                    .then(async () => {
+                        const selectedAddress = await this.getAddress();
+                        if (selectedAddress?.length === 0) throw new WalletAccountError();
                         address = selectedAddress;
+
+                        if (chain) {
+                            this.chain(chain).catch((error) => {
+                                throw new WalletNetworkError(error?.message, error);
+                            });
+                        }
                     })
                     .catch((error: any) => {
                         throw new WalletAddressError();
@@ -178,14 +183,14 @@ export class CoinbaseWalletAdapter {
 
             // this.emit('connect', address);
         } catch (error: any) {
-            // this.emit('error', error);
+            this.emit('error', error);
         } finally {
             this._connecting = false;
         }
     }
 
     async disconnect(): Promise<void> {
-        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension!;
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
 
         if (wallet) {
             wallet.off('disconnect', this._disconnected);
@@ -195,32 +200,39 @@ export class CoinbaseWalletAdapter {
             this._address = null;
 
             try {
-                // await wallet.on('disconnect', (error: WalletError) => {
-                await wallet.on('disconnect', (error: any) => {
-                    console.log(error);
-                    // new WalletDisconnectionError(error?.message, error);
+                await wallet.on('disconnect', (error: WalletError) => {
+                    new WalletDisconnectionError(error?.message, error);
                 });
             } catch (error: any) {
-                // this.emit('error', new WalletDisconnectionError(error?.message, error));
+                this.emit('error', new WalletDisconnectionError(error?.message, error));
             }
         }
 
-        // this.emit('disconnect');
+        this.emit('disconnect');
+    }
+
+    async getAddress() {
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
+        return await wallet.request({ method: 'eth_accounts' });
     }
 
     async message(msg: string, fn?: Function): Promise<void> {
-        const listener = window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension!;
-        const wallet = (listener as any).providerMap.get('Coinbase')!;
-        listener.on('message', (message: ProviderMessage) => {
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
+        wallet.on('message', (message: ProviderMessage) => {
             if (typeof fn === 'function') fn;
         });
     }
 
+    async sendTransaction(transaction: TransactionOrVersionedTransaction<this['supportedTransactionVersions']>, connection: Connection, options?: SendTransactionOptions | undefined): Promise<any> {
+
+    }
+
     private _disconnected = () => {
-        const listener = window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension!;
-        if (listener) {
-            listener.off('disconnect', this._disconnected);
-            listener.off('accountsChanged', this._accountChanged);
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
+
+        if (wallet) {
+            wallet.off('disconnect', this._disconnected);
+            wallet.off('accountsChanged', this._accountChanged);
 
             this._wallet = null;
             this._address = null;
@@ -230,25 +242,22 @@ export class CoinbaseWalletAdapter {
         }
     };
 
-    private _accountChanged = async (newAddress?: string[]) => {
-        const listener = window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension!;
-        const wallet = this._wallet || (listener as any).providerMap.get('Coinbase')!;
+    private _accountChanged = async () => {
+        const wallet = this._wallet || window.ethereum?.providerMap?.get('CoinbaseWallet') || window.coinbaseWalletExtension;
         if (!wallet) return;
 
         try {
-            await wallet.request({ method: 'accountsChanged' }).then((accounts: any) => {
-                if (accounts.length === 0) {
-                    // Coinbase is locked or the user has not connected any accounts
-                    console.log('Please connect to Coinbase.');
-                } else if (accounts[0] !== this._address) {
-                    this._address = accounts[0];
-                    // Do any other work!
-                }
-            });
+            const accounts = await this.getAddress()
+            if (accounts.length === 0) {
+                // MetaMask is locked or the user has not connected any accounts
+                this.connect();
+            } else {
+                this._address = accounts;
+                // Do any other work!
+            }
         } catch (error: any) {
-            // this.emit('error', new WalletAddressError(error?.message, error));
+            this.emit('error', new WalletAddressError(error?.message, error));
         }
-
         // this.emit('connect', newAddress);
     };
 }

@@ -12,7 +12,7 @@ export interface Chain {
 }
 
 export interface Chains {
-    [key as string]: Chain;
+    [key: string]: Chain;
 }
 
 export interface Providers {
@@ -27,6 +27,6 @@ export interface Provider {
     adapter?: any;
 }
 
-export interface Adapter{
+export interface Adapter {
     connect: (chainId: number, name: string, auto?: boolean) => Promise<void>
 }

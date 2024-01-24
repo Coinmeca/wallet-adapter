@@ -150,17 +150,18 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
 
             let address: string[] | null = null;
             try {
-                if (chain) {
-                    this.chain(chain).catch((error) => {
-                        throw new WalletNetworkError(error?.message, error);
-                    });
-                }
                 await wallet
                     .request({ method: 'eth_requestAccounts' })
                     .then(async () => {
-                        const addresses = await wallet.request({ method: 'eth_accounts' })
-                        if (addresses?.length === 0) throw new WalletAccountError();
-                        address = addresses;
+                        const selectedAddress = await this.getAddress();
+                        if (selectedAddress?.length === 0) throw new WalletAccountError();
+                        address = selectedAddress;
+
+                        if (chain) {
+                            this.chain(chain).catch((error) => {
+                                throw new WalletNetworkError(error?.message, error);
+                            });
+                        }
                     })
                     .catch((error: any) => {
                         throw new WalletAddressError();
@@ -177,7 +178,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
 
             // this.emit('connect', address);
         } catch (error: any) {
-            // this.emit('error', error);
+            this.emit('error', error);
         } finally {
             this._connecting = false;
         }
@@ -187,22 +188,22 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
         const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
 
         if (wallet) {
-            wallet?.off('disconnect' as never, this._disconnected);
-            wallet?.off('accountsChanged' as never, this._accountChanged);
+            wallet?.off('disconnect', this._disconnected);
+            wallet?.off('accountsChanged', this._accountChanged);
 
             this._wallet = null;
             this._address = null;
 
             try {
-                wallet.on('disconnect' as never, (error: WalletError) => {
+                wallet.on('disconnect', (error: WalletError) => {
                     new WalletDisconnectionError(error?.message, error);
                 });
             } catch (error: any) {
-                // this.emit('error', new WalletDisconnectionError(error?.message, error));
+                this.emit('error', new WalletDisconnectionError(error?.message, error));
             }
         }
 
-        // this.emit('disconnect');
+        this.emit('disconnect');
     }
 
     async getAddress() {
@@ -223,10 +224,11 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
     }
 
     private _disconnected = () => {
-        const wallet = this._wallet || window.metamask?.ethereum || window.ethereum!;
+        const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
+
         if (wallet) {
-            wallet.off('disconnect' as never, this._disconnected);
-            wallet.off('accountsChanged' as never, this._accountChanged);
+            wallet.off('disconnect', this._disconnected);
+            wallet.off('accountsChanged', this._accountChanged);
 
             this._wallet = null;
             this._address = null;
@@ -236,25 +238,22 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<'MetaMask'> {
         }
     };
 
-    private _accountChanged = async (newAddress?: string[]) => {
-        const listener = window.metamask?.ethereum || window.ethereum!;
-        const wallet = this._wallet || (listener as any).providerMap.get('MetaMask')!;
+    private _accountChanged = async () => {
+        const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
         if (!wallet) return;
 
         try {
-            await wallet.request({ method: 'accountsChanged' }).then((accounts: any) => {
-                if (accounts.length === 0) {
-                    // MetaMask is locked or the user has not connected any accounts
-                    console.log('Please connect to MetaMask.');
-                } else if (accounts[0] !== this._address) {
-                    this._address = accounts[0];
-                    // Do any other work!
-                }
-            });
+            const accounts = await this.getAddress()
+            if (accounts.length === 0) {
+                // MetaMask is locked or the user has not connected any accounts
+                this.connect();
+            } else {
+                this._address = accounts;
+                // Do any other work!
+            }
         } catch (error: any) {
-            // this.emit('error', new WalletAddressError(error?.message, error));
+            this.emit('error', new WalletAddressError(error?.message, error));
         }
-
         // this.emit('connect', newAddress);
     };
 }
