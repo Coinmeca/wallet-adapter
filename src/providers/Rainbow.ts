@@ -146,26 +146,28 @@ export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 
 	async connect(chain?: any): Promise<void> {
 		try {
-			const wallet = window.ethereum?.providers?.find((provider) => provider.isRainbow);
+			const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
 			if (this.connected || this.connecting) return;
 			if (this.readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
 			// const wallet = (window.ethereum! as any).providerMap!.get('Rainbow')!;
 
-			let address: string[] | null = null;
 			try {
-				if (chain) {
-					this.chain(chain).catch((error) => {
-						throw new WalletNetworkError(error?.message, error);
-					});
-				}
 				await wallet
 					.request({ method: "eth_requestAccounts" })
 					.then(async () => {
-						const addresses = await wallet.request({ method: "eth_accounts" });
-						if (addresses?.length === 0) throw new WalletAccountError();
-						address = addresses;
+						const selectedAddress = await wallet.request({ method: "eth_accounts" });
+						if (selectedAddress?.length === 0) throw new WalletAccountError();
+
+						this._address = selectedAddress;
+						this._wallet = wallet;
+
+						if (chain) {
+							this.chain(chain).catch((error) => {
+								throw new WalletNetworkError(error?.message, error);
+							});
+						}
 					})
 					.catch((error: any) => {
 						throw new WalletAddressError();
@@ -176,9 +178,6 @@ export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 
 			wallet.on("disconnect", this._disconnected);
 			wallet.on("accountsChanged", this._accountChanged);
-
-			this._wallet = wallet;
-			this._address = address;
 
 			// this.emit('connect', address);
 		} catch (error: any) {
