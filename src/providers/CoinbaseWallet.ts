@@ -73,7 +73,7 @@ interface CoinbaseWindow extends Window {
 
 declare const window: CoinbaseWindow;
 
-export interface CoinbaseWalletAdapterConfig {}
+export interface CoinbaseWalletAdapterConfig { }
 
 export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
 
@@ -85,6 +85,7 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 	private _connecting: boolean;
 	private _wallet: CoinbaseWallet | null;
 	private _address: string[] | null;
+	private _chain: any;
 	private _readyState: WalletReadyState =
 		typeof window?.coinbaseWalletExtension !== "undefined" && window.coinbaseWalletExtension.isCoinbaseWallet === true
 			? WalletReadyState.Unsupported
@@ -153,8 +154,6 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 			const wallet = this._wallet || window.ethereum?.providerMap?.get("CoinbaseWallet") || window.coinbaseWalletExtension;
 			if (!wallet.isCoinbaseWallet) return;
 			if (this.connected || this.connecting) return;
-
-			console.log("readyis", this.readyState);
 			if (this.readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
@@ -170,12 +169,6 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 
 						this._address = selectedAddress;
 						this._wallet = wallet;
-
-						if (chain) {
-							this.chain(chain).catch((error) => {
-								throw new WalletNetworkError(error?.message, error);
-							});
-						}
 					})
 					.catch((error: any) => {
 						throw new WalletAddressError();
@@ -191,6 +184,12 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 		} catch (error: any) {
 			this.emit("error", error);
 		} finally {
+			if (this._chain && this._chain.chainId !== chain.chainId && chain) {
+				this.chain(chain).catch((error) => {
+					throw new WalletNetworkError(error?.message, error);
+				});
+			}
+
 			this._connecting = false;
 		}
 	}
@@ -233,7 +232,7 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"CoinbaseWallet"> {
 		transaction: TransactionOrVersionedTransaction<this["supportedTransactionVersions"]>,
 		connection: Connection,
 		options?: SendTransactionOptions | undefined
-	): Promise<any> {}
+	): Promise<any> { }
 
 	private _disconnected = () => {
 		const wallet = this._wallet || window.ethereum?.providerMap?.get("CoinbaseWallet") || window.coinbaseWalletExtension;

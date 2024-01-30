@@ -70,7 +70,7 @@ interface MetaMaskWindow extends Window {
 
 declare const window: MetaMaskWindow;
 
-export interface MetaMaskWalletAdapterConfig {}
+export interface MetaMaskWalletAdapterConfig { }
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
 
@@ -83,6 +83,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 	private _connecting: boolean;
 	private _wallet: MetaMaskWallet | null;
 	private _address: string[] | null;
+	private _chain: any;
 	private _readyState: WalletReadyState =
 		typeof window.ethereum !== "undefined" && window.ethereum.isMetaMask === true ? WalletReadyState.Unsupported : WalletReadyState.NotDetected;
 
@@ -162,12 +163,6 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 						this._address = selectedAddress;
 						this._wallet = wallet;
-
-						if (chain) {
-							this.chain(chain).catch((error) => {
-								throw new WalletNetworkError(error?.message, error);
-							});
-						}
 					})
 					.catch((error: any) => {
 						throw new WalletAddressError();
@@ -183,6 +178,12 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 		} catch (error: any) {
 			this.emit("error", error);
 		} finally {
+			if (this._chain && this._chain.chainId !== chain.chainId && chain) {
+				this.chain(chain).catch((error) => {
+					throw new WalletNetworkError(error?.message, error);
+				});
+			}
+
 			this._connecting = false;
 		}
 	}
@@ -226,7 +227,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 		transaction: TransactionOrVersionedTransaction<this["supportedTransactionVersions"]>,
 		connection: Connection,
 		options?: SendTransactionOptions | undefined
-	): Promise<any> {}
+	): Promise<any> { }
 
 	private _disconnected = () => {
 		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isMetaMask);
