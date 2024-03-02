@@ -1,6 +1,5 @@
-import { Config } from "base/adapter";
 import { Provider, Providers } from "types";
-import { MetaMaskWalletAdapter, CoinbaseWalletAdapter, RainbowWalletAdapter } from "providers";
+import { MetaMaskWalletAdapter, CoinbaseWalletAdapter, RainbowWalletAdapter, PhantomWalletAdapter } from "providers";
 
 const detect = (wallet: string) => ((global || new (window as any)()) as any)?.ethereum?.providers?.find((p: any) => p[`${wallet}`]);
 
@@ -22,5 +21,11 @@ export const providers: Providers = {
 		url: "https://rainbow.me",
 		logo: "https://coinmeca-web3.vercel.app/wallets/Rainbow/logo.svg",
 		adapter: (config?: any) => new RainbowWalletAdapter(config),
+	},
+	Phantom: <Provider>{
+		name: "Phantom",
+		url: "https://phantom.app",
+		logo: "https://coinmeca-web3.vercel.app/wallets/Phantom/logo.svg",
+		adapter: (config?: any) => new PhantomWalletAdapter(config),
 	},
 };

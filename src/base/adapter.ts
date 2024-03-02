@@ -8,7 +8,7 @@ import { formatChainId, parseChainId } from '../utils/lib';
 
 export { EventEmitter };
 
-export interface Config {
+export interface WalletConfig {
     rpc?: string;
     chainId?: number;
     options?: {
@@ -69,15 +69,13 @@ export type WalletName<T extends string = string> = T & { __brand__: 'WalletName
 export interface WalletAdapterProps<Name extends string = string> {
     name: WalletName<Name>;
     state: WalletReadyState;
-    accounts?: string | string[] | Account | Account[] | undefined | null;
-    connecting: boolean;
+    address: string;
     connected: boolean;
-    supportedTransactionVersions?: SupportedTransactionVersions;
 
     autoConnect(): Promise<void>;
     connect(): Promise<void>;
     disconnect(): Promise<void>;
-    sendTransaction(): Promise<void>;
+    // sendTransaction(): Promise<void>;
 }
 
 export type WalletAdapter<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
@@ -113,16 +111,21 @@ export enum WalletReadyState {
 
 export abstract class BaseWalletAdapter<Name extends string = string>
     extends EventEmitter<WalletAdapterEvents>
-    implements WalletAdapter<Name>
+// implements WalletAdapter<Name>
 {
     abstract name: WalletName<Name>;
+
     protected abstract _state: WalletReadyState;
     protected abstract _chain: string | number | Chain | null;
     protected abstract _accounts: any[] | null;
-    protected abstract _connecting: boolean;
+    protected _connecting: boolean = false;
+
+    get state() {
+        return this._state;
+    };
 
     get address() {
-        return this._accounts;
+        return (this._accounts && this._accounts?.length > 0) ? this._accounts[0] : '';
     }
 
     get connecting() {
@@ -133,26 +136,21 @@ export abstract class BaseWalletAdapter<Name extends string = string>
         return !!this._accounts;
     }
 
-    get state() {
-        return this._state;
-    }
-
     abstract autoConnect(): Promise<void>;
 
     abstract connect(): Promise<void>;
 
     abstract disconnect(): Promise<void>;
 
-    abstract sendTransaction(): Promise<void>;
+    // abstract sendTransaction(): Promise<void>;
 
     abstract chain(chain: number | string | Chain): Promise<void>;
 }
 
-export abstract class EvmBaseWalletAdapter<Name extends string = string> extends BaseWalletAdapter {
+export abstract class EvmBaseWalletAdapter<Name extends string = string> extends BaseWalletAdapter<Name> {
     protected abstract _provider: any | null;
     protected abstract _chain: Chain | null;
     protected abstract _accounts: string[] | null;
-    protected _connecting: boolean = false;
 
     async getAddress(): Promise<string[] | undefined | null> {
         return await this._provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
@@ -169,7 +167,7 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
     }
 
     async watchAsset({ type, address, symbol, decimals, image }: Asset): Promise<true> {
-        if (!this._provider) throw new WalletConnectionError;
+        if (!this._provider) throw new WalletConnectionError();
         return this._provider
             .request({
                 method: 'wallet_watchAsset',
@@ -184,11 +182,10 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
                 },
             })
             .then((success: any) => {
-                if (!success) throw new WalletUserReject
+                if (!success) throw new WalletUserReject();
                 return true
             })
     }
-
 
     protected _accountChanged(accounts: string[]) {
         if (accounts.length > 0) this._accounts = accounts;
@@ -198,16 +195,15 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
         this._chain = getNetworksById(parseChainId(chain)) as Chain;
     }
 }
-
-export abstract class SvmBaseWalletAdapter extends BaseWalletAdapter {
-    abstract accounts: Account[] | null;
+export abstract class SvmBaseWalletAdapter<Name extends string = string> extends BaseWalletAdapter<Name> {
+    protected abstract accounts: Account[] | null;
     abstract supportedTransactionVersions?: SupportedTransactionVersions;
 
-    // abstract sendTransaction(
-    //     transaction: TransactionOrVersionedTransaction<any>,
-    //     connection: Connection,
-    //     options?: SendTransactionOptions | undefined
-    // ): Promise<any>;
+    abstract sendTransaction(
+        transaction: TransactionOrVersionedTransaction<this['supportedTransactionVersions']>,
+        connection: Connection,
+        options: SendTransactionOptions
+    ): Promise<TransactionSignature>
 
     async prepareTransaction(
         transaction: Transaction,
@@ -230,6 +226,7 @@ export abstract class SvmBaseWalletAdapter extends BaseWalletAdapter {
         return transaction;
     }
 }
+
 
 export function scopePollingDetectionStrategy(detect: () => boolean): void {
     // Early return when server-side rendering

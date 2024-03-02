@@ -12,16 +12,27 @@ import {
 	WalletNotConnectedError,
 	WalletNotReadyError,
 	WalletAddressError,
+	WalletConnectionError,
+	WalletUserReject,
 } from "base/errors";;
-import type { Config } from "base/adapter";
-import type { Chain } from "types";
+import type { Provider, ProviderMessage, WalletConfig } from "base/adapter";
+import type { Asset, Chain } from "types";
 import { isMobile } from "states";
 
-import MetaMaskSDK, { type MetaMaskSDKOptions, type SDKProvider } from "@metamask/sdk";
+import type MetaMaskEthereumProvider from "@metamask/detect-provider";
+import { formatChainId } from "../utils/lib";
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
-export interface MetaMaskProvider extends SDKProvider { }
-export interface MetaMaskWalletAdapterConfig extends Config { options?: MetaMaskSDKOptions }
+type MetaMaskProviderProps = typeof MetaMaskEthereumProvider;
+
+export interface MetaMaskProvider extends Provider, MetaMaskProviderProps { }
+export interface MetaMaskWalletAdapterConfig extends WalletConfig {
+	options?: {
+		mustBeMetaMask?: boolean | undefined;
+		silent?: boolean | undefined;
+		timeout?: number | undefined;
+	}
+}
 
 export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
@@ -62,12 +73,15 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 	get provider() {
 		if (!this._provider) {
-			this._provider = new MetaMaskSDK({
-				dappMetadata: {
-					name: this._config?.app?.name,
-					url: this._config?.app?.url,
-				},
-			}).getProvider();
+			import('@metamask/detect-provider').then(async (p) => {
+				const provider = await p.default(this._config?.options) as MetaMaskProvider;
+				if (provider) this._provider = provider.providers?.length
+					? (provider.providers.find((p) => p.isMetaMask)
+						|| provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
+						|| provider.providers[0])
+					: provider;
+
+			})
 		}
 		return this._provider;
 	}
@@ -94,9 +108,9 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 						if (!accounts || accounts?.length === 0) throw new WalletAccountError();
 						this._accounts = accounts;
 
-						this.provider.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
-						this.provider.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
-						this.provider.on("disconnect", this.disconnect);
+						this.provider!.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
+						this.provider!.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
+						this.provider!.on("disconnect", this.disconnect);
 
 						this.emit('connect', accounts[0]);
 					}).catch(() => {
@@ -119,9 +133,9 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 	async disconnect(): Promise<void> {
 		try {
-			this.provider.off("chainChanged", this._chainChanged);
-			this.provider.off("accountsChanged", this._accountChanged);
-			this.provider.off("disconnect", this.disconnect);
+			this.provider!.off("chainChanged", this._chainChanged);
+			this.provider!.off("accountsChanged", this._accountChanged);
+			this.provider!.off("disconnect", this.disconnect);
 
 			this._provider = null;
 			this._accounts = null;

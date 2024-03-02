@@ -13,7 +13,7 @@ import {
 	WalletNotReadyError,
 	WalletAddressError,
 } from "base/errors";
-import type { Config, Provider, RequestArguments } from "base/adapter";
+import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
 import type { Chain } from "types";
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
@@ -22,7 +22,7 @@ export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
 	request<T>(args: RequestArguments): Promise<T>;
 }
-export interface CoinbaseWalletAdapterConfig extends Config { options?: CoinbaseWalletSDKOptions }
+export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions }
 
 export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"CoinbaseWallet">> {
 

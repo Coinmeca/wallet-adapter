@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.3675",
+    "version": "0.1.3685",
     "keywords": [
         "coinmeca",
         "web3",
@@ -49,6 +49,7 @@
     "dependencies": {
         "@babel/runtime": "^7.23.8",
         "@coinbase/wallet-sdk": "^3.9.1",
+        "@metamask/detect-provider": "^2.0.0",
         "@metamask/sdk": "^0.15.0",
         "@rainbow-me/rainbowkit": "^2.0.1",
         "@solana/wallet-adapter-wallets": "^0.19.25",

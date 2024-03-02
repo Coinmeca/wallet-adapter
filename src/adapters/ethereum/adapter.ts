@@ -4,12 +4,12 @@ import { useWallet, type WalletStore } from "states";
 import { Chain } from "../../types";
 import { WalletConnectionError } from "../../base/errors";
 
-export const adapter = () => {
+export const adapter = (config?: object) => {
 	const { info, mount, unmount, update, connection } = useWallet();
 
 	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | void> => {
 		name = name?.replaceAll(" ", "");
-		const wallet = providers[name]?.adapter(providers[name].url);
+		const wallet = providers[name]?.adapter(config);
 		const chain = getNetworksById(chainId);
 		const c = {
 			chainId: "0x" + chainId.toString(16),
@@ -21,10 +21,10 @@ export const adapter = () => {
 		try {
 			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {
 			await wallet.connect(c).then(() => {
-				if (wallet.connected && wallet.address[0]) {
+				if (wallet.connected && wallet.address) {
 					const w: WalletStore = {
 						provider: wallet.name,
-						address: wallet.address[0],
+						address: wallet.address,
 						chain,
 					};
 					update(w, chain);
@@ -32,7 +32,6 @@ export const adapter = () => {
 					return w;
 				}
 			});
-			console.log(await wallet.getProvider());
 			// }
 		} catch (error: any) {
 			throw new WalletConnectionError(error?.message as string);

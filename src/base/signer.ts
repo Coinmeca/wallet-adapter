@@ -1,7 +1,7 @@
 import type { Connection, TransactionSignature } from './module';
 
 import {
-    BaseWalletAdapter,
+    SvmBaseWalletAdapter,
     type SendTransactionOptions,
     type WalletAdapter,
     type WalletAdapterProps,
@@ -9,7 +9,7 @@ import {
 import { WalletSendTransactionError, WalletSignTransactionError } from './errors';
 import { isVersionedTransaction, type TransactionOrVersionedTransaction } from './transaction';
 
-export interface SignerWalletAdapterProps<Name extends string = string> extends WalletAdapterProps<Name> {
+export interface SignerWalletAdapterProps<Name extends string = string> extends SvmBaseWalletAdapter<Name> {
     signTransaction<T extends TransactionOrVersionedTransaction<this['supportedTransactionVersions']>>(
         transaction: T
     ): Promise<T>;
@@ -21,7 +21,7 @@ export interface SignerWalletAdapterProps<Name extends string = string> extends 
 export type SignerWalletAdapter<Name extends string = string> = WalletAdapter<Name> & SignerWalletAdapterProps<Name>;
 
 export abstract class BaseSignerWalletAdapter<Name extends string = string>
-    extends BaseWalletAdapter<Name>
+    extends SvmBaseWalletAdapter<Name>
     implements SignerWalletAdapter<Name>
 {
     async sendTransaction(

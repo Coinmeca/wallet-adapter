@@ -18,7 +18,7 @@ import {
 	WalletAddressError,
 	WalletError,
 } from "base/errors";
-import type { Config, Provider } from "base/adapter";
+import type { WalletConfig, Provider } from "base/adapter";
 import type { Chain } from "types";
 import type { Wallet } from "@rainbow-me/rainbowkit";
 
@@ -27,7 +27,7 @@ import { isMobile } from "../states";
 
 export const RainbowWalletName = "Rainbow" as WalletName<"Rainbow">;
 export interface RainbowProvider extends Provider, Wallet { }
-export interface RainbowWalletAdapterConfig extends Config, RainbowWalletOptions { }
+export interface RainbowWalletAdapterConfig extends WalletConfig, RainbowWalletOptions { }
 
 export class RainbowWalletAdapter extends EvmBaseWalletAdapter<"Rainbow"> {
 
