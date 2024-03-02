@@ -19,20 +19,21 @@ export const adapter = () => {
 			...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
 		};
 		try {
-			if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && wallet.address[0])) {
-				await wallet.connect(c).then(() => {
-					if (wallet.connected && wallet.address[0]) {
-						const w: WalletStore = {
-							provider: wallet.name,
-							address: wallet.address[0],
-							chain,
-						};
-						update(w, chain);
-						localStorage.setItem("wallet", JSON.stringify(w));
-						return w;
-					}
-				});
-			}
+			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {
+			await wallet.connect(c).then(() => {
+				if (wallet.connected && wallet.address[0]) {
+					const w: WalletStore = {
+						provider: wallet.name,
+						address: wallet.address[0],
+						chain,
+					};
+					update(w, chain);
+					localStorage.setItem("wallet", JSON.stringify(w));
+					return w;
+				}
+			});
+			console.log(wallet.provider);
+			// }
 		} catch (error: any) {
 			throw new WalletConnectionError(error?.message as string);
 			let msg = "";

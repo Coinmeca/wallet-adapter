@@ -7,7 +7,6 @@ import {
 	WalletName,
 	WalletReadyState,
 } from "base/adapter";
-import type RainbowEthereumProvider from "@metamask/detect-provider";
 import {
 	WalletNetworkError,
 	WalletAccountError,
@@ -19,103 +18,63 @@ import {
 	WalletError,
 } from "base/errors";
 import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from "base/transaction";
+import type { Config, Provider, ProviderMessage, RequestArguments, Transaction } from "base/adapter";
 import type { Connection } from "base/module";
 import type { Chain } from "base/types";
+import { getNetworksById } from "chains";
 
-interface ProviderMessage {
-	type: string;
-	data: unknown;
-}
-
-interface RainbowArguments {
-	method: string;
-	params?: unknown[] | object;
-}
-
-interface RainbowTransaction {
-	nonce?: string; // '0x00' ignored by Rainbow
-	gasPrice?: string; // '0x09184e72a000' customizable by user during Rainbow confirmation.
-	gas?: string; // '0x2710' customizable by user during Rainbow confirmation.
-	to?: string; // '0x0000000000000000000000000000000000000000' Required except during contract publications.
-	from: string; // ethereum.selectedAddress // must match user's active address.
-	value?: string; // '0x00' Only required to send ether to the recipient from the initiating external account.
-	data?: string;
-	// '0x7f7465737432000000000000000000000000000000000000000000000000000000600057' // Optional, but used for defining smart contract creation and interaction.
-	chainId?: string; // '0x3' Used to prevent transaction reuse across blockchains. Auto-filled by Rainbow.
-	hardfork?: string;
-	returnTransaction?: boolean;
-}
-
-interface RainbowWalletEvents {
-	connect(...args: unknown[]): unknown;
-	disconnect(...args: unknown[]): unknown;
-	accountChanged(newAddress: unknown): unknown;
-}
-
-interface RainbowWallet extends EventEmitter<typeof RainbowEthereumProvider> {
-	isRainbow?: boolean;
-	isConnected(): boolean;
-	providers?: any[];
-	providerMap?: any;
-
-	request(args: RainbowArguments): Promise<unknown>;
-}
-
-interface RainbowWindow extends Window {
-	metamask?: {
-		ethereum?: RainbowWallet;
-	};
-	ethereum?: RainbowWallet;
-}
-
-declare const window: RainbowWindow;
-
-export interface RainbowWalletAdapterConfig { }
+import type { RainbowWalletOptions } from "@rainbow-me/rainbowkit/dist/wallets/walletConnectors/rainbowWallet/rainbowWallet";
 
 export const RainbowWalletName = "Rainbow" as WalletName<"Rainbow">;
+export interface RainbowProvider extends Provider { }
+export interface RainbowWalletAdapterConfig extends Config, RainbowWalletOptions { }
 
 export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 	// export class RainbowWalletAdapter {
 	name = RainbowWalletName;
-	url = "https://rainbow.me/";
-	icon = "https://framerusercontent.com/images/Hml6PtJwt03gwFtTRYmbpo7EarY.png";
 
 	private _connecting: boolean;
-	private _wallet: RainbowWallet | null;
-	private _address: string[] | null;
-	private _chain: any;
-	private _readyState: WalletReadyState =
-		typeof window.ethereum !== "undefined" && window.ethereum.isRainbow === true ? WalletReadyState.Unsupported : WalletReadyState.NotDetected;
+	private _provider: RainbowProvider | null;
+	private _chain: Chain | undefined;
+	private _accounts: string[] | null;
+	private _config: any;
+	private _state: WalletReadyState = WalletReadyState.NotDetected;
 
-	constructor(config: RainbowWalletAdapterConfig = {}) {
+	constructor(config?: RainbowWalletAdapterConfig) {
 		super();
 
 		this._connecting = false;
-		this._wallet = null;
-		this._address = null;
+		this._accounts = null;
+		this._provider = null;
 
-		// To do
-		if (this._readyState !== WalletReadyState.Unsupported) {
-			if (isIosAndRedirectable()) {
-				this._readyState = WalletReadyState.Loadable;
-				// this.emit('readyStateChange', this._readyState);
+		if (config) this._config = config as RainbowWalletAdapterConfig;
+		if (isIosAndRedirectable()) {
+			if (this.provider) {
+				this._state = WalletReadyState.Loadable;
+				this.emit('readyStateChange', this._state);
 			} else {
-				scopePollingDetectionStrategy(() => {
-					if (window.ethereum?.isRainbow) {
-						this._readyState = WalletReadyState.Installed;
-						// this.emit('readyStateChange', this._readyState);
-						return true;
-					}
-					return false;
-				});
+				this._state = WalletReadyState.Unsupported;
 			}
+		} else {
+			scopePollingDetectionStrategy(() => {
+				if (this.provider) {
+					this._state = WalletReadyState.Installed;
+					this.emit('readyStateChange', this._state);
+					return true;
+				} else return false;
+			});
 		}
+	}
 
-		this._readyState = WalletReadyState.Installed;
+	get provider() {
+		if (!this._provider) {
+			this._provider = window.ethereum?.providers.find((p: any) => p?.isRainbow);
+		}
+		return this._provider;
 	}
 
 	get address() {
-		return this._address;
+		return this._accounts;
 	}
 
 	get connecting() {
@@ -123,102 +82,92 @@ export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 	}
 
 	get connected() {
-		return !!this._wallet?.isConnected();
+		return !!this._provider?.isConnected();
 	}
 
-	get readyState() {
-		return this._readyState;
+	get state() {
+		return this._state;
 	}
 
 	public supportedTransactionVersions?: SupportedTransactionVersions;
 
 	async chain(chain: Chain): Promise<void> {
-		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
-		return wallet.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
+		return await this.provider?.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
 			return resp;
 		});
 	}
 
 	async autoConnect(): Promise<void> {
-		if (this.readyState === WalletReadyState.Installed) {
+		if (this._state === WalletReadyState.Installed) {
 			await this.connect();
 		}
 	}
 
 	async connect(chain?: any): Promise<void> {
 		try {
-			const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
+			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
-			if (this.readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
+			if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
-			// const wallet = (window.ethereum! as any).providerMap!.get('Rainbow')!;
-
 			try {
-				await wallet
+				await this.provider
 					.request({ method: "eth_requestAccounts" })
 					.then(async () => {
-						const selectedAddress = await wallet.request({ method: "eth_accounts" });
-						if (selectedAddress?.length === 0) throw new WalletAccountError();
+						const accounts = await this.getAddress();
+						if (!accounts || accounts?.length === 0) throw new WalletAccountError();
+						this._accounts = accounts;
 
-						this._address = selectedAddress;
-						this._wallet = wallet;
+						this._provider?.on("chain", this.chain);
+						this._provider?.on("accountsChanged", this._accountChanged);
+
+						this.emit('connect', accounts[0]);
 					})
-					.catch((error: any) => {
+					.catch(() => {
 						throw new WalletAddressError();
 					});
 			} catch (error: any) {
 				throw new WalletNotConnectedError(error?.message, error);
 			}
-
-			wallet.on("disconnect", this._disconnected);
-			wallet.on("accountsChanged", this._accountChanged);
-
-			// this.emit('connect', address);
+			this.provider.on("disconnect", this._disconnected);
 		} catch (error: any) {
-			// this.emit('error', error);
+			this.emit("error", error);
 		} finally {
-			if (this._chain && this._chain.chainId !== chain.chainId && chain) {
+			if (this._chain && this._chain.id !== chain.chainId && chain) {
 				this.chain(chain).catch((error) => {
 					throw new WalletNetworkError(error?.message, error);
 				});
 			}
-
-			this._connecting = false;
 		}
+		this._connecting = false;
 	}
 
 	async disconnect(): Promise<void> {
-		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
+		try {
+			this.provider!.off("disconnect", this._disconnected);
+			this.provider!.off("accountsChanged", this._accountChanged);
+			this._accounts = null;
 
-		if (wallet) {
-			wallet?.off("disconnect" as never, this._disconnected);
-			wallet?.off("accountsChanged" as never, this._accountChanged);
-
-			this._wallet = null;
-			this._address = null;
-
-			try {
-				wallet.on("disconnect" as never, (error: WalletError) => {
-					new WalletDisconnectionError(error?.message, error);
-				});
-			} catch (error: any) {
-				// this.emit('error', new WalletDisconnectionError(error?.message, error));
-			}
+			this.emit("disconnect");
+		} catch (e) {
+			this.emit("error", new WalletDisconnectionError());
 		}
-
-		// this.emit('disconnect');
 	}
 
-	async getAddress() {
-		const wallet = this._wallet || window.ethereum?.providers?.find((provider) => provider.isRainbow);
-		return await wallet.request({ method: "eth_accounts" });
+	async getAddress(): Promise<string[] | undefined | null> {
+		return await this.provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
 	}
+
+	async getChainId(): Promise<Chain | undefined> {
+		if (!this._chain && this.provider) {
+			const chainId: string = await this.provider?.request({ method: "eth_chainId" }) as string;
+			if (chainId) this._chain = getNetworksById(Number(chainId)) as Chain;
+		}
+		return this._chain;
+	};
 
 	async message(msg: string, fn?: Function): Promise<void> {
-		const listener = window.metamask?.ethereum || window.ethereum!;
-		const wallet = (listener as any).providerMap.get("Rainbow")!;
-		wallet.on("message", (message: ProviderMessage) => {
+		this.provider?.on("message", (message: ProviderMessage) => {
 			if (typeof fn === "function") fn;
 		});
 	}
@@ -230,38 +179,28 @@ export class RainbowWalletAdapter extends BaseWalletAdapter<"Rainbow"> {
 	): Promise<any> { }
 
 	private _disconnected = () => {
-		const wallet = this._wallet || window.metamask?.ethereum || window.ethereum!;
-		if (wallet) {
-			wallet.off("disconnect" as never, this._disconnected);
-			wallet.off("accountsChanged" as never, this._accountChanged);
+		try {
+			this.provider?.off("disconnect", this._disconnected);
+			this.provider?.off("accountsChanged", this._accountChanged);
 
-			this._wallet = null;
-			this._address = null;
-
-			// this.emit('error', new WalletDisconnectedError());
-			// this.emit('disconnect');
+			this._provider = null;
+			this._accounts = null;
+		} catch (e) {
+			throw new WalletDisconnectionError(e?.toString());
 		}
 	};
 
-	private _accountChanged = async (newAddress?: string[]) => {
-		const listener = window.metamask?.ethereum || window.ethereum!;
-		const wallet = this._wallet || (listener as any).providerMap.get("Rainbow")!;
-		if (!wallet) return;
-
+	private _accountChanged = async () => {
 		try {
-			await wallet.request({ method: "accountsChanged" }).then((accounts: any) => {
-				if (accounts.length === 0) {
-					// Rainbow is locked or the user has not connected any accounts
-					console.log("Please connect to Rainbow.");
-				} else if (accounts[0] !== this._address) {
-					this._address = accounts[0];
-					// Do any other work!
-				}
-			});
+			const accounts = await this.getAddress();
+			if (!accounts || accounts?.length === 0) {
+				this.connect();
+			} else {
+				this._accounts = accounts;
+				this.emit('connect', accounts);
+			}
 		} catch (error: any) {
-			// this.emit('error', new WalletAddressError(error?.message, error));
+			this.emit("error", new WalletAddressError(error?.message, error));
 		}
-
-		// this.emit('connect', newAddress);
 	};
 }

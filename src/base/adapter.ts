@@ -1,12 +1,49 @@
 import EventEmitter from 'eventemitter3';
 import { WalletError, WalletNotConnectedError } from './errors';
-import type { Connection, Account, Signer, SendOptions, Transaction, TransactionSignature, PublicKey } from './module';
+import type { Connection, Account, Signer, SendOptions, Transaction as Tx, TransactionSignature, PublicKey } from './module';
 import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from './transaction';
 
 export { EventEmitter };
 
+export interface Config {
+    rpc?: string,
+    chainId?: number,
+    options?: {
+        [x: string | number | symbol]: any;
+    }
+}
+
+export interface Provider extends EventEmitter {
+    providers?: any[];
+    isConnected(): boolean;
+    request<T>(args: RequestArguments): Promise<T>;
+};
+
+export interface ProviderMessage {
+    type: string;
+    data: unknown;
+}
+
+export interface RequestArguments {
+    method: string;
+    params?: unknown[] | object;
+}
+
+export interface Transaction extends Tx {
+    nonce?: string; // '0x00' ignored by Coinbase
+    gasPrice?: string; // '0x09184e72a000' customizable by user during Coinbase confirmation.
+    gas?: string; // '0x2710' customizable by user during Coinbase confirmation.
+    to?: string; // '0x0000000000000000000000000000000000000000' Required except during contract publications.
+    from: string | any; // ethereum.selectedAddress // must match user's active address.
+    value?: string; // '0x00' Only required to send ether to the recipient from the initiating external account.
+    data?: string;
+    // '0x7f7465737432000000000000000000000000000000000000000000000000000000600057' // Optional, but used for defining smart contract creation and interaction.
+    chainId?: string; // '0x3' Used to prevent transaction reuse across blockchains. Auto-filled by Coinbase.
+    hardfork?: string;
+    returnTransaction?: boolean;
+}
 export interface WalletAdapterEvents {
-    connect(Account: Account): void;
+    connect(account: string | string[] | Account | Account[]): void;
     disconnect(): void;
     error(error: WalletError): void;
     readyStateChange(readyState: WalletReadyState): void;
@@ -22,10 +59,8 @@ export type WalletName<T extends string = string> = T & { __brand__: 'WalletName
 
 export interface WalletAdapterProps<Name extends string = string> {
     name: WalletName<Name>;
-    url: string;
-    icon: string;
-    readyState: WalletReadyState;
-    address?: string[] | Account[] | null;
+    state: WalletReadyState;
+    accounts?: string | string[] | Account | Account[] | undefined | null;
     connecting: boolean;
     connected: boolean;
     supportedTransactionVersions?: SupportedTransactionVersions;
@@ -76,9 +111,7 @@ export abstract class BaseWalletAdapter<Name extends string = string>
     implements WalletAdapter<Name>
 {
     abstract name: WalletName<Name>;
-    abstract url: string;
-    abstract icon: string;
-    abstract readyState: WalletReadyState;
+    abstract state: WalletReadyState;
     abstract address: string[] | Account[] | null;
     abstract connecting: boolean;
     abstract supportedTransactionVersions?: SupportedTransactionVersions;
@@ -87,11 +120,10 @@ export abstract class BaseWalletAdapter<Name extends string = string>
         return !!this.address;
     }
 
-    async autoConnect() {
-        await this.connect();
-    }
+    async autoConnect() { await this.connect(); }
 
     abstract connect(): Promise<void>;
+
     abstract disconnect(): Promise<void>;
 
     abstract sendTransaction(
