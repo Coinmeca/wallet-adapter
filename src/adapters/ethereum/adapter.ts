@@ -32,7 +32,7 @@ export const adapter = () => {
 					return w;
 				}
 			});
-			console.log(wallet.provider);
+			console.log(await wallet.getProvider());
 			// }
 		} catch (error: any) {
 			throw new WalletConnectionError(error?.message as string);

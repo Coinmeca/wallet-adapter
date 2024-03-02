@@ -1,53 +1,45 @@
 import {
-	BaseWalletAdapter,
-	EventEmitter,
+	EvmBaseWalletAdapter,
 	isIosAndRedirectable,
 	scopePollingDetectionStrategy,
-	SendTransactionOptions,
 	WalletName,
 	WalletReadyState,
 } from "base/adapter";
 import {
 	WalletNetworkError,
 	WalletAccountError,
-	WalletDisconnectedError,
 	WalletDisconnectionError,
 	WalletNotConnectedError,
 	WalletNotReadyError,
 	WalletAddressError,
-	WalletError,
-} from "base/errors";
-import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from "base/transaction";
-import type { Config, Provider, ProviderMessage, RequestArguments, Transaction } from "base/adapter";
-import type { Connection } from "base/module";
-import type { Chain } from "base/types";
-import type MetaMaskEthereumProvider from "@metamask/detect-provider";
-import { getNetworksById } from "chains";
-import { isMobile } from "../states";
+} from "base/errors";;
+import type { Config } from "base/adapter";
+import type { Chain } from "types";
+import { isMobile } from "states";
+
+import MetaMaskSDK, { type MetaMaskSDKOptions, type SDKProvider } from "@metamask/sdk";
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
-type MetaMaskProviderProps = typeof MetaMaskEthereumProvider;
-export interface MetaMaskProvider extends Provider, MetaMaskProviderProps { }
-export interface MetaMaskWalletAdapterConfig extends Config { options?: Parameters<typeof MetaMaskEthereumProvider>[0] }
+export interface MetaMaskProvider extends SDKProvider { }
+export interface MetaMaskWalletAdapterConfig extends Config { options?: MetaMaskSDKOptions }
 
+export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
-export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
-	// export class MetaMaskWalletAdapter {
 	name = MetaMaskWalletName;
 
-	private _connecting: boolean;
-	private _provider: MetaMaskProvider | null;
-	private _chain: Chain | undefined;
-	private _accounts: string[] | null;
-	private _config: MetaMaskWalletAdapterConfig | undefined;
-	private _state: WalletReadyState = WalletReadyState.NotDetected;
+	protected _config: MetaMaskWalletAdapterConfig | undefined;
+	protected _state: WalletReadyState = WalletReadyState.NotDetected;
+
+	protected _provider: MetaMaskProvider | null;
+	protected _chain: Chain | null;
+	protected _accounts: string[] | null;
 
 	constructor(config?: MetaMaskWalletAdapterConfig) {
 		super();
 
-		this._connecting = false;
-		this._accounts = null;
 		this._provider = null;
+		this._chain = null;
+		this._accounts = null;
 
 		if (config) this._config = { ...config, options: { ...config?.options, mustBeMetaMask: true } } as MetaMaskWalletAdapterConfig;
 		if (isIosAndRedirectable()) {
@@ -70,37 +62,14 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 	get provider() {
 		if (!this._provider) {
-			import('@metamask/detect-provider').then(async (p) => {
-				const provider = await p.default(this._config?.options) as MetaMaskProvider;
-				if (provider) this._provider = provider.providers?.length ? (provider.providers.find((p) => p.isMetaMask) ?? provider.providers[0]) : provider;
-
-			})
+			this._provider = new MetaMaskSDK({
+				dappMetadata: {
+					name: this._config?.app?.name,
+					url: this._config?.app?.url,
+				},
+			}).getProvider();
 		}
 		return this._provider;
-	}
-
-	get address() {
-		return this._accounts;
-	}
-
-	get connecting() {
-		return this._connecting;
-	}
-
-	get connected() {
-		return !!this._provider?.isConnected();
-	}
-
-	get state() {
-		return this._state;
-	}
-
-	public supportedTransactionVersions?: SupportedTransactionVersions;
-
-	async chain(chain: Chain): Promise<void> {
-		return await this.provider?.request({ method: "wallet_addEthereumChain", params: [chain] }).then((resp: any) => {
-			return resp;
-		});
 	}
 
 	async autoConnect(): Promise<void> {
@@ -111,32 +80,31 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 	async connect(chain?: any): Promise<void> {
 		try {
-			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${this._config?.url}`;
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location}`;
+
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
-			if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
+			// await this.detect();
+			// if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
 			try {
-				await this.provider
-					.request({ method: "eth_requestAccounts" })
-					.then(async () => {
-						const accounts = await this.getAddress();
+				await this.provider?.request({ method: "eth_requestAccounts" })
+					.then((accounts: any) => {
 						if (!accounts || accounts?.length === 0) throw new WalletAccountError();
 						this._accounts = accounts;
 
-						this._provider?.on("chain", this.chain);
-						this._provider?.on("accountsChanged", this._accountChanged);
+						this.provider.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
+						this.provider.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
+						this.provider.on("disconnect", this.disconnect);
 
 						this.emit('connect', accounts[0]);
-					})
-					.catch(() => {
+					}).catch(() => {
 						throw new WalletAddressError();
 					});
 			} catch (error: any) {
 				throw new WalletNotConnectedError(error?.message, error);
 			}
-			this.provider.on("disconnect", this._disconnected);
 		} catch (error: any) {
 			this.emit("error", error);
 		} finally {
@@ -151,63 +119,20 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 	async disconnect(): Promise<void> {
 		try {
-			this.provider!.off("disconnect", this._disconnected);
-			this.provider!.off("accountsChanged", this._accountChanged);
+			this.provider.off("chainChanged", this._chainChanged);
+			this.provider.off("accountsChanged", this._accountChanged);
+			this.provider.off("disconnect", this.disconnect);
+
+			this._provider = null;
 			this._accounts = null;
 
 			this.emit("disconnect");
 		} catch (e) {
-			this.emit("error", new WalletDisconnectionError());
-		}
-	}
-
-	async getAddress(): Promise<string[] | undefined | null> {
-		return await this.provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
-	}
-
-	async getChainId(): Promise<Chain | undefined> {
-		if (!this._chain && this.provider) {
-			const chainId: string = await this.provider?.request({ method: "eth_chainId" }) as string;
-			if (chainId) this._chain = getNetworksById(Number(chainId)) as Chain;
-		}
-		return this._chain;
-	};
-
-	async message(msg: string, fn?: Function): Promise<void> {
-		this.provider?.on("message", (message: ProviderMessage) => {
-			if (typeof fn === "function") fn;
-		});
-	}
-
-	async sendTransaction(
-		transaction: TransactionOrVersionedTransaction<this["supportedTransactionVersions"]>,
-		connection: Connection,
-		options?: SendTransactionOptions | undefined
-	): Promise<any> { }
-
-	private _disconnected = () => {
-		try {
-			this.provider?.off("disconnect", this._disconnected);
-			this.provider?.off("accountsChanged", this._accountChanged);
-
-			this._provider = null;
-			this._accounts = null;
-		} catch (e) {
 			throw new WalletDisconnectionError(e?.toString());
 		}
-	};
+	}
 
-	private _accountChanged = async () => {
-		try {
-			const accounts = await this.getAddress();
-			if (!accounts || accounts?.length === 0) {
-				this.connect();
-			} else {
-				this._accounts = accounts;
-				this.emit('connect', accounts);
-			}
-		} catch (error: any) {
-			this.emit("error", new WalletAddressError(error?.message, error));
-		}
-	};
+	async sendTransaction(): Promise<void> {
+
+	}
 }

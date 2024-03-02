@@ -1,6 +1,15 @@
+
 export interface NativeCurrency {
     symbol: string;
     decimals: number;
+}
+
+export interface Asset {
+    type?: string,
+    address?: string;
+    symbol?: string;
+    decimals?: string | number;
+    image?: string;
 }
 
 export interface Chain {
