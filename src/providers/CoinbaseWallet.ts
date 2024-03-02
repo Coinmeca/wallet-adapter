@@ -24,6 +24,7 @@ import type { Chain } from "base/types";
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import type { CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 import { getNetworksById } from "chains";
+import { isMobile } from "../states";
 
 
 export const CoinbaseWalletName = "Coinbase" as WalletName<"Coinbase">;
@@ -111,6 +112,7 @@ export class CoinbaseWalletAdapter extends BaseWalletAdapter<"Coinbase"> {
 
 	async connect(chain?: any): Promise<void> {
 		try {
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
 			if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();

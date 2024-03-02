@@ -23,6 +23,7 @@ import type { Connection } from "base/module";
 import type { Chain } from "base/types";
 import type MetaMaskEthereumProvider from "@metamask/detect-provider";
 import { getNetworksById } from "chains";
+import { isMobile } from "../states";
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
 type MetaMaskProviderProps = typeof MetaMaskEthereumProvider;
@@ -110,6 +111,7 @@ export class MetaMaskWalletAdapter extends BaseWalletAdapter<"MetaMask"> {
 
 	async connect(chain?: any): Promise<void> {
 		try {
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${this._config?.url}`;
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
 			if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();

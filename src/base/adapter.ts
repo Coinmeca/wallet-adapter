@@ -6,8 +6,9 @@ import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } 
 export { EventEmitter };
 
 export interface Config {
-    rpc?: string,
-    chainId?: number,
+    url?: string;
+    rpc?: string;
+    chainId?: number;
     options?: {
         [x: string | number | symbol]: any;
     }
