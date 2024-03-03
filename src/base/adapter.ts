@@ -152,23 +152,27 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
     protected abstract _chain: Chain | null;
     protected abstract _accounts: string[] | null;
 
+    get provider() {
+        return this._provider;
+    }
+
     async getAddress(): Promise<string[] | undefined | null> {
-        return await this._provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
+        return await this.provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
     }
 
     async chain(chain: number | string | Chain): Promise<void> {
-        return await this._provider?.request({ method: "wallet_addEthereumChain", params: [formatChainId(chain)] }).then((success: any) => { if (success) this._chainChanged(chain) });
+        return await this.provider?.request({ method: "wallet_addEthereumChain", params: [formatChainId(chain)] }).then((success: any) => { if (success) this._chainChanged(chain) });
     }
 
     async message(msg: string, fn?: Function): Promise<void> {
-        this._provider?.on("message", (message: ProviderMessage | any) => {
+        this.provider?.on("message", (message: ProviderMessage | any) => {
             if (typeof fn === "function") fn;
         });
     }
 
-    async watchAsset({ type, address, symbol, decimals, image }: Asset): Promise<true> {
-        if (!this._provider) throw new WalletConnectionError();
-        return this._provider
+    async watchAsset({ type, address, symbol, decimals, image }: Asset): Promise<boolean> {
+        if (!this.provider) throw new WalletConnectionError();
+        return this.provider
             .request({
                 method: 'wallet_watchAsset',
                 params: {

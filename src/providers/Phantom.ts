@@ -41,7 +41,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
 
         if (config) this._config = config as WalletConfig;
         if (isIosAndRedirectable()) {
-            if (this._provider) {
+            if (this.provider) {
                 this._state = WalletReadyState.Loadable;
                 this.emit('readyStateChange', this._state);
             } else {
@@ -49,7 +49,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
             }
         } else {
             scopePollingDetectionStrategy(() => {
-                if (this._provider) {
+                if (this.provider) {
                     this._state = WalletReadyState.Installed;
                     this.emit('readyStateChange', this._state);
                     return true;
@@ -82,8 +82,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
 
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
-            // await this.detect();
-            // if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
+            if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
             this._connecting = true;
             try {

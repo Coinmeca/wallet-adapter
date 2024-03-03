@@ -17,14 +17,15 @@ import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
 import type { Chain } from "types";
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
+import { isMobile } from "../states";
 
-export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
+export const CoinbaseWalletName = "Coinbase" as WalletName<"Coinbase">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
 	request<T>(args: RequestArguments): Promise<T>;
 }
 export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions }
 
-export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"CoinbaseWallet">> {
+export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coinbase">> {
 
 	name = CoinbaseWalletName;
 
@@ -44,7 +45,7 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 
 		if (config) this._config = config as CoinbaseWalletAdapterConfig;
 		if (isIosAndRedirectable()) {
-			if (this._provider) {
+			if (this.provider) {
 				this._state = WalletReadyState.Loadable;
 				this.emit('readyStateChange', this._state);
 			} else {
@@ -52,7 +53,7 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 			}
 		} else {
 			scopePollingDetectionStrategy(() => {
-				if (this._provider) {
+				if (this.provider) {
 					this._state = WalletReadyState.Installed;
 					this.emit('readyStateChange', this._state);
 					return true;
@@ -80,7 +81,7 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 
 	async connect(chain?: any): Promise<void> {
 		try {
-			// if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.host + window.location.pathname}`;
 
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;

@@ -87,8 +87,7 @@ export class RainbowWalletAdapter extends EvmBaseWalletAdapter<"Rainbow"> {
 
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
-			// await this.detect();
-			// if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
+			if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
 			try {

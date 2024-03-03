@@ -12,7 +12,6 @@ import {
 	WalletNotConnectedError,
 	WalletNotReadyError,
 	WalletAddressError,
-	WalletConnectionError,
 	WalletUserReject,
 } from "base/errors";;
 import type { Provider, ProviderMessage, WalletConfig } from "base/adapter";
@@ -54,7 +53,7 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 		if (config) this._config = { ...config, options: { ...config?.options, mustBeMetaMask: true } } as MetaMaskWalletAdapterConfig;
 		if (isIosAndRedirectable()) {
-			if (this.provider) {
+			if (this._provider) {
 				this._state = WalletReadyState.Loadable;
 				this.emit('readyStateChange', this._state);
 			} else {
@@ -62,7 +61,7 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 			}
 		} else {
 			scopePollingDetectionStrategy(() => {
-				if (this.provider) {
+				if (this._provider) {
 					this._state = WalletReadyState.Installed;
 					this.emit('readyStateChange', this._state);
 					return true;
@@ -71,19 +70,34 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 		}
 	}
 
-	get provider() {
-		if (!this._provider) {
-			import('@metamask/detect-provider').then(async (p) => {
-				const provider = await p.default(this._config?.options) as MetaMaskProvider;
-				if (provider) this._provider = provider.providers?.length
-					? (provider.providers.find((p) => p.isMetaMask)
-						|| provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
-						|| provider.providers[0])
-					: provider;
+	get address() {
+		return this._accounts;
+	}
 
+	get connecting() {
+		return this._connecting;
+	}
+
+	get connected() {
+		return !!this._provider?.isConnected();
+	}
+
+	get state() {
+		return this._state;
+	}
+
+	async getProvider(): Promise<MetaMaskProvider | null> {
+		if (!this._provider) {
+			this._provider = await import('@metamask/detect-provider').then(async (p) => {
+				const provider = await p.default(this._config?.options) as MetaMaskProvider;
+				if (provider) return provider.providers?.length
+					? (provider.providers.find((p) => p.isMetaMask)
+						?? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
+						?? provider.providers[0])
+					: provider;
 			})
 		}
-		return this._provider;
+		return this._provider
 	}
 
 	async autoConnect(): Promise<void> {
@@ -94,23 +108,25 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 	async connect(chain?: any): Promise<void> {
 		try {
-			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location}`;
+			const provider = await this.getProvider();
+			// if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
 
-			if (!this.provider) throw new WalletNotReadyError();
+			if (!provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
 			// await this.detect();
 			// if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
 			try {
-				await this.provider?.request({ method: "eth_requestAccounts" })
+				await provider.request({ method: "eth_requestAccounts" })
 					.then((accounts: any) => {
 						if (!accounts || accounts?.length === 0) throw new WalletAccountError();
 						this._accounts = accounts;
 
-						this.provider!.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
-						this.provider!.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
-						this.provider!.on("disconnect", this.disconnect);
+						provider.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
+						provider.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
+						provider.on("disconnect", this.disconnect);
 
 						this.emit('connect', accounts[0]);
 					}).catch(() => {
@@ -133,9 +149,11 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 	async disconnect(): Promise<void> {
 		try {
-			this.provider!.off("chainChanged", this._chainChanged);
-			this.provider!.off("accountsChanged", this._accountChanged);
-			this.provider!.off("disconnect", this.disconnect);
+			const provider = await this.getProvider();
+
+			provider!.off("chainChanged", this._chainChanged);
+			provider!.off("accountsChanged", this._accountChanged);
+			provider!.off("disconnect", this.disconnect);
 
 			this._provider = null;
 			this._accounts = null;
@@ -148,5 +166,40 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 
 	async sendTransaction(): Promise<void> {
 
+	}
+	async getAddress(): Promise<string[] | undefined | null> {
+		const provider = await this.getProvider();
+		return await provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
+	}
+
+	async chain(chain: number | string | Chain): Promise<void> {
+		const provider = await this.getProvider();
+		return await provider?.request({ method: "wallet_addEthereumChain", params: [formatChainId(chain)] }).then((success: any) => { if (success) this._chainChanged(chain) });
+	}
+
+	async message(msg: string, fn?: Function): Promise<void> {
+		const provider = await this.getProvider();
+		provider?.on("message", (message: ProviderMessage | any) => {
+			if (typeof fn === "function") fn;
+		});
+	}
+
+	async watchAsset({ type, address, symbol, decimals, image }: Asset): Promise<boolean> {
+		const provider = await this.getProvider();
+		return provider?.request({
+			method: 'wallet_watchAsset',
+			params: {
+				type: type,
+				options: {
+					address,
+					symbol,
+					decimals,
+					image,
+				},
+			},
+		}).then((success: any) => {
+			if (!success) throw new WalletUserReject();
+			return true;
+		}) || false
 	}
 }
