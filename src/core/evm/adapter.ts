@@ -13,7 +13,7 @@ export interface WalletAdapterProps<Name extends string = string> extends Omit<C
     sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void>;
 }
 
-export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<Core.WalletAdapterEvents>;
+export type Wallet<Name extends string = string> = WalletAdapterProps<Name>;
 
 export abstract class WalletAdapter<Name extends string = string> extends Core.WalletAdapter<Name> implements Wallet<Name> {
     protected abstract _accounts: string[] | null;
@@ -123,5 +123,12 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
     async signature(requests: any[]): Promise<string[]> {
         requests = Array.isArray(requests) ? requests : [requests];
         return await Promise.all(requests.map(async (params) => await this.provider.request({ method: "eth_signTypedData_v4", params })))
+    }
+
+    on(listener: string, handler: Function | Promise<any>) {
+        this.provider.on(listener, handler);
+    }
+    off(listener: string, handler?: Function | Promise<any>) {
+        this.provider.off(listener, handler);
     }
 }

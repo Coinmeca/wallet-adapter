@@ -19,7 +19,7 @@ export interface WalletConfig {
     }
 }
 export interface WalletAdapterEvents {
-    connect({ chainId }?: { chainId: string }): any;
+    connect({ chainId }?: { chainId?: string }): any;
     disconnect(chainId?: string): any;
     error(error: WalletError): any;
     readyStateChange(readyState: WalletReadyState): void;
@@ -40,7 +40,7 @@ export interface WalletAdapterProps<Name extends string = string> {
     // sendTransaction(): Promise<any>;
 }
 
-export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
+export type Wallet<Name extends string = string> = WalletAdapterProps<Name>;
 
 // WalletName is a nominal type that wallet adapters should use, e.g. `'MyCryptoWallet' as WalletName<'MyCryptoWallet'>`
 // https://medium.com/@KevinBGreene/surviving-the-typescript-ecosystem-branding-and-type-tagging-6cf6e516523d
@@ -77,7 +77,6 @@ export enum WalletReadyState {
 }
 
 export abstract class WalletAdapter<Name extends string = string>
-    extends EventEmitter<WalletAdapterEvents>
     implements Wallet<Name>
 {
     abstract name: WalletName<Name>;
@@ -88,6 +87,8 @@ export abstract class WalletAdapter<Name extends string = string>
     protected abstract _accounts: any[] | null;
 
     protected _connecting: boolean = false;
+
+    abstract get provider(): any & EventEmitter<WalletAdapterEvents>;
 
     get state() {
         return this._state;
@@ -114,6 +115,10 @@ export abstract class WalletAdapter<Name extends string = string>
     // abstract sendTransaction(): Promise<void>;
 
     abstract chain(chain: number | string | Chain): Promise<void>;
+
+    abstract on(listener: string, handler: Function | Promise<any>): void;
+
+    abstract off(listener: string, handler: Function | Promise<any>): void;
 }
 
 export function scopePollingDetectionStrategy(detect: () => boolean): void {

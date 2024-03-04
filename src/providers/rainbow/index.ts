@@ -47,7 +47,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.emit('readyStateChange', this._state);
+                this.provider.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
@@ -55,7 +55,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
             scopePollingDetectionStrategy(() => {
                 if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.emit('readyStateChange', this._state);
+                    this.provider.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });
@@ -97,7 +97,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
                         this.provider!.on("accountsChanged", this._accountChanged);
                         this.provider!.on("disconnect", this.disconnect);
 
-                        this.emit('connect', accounts[0]);
+                        this.provider!.emit('connect', accounts[0]);
                     }).catch(() => {
                         throw new WalletAddressError();
                     });
@@ -105,7 +105,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
-            this.emit("error", error);
+            this.provider?.emit("error", error);
         } finally {
             if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
                 this.chain(chain).catch((error) => {
@@ -125,7 +125,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
             this._provider = null;
             this._accounts = null;
 
-            this.emit("disconnect");
+            this.provider!.emit("disconnect");
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }

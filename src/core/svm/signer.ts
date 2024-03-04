@@ -74,7 +74,7 @@ export abstract class BaseSignerWalletAdapter<Name extends string = string>
             }
         } catch (error: any) {
             if (emit) {
-                this.emit('error', error);
+                this.provider.emit('error', error);
             }
             throw error;
         }

@@ -24,8 +24,8 @@ export const adapter = (config?: object) => {
 					};
 					update(w, chain);
 					localStorage.setItem("wallet", JSON.stringify(w));
-					wallet.on('chainChanged', (chainId) => connection(getNetworksById(parseChainId(chainId))));
-					wallet.on('accountsChanged', (accounts) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
+					wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId))));
+					wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
 					wallet.on('disconnect', disconnect);
 					return w;
 				} else {

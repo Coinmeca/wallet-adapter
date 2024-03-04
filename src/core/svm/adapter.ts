@@ -30,9 +30,10 @@ export interface WalletAdapterProps<Name extends string = string> extends Omit<C
     ): Promise<TransactionSignature>;
 }
 
-export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
+// export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
+export type Wallet<Name extends string = string> = WalletAdapterProps<Name>;
 
-export abstract class WalletAdapter<Name extends string = string> extends Core.WalletAdapter<Name> implements Wallet<Name>, EventEmitter<WalletAdapterEvents> {
+export abstract class WalletAdapter<Name extends string = string> extends Core.WalletAdapter<Name> implements Wallet<Name> {
     protected abstract accounts: Account[] | null;
     abstract supportedTransactionVersions?: SupportedTransactionVersions;
 

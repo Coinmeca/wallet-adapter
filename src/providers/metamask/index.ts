@@ -53,17 +53,17 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 
         if (config) this._config = { ...config, options: { ...config?.options, mustBeMetaMask: true } } as MetaMaskWalletAdapterConfig;
         if (isIosAndRedirectable()) {
-            if (this._provider) {
+            if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.emit('readyStateChange', this._state);
+                this.provider.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
         } else {
             scopePollingDetectionStrategy(() => {
-                if (this._provider) {
+                if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.emit('readyStateChange', this._state);
+                    this.provider.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });
@@ -103,11 +103,11 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
                         if (!accounts || accounts?.length === 0) throw new WalletAccountError();
                         this._accounts = accounts;
 
-                        this.provider?.on("chainChanged", this._chainChanged);
-                        this.provider?.on("accountsChanged", this._accountChanged);
-                        this.provider?.on("disconnect", this.disconnect);
+                        this.provider!.on("chainChanged", this._chainChanged);
+                        this.provider!.on("accountsChanged", this._accountChanged);
+                        this.provider!.on("disconnect", this.disconnect);
 
-                        this.emit('connect', accounts[0]);
+                        this.provider!.emit('connect', accounts[0]);
                     }).catch(() => {
                         throw new WalletAddressError();
                     });
@@ -115,7 +115,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
-            this.emit("error", error);
+            this.provider?.emit("error", error);
         } finally {
             if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
                 this.chain(chain).catch((error) => {
@@ -135,7 +135,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             this._provider = null;
             this._accounts = null;
 
-            this.emit("disconnect");
+            this.provider!.emit("disconnect");
             return true;
         } catch (e) {
             return false;
