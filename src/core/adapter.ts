@@ -19,7 +19,7 @@ export interface WalletConfig {
     }
 }
 export interface WalletAdapterEvents {
-    connect({ chainId }?: { chainId?: string }): any;
+    connect(chainId?: string): any;
     disconnect(chainId?: string): any;
     error(error: WalletError): any;
     readyStateChange(readyState: WalletReadyState): void;
