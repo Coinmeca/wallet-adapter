@@ -125,7 +125,7 @@ export abstract class BaseWalletAdapter<Name extends string = string>
     };
 
     get address() {
-        return (this._accounts && this._accounts?.length > 0) ? this._accounts[0] : '';
+        return Array.isArray(this._accounts) ? this._accounts[0] : this._accounts || '';
     }
 
     get connecting() {
@@ -138,7 +138,7 @@ export abstract class BaseWalletAdapter<Name extends string = string>
 
     abstract autoConnect(): Promise<void>;
 
-    abstract connect(): Promise<void>;
+    abstract connect(chain?: number | string | Chain): Promise<void>;
 
     abstract disconnect(): Promise<void>;
 
@@ -161,7 +161,16 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
     }
 
     async chain(chain: number | string | Chain): Promise<void> {
-        return await this.provider?.request({ method: "wallet_addEthereumChain", params: [formatChainId(chain)] }).then((success: any) => { if (success) this._chainChanged(chain) });
+        chain = getNetworksById(parseChainId(chain)) as Chain;
+        return await this.provider?.request({
+            method: "wallet_addEthereumChain", params: [{
+                chainId: "0x" + chain?.id?.toString(16),
+                ...(chain?.name && { chainName: chain?.name }),
+                ...(chain?.rpc && { rpcUrls: chain?.rpc }),
+                ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
+                ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
+            }]
+        }).then((success: any) => { if (success) this._chainChanged(chain) });
     }
 
     async message(msg: string, fn?: Function): Promise<void> {

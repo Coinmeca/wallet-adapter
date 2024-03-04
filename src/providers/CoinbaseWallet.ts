@@ -12,6 +12,8 @@ import {
 	WalletNotConnectedError,
 	WalletNotReadyError,
 	WalletAddressError,
+	WalletChangePlatform,
+	WalletRequestError,
 } from "base/errors";
 import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
 import type { Chain } from "types";
@@ -19,13 +21,15 @@ import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 import { isMobile } from "../states";
 
-export const CoinbaseWalletName = "Coinbase" as WalletName<"Coinbase">;
+export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
 	request<T>(args: RequestArguments): Promise<T>;
 }
 export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions }
-
-export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coinbase">> {
+export interface CoinbaseWalletMobileAapter {
+	method: string;
+}
+export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"CoinbaseWallet">> {
 
 	name = CoinbaseWalletName;
 
@@ -72,6 +76,13 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 		return this._provider;
 	}
 
+	get url() {
+		return window.location.host + window.location.pathname;
+	}
+
+	get mobileRequest() {
+		return Object.fromEntries(new URLSearchParams(Object.fromEntries(new URLSearchParams(location.search))?.cb_wallet))?.method;
+	}
 
 	async autoConnect(): Promise<void> {
 		if (this._state === WalletReadyState.Installed) {
@@ -79,10 +90,9 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 		}
 	}
 
-	async connect(chain?: any): Promise<void> {
+	async connect(chain?: number | string | Chain): Promise<void> {
 		try {
-			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.host + window.location.pathname}`;
-
+			if (isMobile() && !this.mobileRequest) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this.url}?cb_wallet=?method=eth_requestAccounts`;
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
 			// await this.detect();
@@ -110,7 +120,7 @@ export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Coin
 		} catch (error: any) {
 			this.emit("error", error);
 		} finally {
-			if (this._chain && this._chain.id !== chain.chainId && chain) {
+			if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
 				this.chain(chain).catch((error) => {
 					throw new WalletNetworkError(error?.message, error);
 				});

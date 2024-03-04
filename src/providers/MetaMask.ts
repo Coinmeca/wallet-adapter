@@ -13,6 +13,7 @@ import {
 	WalletNotReadyError,
 	WalletAddressError,
 	WalletUserReject,
+	WalletChangePlatform,
 } from "base/errors";;
 import type { Provider, ProviderMessage, WalletConfig } from "base/adapter";
 import type { Asset, Chain } from "types";
@@ -20,6 +21,7 @@ import { isMobile } from "states";
 
 import type MetaMaskEthereumProvider from "@metamask/detect-provider";
 import { formatChainId } from "../utils/lib";
+import detectEthereumProvider from "@metamask/detect-provider";
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
 type MetaMaskProviderProps = typeof MetaMaskEthereumProvider;
@@ -70,29 +72,13 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 		}
 	}
 
-	get address() {
-		return this._accounts;
-	}
-
-	get connecting() {
-		return this._connecting;
-	}
-
-	get connected() {
-		return !!this._provider?.isConnected();
-	}
-
-	get state() {
-		return this._state;
-	}
-
 	async getProvider(): Promise<MetaMaskProvider | null> {
 		if (!this._provider) {
-			this._provider = await import('@metamask/detect-provider').then(async (p) => {
-				const provider = await p.default(this._config?.options) as MetaMaskProvider;
-				if (provider) return provider.providers?.length
-					? (provider.providers.find((p) => p.isMetaMask)
-						?? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
+			await detectEthereumProvider(this._config?.options).then(async (p) => {
+				const provider = p as MetaMaskProvider;
+				this._provider = provider.providers?.length
+					? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
+					?? (provider.providers.find((p) => p.isMetaMask)
 						?? provider.providers[0])
 					: provider;
 			})
@@ -106,11 +92,11 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 		}
 	}
 
-	async connect(chain?: any): Promise<void> {
+	async connect(chain?: number | string | Chain): Promise<void> {
 		try {
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
 			const provider = await this.getProvider();
 			// if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
-			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
 
 			if (!provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
@@ -138,7 +124,7 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 		} catch (error: any) {
 			this.emit("error", error);
 		} finally {
-			if (this._chain && this._chain.id !== chain.chainId && chain) {
+			if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
 				this.chain(chain).catch((error) => {
 					throw new WalletNetworkError(error?.message, error);
 				});
@@ -167,6 +153,7 @@ export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
 	async sendTransaction(): Promise<void> {
 
 	}
+
 	async getAddress(): Promise<string[] | undefined | null> {
 		const provider = await this.getProvider();
 		return await provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);

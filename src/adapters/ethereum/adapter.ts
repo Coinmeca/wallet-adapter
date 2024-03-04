@@ -3,24 +3,18 @@ import { providers } from "./providers";
 import { useWallet, type WalletStore } from "states";
 import { Chain } from "../../types";
 import { WalletConnectionError } from "../../base/errors";
+import { EvmBaseWalletAdapter } from "../../base/adapter";
 
 export const adapter = (config?: object) => {
 	const { info, mount, unmount, update, connection } = useWallet();
 
 	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | void> => {
 		name = name?.replaceAll(" ", "");
-		const wallet = providers[name]?.adapter(config);
+		const wallet = providers[name]?.adapter(config) as EvmBaseWalletAdapter;
 		const chain = getNetworksById(chainId);
-		const c = {
-			chainId: "0x" + chainId.toString(16),
-			...(chain?.name && { chainName: chain?.name }),
-			...(chain?.rpc && { rpcUrls: chain?.rpc }),
-			...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
-			...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
-		};
 		try {
 			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {
-			await wallet.connect(c).then(() => {
+			await wallet.connect(chain).then(() => {
 				if (wallet.connected && wallet.address) {
 					const w: WalletStore = {
 						provider: wallet.name,
@@ -28,13 +22,13 @@ export const adapter = (config?: object) => {
 						chain,
 					};
 					update(w, chain);
+					wallet.on('disconnect', disconnect);
 					localStorage.setItem("wallet", JSON.stringify(w));
 					return w;
 				}
 			});
 			// }
 		} catch (error: any) {
-			throw new WalletConnectionError(error?.message as string);
 			let msg = "";
 			switch (error) {
 				case "WalletTimeoutError": {
@@ -65,12 +59,12 @@ export const adapter = (config?: object) => {
 	const disconnect = async (): Promise<boolean> => {
 		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
 		if (!name) return false;
-		const wallet = providers[name].adapter(providers[name].url);
+		const wallet = providers[name].adapter(config);
 
 		try {
-			const address = (await wallet.getAddress())?.find((f: string) => f === info?.provider);
-			if (!wallet.connected && address) await wallet.disconnect();
+			if (wallet.connected || wallet.address) await wallet.disconnect();
 			localStorage.removeItem("wallet");
+			wallet.off('disconnect');
 			unmount();
 			return true;
 		} catch (error) {
@@ -100,20 +94,14 @@ export const adapter = (config?: object) => {
 		}
 	};
 
-	const switchChain = async (chain: number | Chain) => {
+	const switchChain = async (chain: number | string | Chain) => {
 		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
 		if (!name) return false;
 		const wallet = providers[name].adapter(providers[name].url);
 
 		try {
 			chain = (typeof chain === "number" ? getNetworksById(chain) : chain) as Chain;
-			await wallet.chain({
-				chainId: "0x" + chain?.id?.toString(16),
-				...(chain?.name && { chainName: chain?.name }),
-				...(chain?.rpc && { rpcUrls: chain?.rpc }),
-				...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
-				...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
-			});
+			await wallet.chain(chain);
 			connection(chain);
 		} catch (error) {
 			let msg = "";

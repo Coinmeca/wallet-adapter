@@ -1,13 +1,14 @@
 import type { PublicKey } from '@solana/web3.js';
 import { providers } from './providers';
+import { SvmBaseWalletAdapter } from '../../base/adapter';
 
 export const adapter = {
     connect: async (name: string, auto?: boolean) => {
-        const wallet = providers[name].adapter(providers[name].url);
+        const wallet = providers[name].adapter() as SvmBaseWalletAdapter;
         try {
-            if (!wallet.publicKey) {
+            if (!wallet.address) {
                 await wallet.connect();
-                const publicKey: string = wallet.publicKey.toBase58();
+                const publicKey: string = wallet.address.toBase58();
                 if (wallet.connected && publicKey) {
                     // adapter.on('ready', onReady);
                     // adapter.on('connect', onConnect);
@@ -18,7 +19,7 @@ export const adapter = {
                     localStorage.setItem('wallet', wallet.name);
                     return {
                         provider: name,
-                        publicKey: <PublicKey>wallet.publicKey,
+                        publicKey: <PublicKey>wallet.address,
                         address: publicKey,
                         ...providers[name]
                     };
@@ -57,12 +58,12 @@ export const adapter = {
         const name = localStorage.getItem('wallet');
 
         if (!name) return;
-        const wallet = providers[name].adapter(providers[name].url);
+        const wallet = providers[name].adapter() as SvmBaseWalletAdapter;
 
         try {
-            if (wallet.publicKey) {
+            if (wallet.address) {
                 await wallet.disconnect();
-                const publicKey = wallet.publicKey;
+                const publicKey = wallet.address;
                 if (!publicKey && !wallet.connected) {
                     // localStorage.removeItem('walletName');
                     localStorage.removeItem('wallet');

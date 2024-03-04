@@ -78,3 +78,12 @@ export class WalletWindowClosedError extends WalletError {
 export class WalletUserReject extends WalletError {
     name = 'WalletUserReject';
 }
+
+export class WalletChangePlatform extends WalletError {
+    name = 'WalletChangePlatform';
+}
+
+
+export class WalletRequestError extends WalletError {
+    name = 'WalletRequestError';
+}

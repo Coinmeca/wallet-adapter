@@ -76,7 +76,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
         }
     }
 
-    async connect(chain?: any): Promise<void> {
+    async connect(chain?: number | string | Chain): Promise<void> {
         try {
             // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
 
@@ -106,7 +106,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
         } catch (error: any) {
             this.emit("error", error);
         } finally {
-            if (this._chain && this._chain.id !== chain.chainId && chain) {
+            if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
                 this.chain(chain).catch((error) => {
                     throw new WalletNetworkError(error?.message, error);
                 });
