@@ -34,10 +34,10 @@ export interface WalletAdapterProps<Name extends string = string> {
     connecting: boolean;
     connected: boolean;
 
-    autoConnect(): Promise<void>;
-    connect(): Promise<void>;
-    disconnect(): Promise<void>;
-    sendTransaction(): Promise<void>;
+    autoConnect(): Promise<any>;
+    connect(): Promise<any>;
+    disconnect(): Promise<any>;
+    sendTransaction(): Promise<any>;
 }
 
 export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
@@ -107,9 +107,9 @@ export abstract class WalletAdapter<Name extends string = string>
 
     abstract autoConnect(): Promise<void>;
 
-    abstract connect(chain?: number | string | Chain): Promise<void>;
+    abstract connect(chain?: number | string | Chain): Promise<any>;
 
-    abstract disconnect(): Promise<void>;
+    abstract disconnect(): Promise<any>;
 
     // abstract sendTransaction(): Promise<void>;
 

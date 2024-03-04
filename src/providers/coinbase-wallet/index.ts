@@ -12,15 +12,13 @@ import {
     WalletNotConnectedError,
     WalletNotReadyError,
     WalletAddressError,
-    WalletChangePlatform,
-    WalletRequestError,
 } from "core/errors";
 import { WalletAdapter } from "core/evm/adapter";
 import type { Provider, RequestArguments } from "core/evm/module";
 import type { Chain } from "types";
 import { isMobile } from "states";
 
-import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
+import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 
 export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
@@ -28,7 +26,7 @@ export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
     request<T>(args: RequestArguments): Promise<T>;
 }
 export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions }
-export interface CoinbaseWalletMobileAapter {
+export interface CoinbaseWalletMobileAdapter {
     method: string;
 }
 export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWallet">> {
@@ -75,6 +73,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
                 appLogoUrl: this._config?.app?.logo,
             }).makeWeb3Provider(this._config?.rpc, this._config?.chainId);
         }
+        // window?.ethereum?.setSelectedProvider(this._provider);
         return this._provider;
     }
 
@@ -144,9 +143,5 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }
-    }
-
-    async sendTransaction(): Promise<void> {
-
     }
 }

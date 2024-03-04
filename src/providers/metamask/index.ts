@@ -20,11 +20,10 @@ import type { Asset, Chain } from "types";
 import { formatChainId } from "utils";
 import { isMobile } from "states";
 
-import type MetaMaskEthereumProvider from "@metamask/detect-provider";
 import detectEthereumProvider from "@metamask/detect-provider";
 
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
-type MetaMaskProviderProps = typeof MetaMaskEthereumProvider;
+type MetaMaskProviderProps = typeof detectEthereumProvider;
 
 export interface MetaMaskProvider extends Provider, MetaMaskProviderProps { }
 export interface MetaMaskWalletAdapterConfig extends WalletConfig {
@@ -34,7 +33,6 @@ export interface MetaMaskWalletAdapterConfig extends WalletConfig {
         timeout?: number | undefined;
     }
 }
-
 export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 
     name = MetaMaskWalletName;
@@ -77,12 +75,13 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             await detectEthereumProvider(this._config?.options).then(async (p) => {
                 const provider = p as MetaMaskProvider;
                 this._provider = provider.providers?.length
-                    ? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
-                    ?? (provider.providers.find((p) => p.isMetaMask)
+                    ? (provider.providers.find((p) => p.isMetaMask)
+                        ?? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
                         ?? provider.providers[0])
                     : provider;
             })
         }
+        window?.ethereum?.setSelectedProvider(this._provider);
         return this._provider
     }
 
@@ -133,7 +132,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
         this._connecting = false;
     }
 
-    async disconnect(): Promise<void> {
+    async disconnect() {
         try {
             const provider = await this.getProvider();
 
@@ -145,7 +144,9 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             this._accounts = null;
 
             this.emit("disconnect");
+            return true;
         } catch (e) {
+            return false;
             throw new WalletDisconnectionError(e?.toString());
         }
     }

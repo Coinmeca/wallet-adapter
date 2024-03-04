@@ -59,12 +59,9 @@ export class EvmAdapter extends WalletAdapter<WalletName<"Phantom">> {
 
     get provider() {
         if (!this._provider) {
-            if ('phantom' in window) {
-                this._provider = (window?.phantom as any)?.ethereum;
-            } else if ('ethereum' in window) {
-                this._provider = (window?.ethereum as any)?.provider?.find((p: any) => p.isPhantom);
-            }
+            this._provider = (window?.ethereum as any)?.provider?.find((p: any) => p.isPhantom);
         }
+        window?.ethereum?.setSelectedProvider(this._provider);
         return this._provider;
     }
 

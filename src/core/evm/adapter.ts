@@ -1,15 +1,15 @@
 import * as Core from 'core/adapter';
 import { EventEmitter } from 'core/adapter';
-import { WalletConnectionError, WalletError, WalletUserReject } from 'core/errors';
+import { WalletConnectionError, WalletError, WalletSendTransactionError, WalletUserReject } from 'core/errors';
 import { Asset, Chain } from 'types';
 import { getNetworksById } from 'chains';
 import { formatChainId, parseChainId } from 'utils';
-import { ProviderMessage, TransactionArgs } from './module';
+import { ProviderMessage, RequestArguments, Transaction } from './module';
 
-export interface WalletAdapterProps<Name extends string = string> extends Core.WalletAdapterProps<Name> {
+export interface WalletAdapterProps<Name extends string = string> extends Omit<Core.WalletAdapterProps<Name>, 'sendTransaction'> {
     connect(chain?: number | string | Chain): Promise<void>;
     disconnect(): Promise<void>;
-    sendTransaction(...args: TransactionArgs): Promise<void>;
+    sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void>;
 }
 
 export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<Core.WalletAdapterEvents>;
@@ -73,5 +73,49 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
         this._chain = getNetworksById(parseChainId(chain)) as Chain;
     }
 
-    abstract sendTransaction(...args: TransactionArgs): Promise<void>;
+    async sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void> {
+        tx = Array.isArray(tx) ? tx : [tx]
+
+        await Promise.all(tx.map(async (params) => await this.provider.request({
+            method: 'eth_sendTransaction',
+            params,
+        }).then(async (txHash: any) => {
+            if (txHash) {
+                if (typeof params?.success === 'function') await params.success(txHash);
+            }
+        }).catch(async (error: any) => {
+            if (error) {
+                if (typeof params?.failure === 'function') await params.failure(error);
+            }
+        }))).then(async (response: any) => {
+            if (typeof success === 'function') await success(response);
+        }).catch(async (error: any) => {
+            if (typeof failure === 'function') await failure(error);
+        })
+    }
+
+    async request(requests: RequestArguments | RequestArguments[], success?: Function | Promise<any>, failure?: Function | Promise<any>) {
+        requests = Array.isArray(requests) ? requests : [requests];
+        return Promise.all(requests.map(async (r) =>
+            await this.provider.request(r)
+                .then(async (result: any) => {
+                    result = {
+                        jsonrpc: '2.0',
+                        id: r.id,
+                        result,
+                    };
+                    if (typeof r?.success === 'function') await r?.success(result);
+                    return result;
+                })
+                .catch(async (error: any) => {
+                    if (typeof r?.failure === 'function') await r?.failure(error);
+                    throw new WalletSendTransactionError(error);
+                })
+        ))
+            .then(async (result: any) => typeof success === 'function' && await success(result))
+            .catch(async (error: any) => {
+                typeof failure === 'function' && await failure(error);
+                throw new WalletSendTransactionError(error);
+            });
+    }
 }
