@@ -99,7 +99,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             this._connecting = true;
             try {
                 await this.provider.request({ method: "eth_requestAccounts" })
-                    .then((accounts: any) => {
+                    .then(async (accounts: any) => {
                         if (!accounts || accounts?.length === 0) throw new WalletAccountError();
                         this._accounts = accounts;
 
@@ -117,11 +117,9 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
         } catch (error: any) {
             this.provider?.emit("error", error);
         } finally {
-            if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
-                this.chain(chain).catch((error) => {
-                    throw new WalletNetworkError(error?.message, error);
-                });
-            }
+            await this.chain(chain).catch((error) => {
+                throw new WalletNetworkError(error?.message, error);
+            });
         }
         this._connecting = false;
     }

@@ -107,11 +107,9 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
         } catch (error: any) {
             this.provider?.emit("error", error);
         } finally {
-            if (chain && (typeof chain === 'object' ? chain?.id === this._chain?.id : chain === this._chain?.id)) {
-                this.chain(chain).catch((error) => {
-                    throw new WalletNetworkError(error?.message, error);
-                });
-            }
+            await this.chain(chain).catch((error) => {
+                throw new WalletNetworkError(error?.message, error);
+            });
         }
         this._connecting = false;
     }

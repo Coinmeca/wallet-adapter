@@ -9,7 +9,7 @@ import { ProviderMessage, RequestArguments, Transaction } from './module';
 export interface WalletAdapterProps<Name extends string = string> extends Omit<Core.WalletAdapterProps<Name>, 'sendTransaction'> {
     connect(chain?: number | string | Chain): Promise<void>;
     disconnect(): Promise<void>;
-    chain(chain: number | string | Chain): Promise<void>;
+    chain(chain: number | string | Chain): Promise<Chain | null>;
     sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void>;
 }
 
@@ -26,17 +26,24 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
         return await this.provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
     }
 
-    async chain(chain: number | string | Chain): Promise<void> {
-        chain = getNetworksById(parseChainId(chain)) as Chain;
-        return await this.provider?.request({
-            method: "wallet_addEthereumChain", params: [{
-                chainId: "0x" + chain?.id?.toString(16),
-                ...(chain?.name && { chainName: chain?.name }),
-                ...(chain?.rpc && { rpcUrls: chain?.rpc }),
-                ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
-                ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
-            }]
-        }).then((success: any) => { if (success) this._chainChanged(chain) });
+    async chain(chain?: number | string | Chain): Promise<Chain | null> {
+        const c = chain;
+        if (c) {
+            chain = getNetworksById(parseChainId(c)) as Chain;
+            await this.provider?.request({
+                method: "wallet_addEthereumChain",
+                params: [{
+                    chainId: "0x" + chain?.id?.toString(16),
+                    ...(chain?.name && { chainName: chain?.name }),
+                    ...(chain?.rpc && { rpcUrls: chain?.rpc }),
+                    ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
+                    ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
+                }]
+            }).then((success: any) => { if (success) this._chainChanged(c) });
+        } else {
+            await this.provider?.request({ method: 'eth_chainId' }).then((chainId: string) => this._chainChanged(chainId));
+        }
+        return this._chain as Chain;
     }
 
     async message(msg: string, fn?: Function): Promise<void> {
@@ -67,7 +74,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
     }
 
     protected _accountChanged(accounts: string | string[]) {
-        if (accounts.length > 0) this._accounts = Array.isArray(accounts) ? accounts : [accounts];
+        if (accounts.length > 0) return this._accounts = Array.isArray(accounts) ? accounts : [accounts];
     }
 
     protected _chainChanged(chain: number | string | Chain) {

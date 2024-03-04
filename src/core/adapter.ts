@@ -114,7 +114,7 @@ export abstract class WalletAdapter<Name extends string = string>
 
     // abstract sendTransaction(): Promise<void>;
 
-    abstract chain(chain: number | string | Chain): Promise<void>;
+    abstract chain(chain: number | string | Chain): Promise<any>;
 
     abstract on(listener: string, handler: Function | Promise<any>): void;
 
