@@ -33,6 +33,16 @@
         "./*": [
             "./dist/*.js",
             "./dist/*/index.js"
+        ],
+        "./evm": "./dist/core/evm/index.js",
+        "./evm/*": [
+            "./dist/core/evm/*.js",
+            "./dist/core/evm/*/index.js"
+        ],
+        "./svm": "./dist/core/svm/index.js",
+        "./svm/*": [
+            "./dist/core/svm/*.js",
+            "./dist/core/svm/*/index.js"
         ]
     },
     "typesVersions": {
