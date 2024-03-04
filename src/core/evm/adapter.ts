@@ -97,12 +97,12 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 
     async request(requests: RequestArguments | RequestArguments[], success?: Function | Promise<any>, failure?: Function | Promise<any>) {
         requests = Array.isArray(requests) ? requests : [requests];
-        return Promise.all(requests.map(async (r) =>
+        return Promise.all(requests.map(async (r, id) =>
             await this.provider.request(r)
                 .then(async (result: any) => {
                     result = {
                         jsonrpc: '2.0',
-                        id: r.id,
+                        id,
                         result,
                     };
                     if (typeof r?.success === 'function') await r?.success(result);

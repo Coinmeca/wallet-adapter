@@ -68,7 +68,6 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
             // this._provider = rainbowWallet({ projectId: this._config?.projectId || '', ...this._config }).createConnector();
             this._provider = (window?.ethereum as any)?.providers?.find((p: any) => p?.isRainbow);
         }
-        window?.ethereum?.setSelectedProvider(this._provider);
         return this._provider;
     }
 

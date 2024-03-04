@@ -19,13 +19,15 @@ import type { Chain } from "types";
 import { isMobile } from "states";
 
 import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
+import type { CoinbaseWalletProviderOptions } from "@coinbase/wallet-sdk/dist/provider/CoinbaseWalletProvider";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
+import _ from 'lodash';
 
 export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
     request<T>(args: RequestArguments): Promise<T>;
 }
-export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions }
+export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: CoinbaseWalletSDKOptions & CoinbaseWalletProviderOptions }
 export interface CoinbaseWalletMobileAdapter {
     method: string;
 }
@@ -73,7 +75,6 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
                 appLogoUrl: this._config?.app?.logo,
             }).makeWeb3Provider(this._config?.rpc, this._config?.chainId);
         }
-        // window?.ethereum?.setSelectedProvider(this._provider);
         return this._provider;
     }
 
@@ -145,3 +146,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
         }
     }
 }
+
+// export function CoinbaseWalletAdapter(config?: CoinbaseWalletAdapterConfig) {
+//     return _.merge(new CoinbaseWalletProvider(config?.options as CoinbaseWalletProviderOptions), new CoinbaseWallet(config))
+// }

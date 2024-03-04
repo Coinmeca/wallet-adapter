@@ -70,19 +70,14 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
         }
     }
 
-    async getProvider(): Promise<MetaMaskProvider | null> {
+    get provider() {
         if (!this._provider) {
-            await detectEthereumProvider(this._config?.options).then(async (p) => {
-                const provider = p as MetaMaskProvider;
-                this._provider = provider.providers?.length
-                    ? (provider.providers.find((p) => p.isMetaMask)
-                        ?? provider.providers.find((p) => p.providerMap).providerMap.get('MetaMask')
-                        ?? provider.providers[0])
-                    : provider;
-            })
+            window.addEventListener('eip6963:announceProvider', (event: any) => {
+                if (event?.detail?.info?.name === 'MetaMask') this._provider = event.detail.provider
+            });
+            window.dispatchEvent(new Event('eip6963:requestProvider'));
         }
-        window?.ethereum?.setSelectedProvider(this._provider);
-        return this._provider
+        return this._provider;
     }
 
     async autoConnect(): Promise<void> {
@@ -94,24 +89,23 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         try {
             if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
-            const provider = await this.getProvider();
             // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
 
-            if (!provider) throw new WalletNotReadyError();
+            if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
             // await this.detect();
             // if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
             this._connecting = true;
             try {
-                await provider.request({ method: "eth_requestAccounts" })
+                await this.provider.request({ method: "eth_requestAccounts" })
                     .then((accounts: any) => {
                         if (!accounts || accounts?.length === 0) throw new WalletAccountError();
                         this._accounts = accounts;
 
-                        provider.on("chainChanged", this._chainChanged);
-                        provider.on("accountsChanged", this._accountChanged);
-                        provider.on("disconnect", this.disconnect);
+                        this.provider?.on("chainChanged", this._chainChanged);
+                        this.provider?.on("accountsChanged", this._accountChanged);
+                        this.provider?.on("disconnect", this.disconnect);
 
                         this.emit('connect', accounts[0]);
                     }).catch(() => {
@@ -134,11 +128,9 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 
     async disconnect() {
         try {
-            const provider = await this.getProvider();
-
-            provider!.off("chainChanged", this._chainChanged);
-            provider!.off("accountsChanged", this._accountChanged);
-            provider!.off("disconnect", this.disconnect);
+            this.provider!.off("chainChanged", this._chainChanged);
+            this.provider!.off("accountsChanged", this._accountChanged);
+            this.provider!.off("disconnect", this.disconnect);
 
             this._provider = null;
             this._accounts = null;
@@ -149,45 +141,5 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             return false;
             throw new WalletDisconnectionError(e?.toString());
         }
-    }
-
-    async sendTransaction(): Promise<void> {
-
-    }
-
-    async getAddress(): Promise<string[] | undefined | null> {
-        const provider = await this.getProvider();
-        return await provider?.request({ method: "eth_accounts" }) as (string[] | undefined | null);
-    }
-
-    async chain(chain: number | string | Chain): Promise<void> {
-        const provider = await this.getProvider();
-        return await provider?.request({ method: "wallet_addEthereumChain", params: [formatChainId(chain)] }).then((success: any) => { if (success) this._chainChanged(chain) });
-    }
-
-    async message(msg: string, fn?: Function): Promise<void> {
-        const provider = await this.getProvider();
-        provider?.on("message", (message: ProviderMessage | any) => {
-            if (typeof fn === "function") fn;
-        });
-    }
-
-    async watchAsset({ type, address, symbol, decimals, image }: Asset): Promise<boolean> {
-        const provider = await this.getProvider();
-        return provider?.request({
-            method: 'wallet_watchAsset',
-            params: {
-                type: type,
-                options: {
-                    address,
-                    symbol,
-                    decimals,
-                    image,
-                },
-            },
-        }).then((success: any) => {
-            if (!success) throw new WalletUserReject();
-            return true;
-        }) || false
     }
 }
