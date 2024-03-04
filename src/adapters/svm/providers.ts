@@ -36,14 +36,10 @@ export const providers: Providers = {
 	// //     }
 	// // },
 	// Phantom: {
-	//     name: 'Phantom',
-	//     website: 'https://phantom.app',
-	//     url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
-	//     adapter() {
-	//         return new PhantomWalletAdapter();
-	//         // getPhantomWallet();
-	//         // return new PhantomWalletAdapter();
-	//     }
+	// 	name: 'Phantom',
+	// 	website: 'https://phantom.app',
+	// 	url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
+	// 	adapter: (config?) => new PhantomWalletAdapter.SVM.Adapter();
 	// },
 	// SolflareExtension: {
 	//     name: 'Solflare Extension',

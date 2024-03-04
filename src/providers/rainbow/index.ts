@@ -1,45 +1,53 @@
 ﻿import {
+    BaseWalletAdapter,
+    EventEmitter,
     EvmBaseWalletAdapter,
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
+    SendTransactionOptions,
     WalletName,
     WalletReadyState,
 } from "base/adapter";
 import {
     WalletNetworkError,
     WalletAccountError,
+    WalletDisconnectedError,
     WalletDisconnectionError,
     WalletNotConnectedError,
     WalletNotReadyError,
     WalletAddressError,
+    WalletError,
 } from "base/errors";
-import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
+import type { WalletConfig, Provider } from "base/adapter";
 import type { Chain } from "types";
+import type { Wallet } from "@rainbow-me/rainbowkit";
 
-export const PhantomWalletName = "Phantom" as WalletName<"Phantom">;
-export interface CoinbaseProvider extends Provider {
-    request<T>(args: RequestArguments): Promise<T>;
-}
+import { type RainbowWalletOptions } from "@rainbow-me/rainbowkit/dist/wallets/walletConnectors/rainbowWallet/rainbowWallet";
+import { isMobile } from "states";
 
-export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phantom">> {
+export const RainbowWalletName = "Rainbow" as WalletName<"Rainbow">;
+export interface RainbowProvider extends Provider, Wallet { }
+export interface RainbowWalletAdapterConfig extends WalletConfig, RainbowWalletOptions { }
 
-    name = PhantomWalletName;
+export class RainbowWalletAdapter extends EvmBaseWalletAdapter<"Rainbow"> {
 
-    protected _config: WalletConfig | undefined;
+    name = RainbowWalletName;
+
+    protected _config: RainbowWalletAdapterConfig | undefined;
     protected _state: WalletReadyState = WalletReadyState.NotDetected;
 
-    protected _provider: CoinbaseProvider | null;
+    protected _provider: RainbowProvider | null;
     protected _chain: Chain | null;
     protected _accounts: string[] | null;
 
-    constructor(config?: WalletConfig) {
+    constructor(config?: RainbowWalletAdapterConfig) {
         super();
 
         this._provider = null;
         this._chain = null;
         this._accounts = null;
 
-        if (config) this._config = config as WalletConfig;
+        if (config) this._config = config as RainbowWalletAdapterConfig;
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
@@ -58,17 +66,14 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
         }
     }
 
+
     get provider() {
         if (!this._provider) {
-            if ('phantom' in window) {
-                this._provider = (window?.phantom as any)?.ethereum;
-            } else if ('ethereum' in window) {
-                this._provider = (window?.ethereum as any)?.provider?.find((p: any) => p.isPhantom);
-            }
+            // this._provider = rainbowWallet({ projectId: this._config?.projectId || '', ...this._config }).createConnector();
+            this._provider = (window?.ethereum as any)?.providers?.find((p: any) => p?.isRainbow);
         }
         return this._provider;
     }
-
 
     async autoConnect(): Promise<void> {
         if (this._state === WalletReadyState.Installed) {
@@ -78,7 +83,7 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
 
     async connect(chain?: number | string | Chain): Promise<void> {
         try {
-            // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location}`;
 
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
@@ -91,13 +96,12 @@ export class PhantomWalletAdapter extends EvmBaseWalletAdapter<WalletName<"Phant
                         if (!accounts || accounts?.length === 0) throw new WalletAccountError();
                         this._accounts = accounts;
 
-                        this.provider!.on("chainChanged", (chainId: any) => this._chainChanged(chainId));
-                        this.provider!.on("accountsChanged", (accounts: any) => this._accountChanged(accounts));
+                        this.provider!.on("chainChanged", this._chainChanged);
+                        this.provider!.on("accountsChanged", this._accountChanged);
                         this.provider!.on("disconnect", this.disconnect);
 
                         this.emit('connect', accounts[0]);
-                    })
-                    .catch(() => {
+                    }).catch(() => {
                         throw new WalletAddressError();
                     });
             } catch (error: any) {

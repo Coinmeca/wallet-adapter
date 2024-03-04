@@ -1,9 +1,8 @@
+import { EvmBaseWalletAdapter } from "base/adapter";
 import { getNetworksById } from "chains";
-import { providers } from "./providers";
 import { useWallet, type WalletStore } from "states";
-import { Chain } from "../../types";
-import { WalletConnectionError } from "../../base/errors";
-import { EvmBaseWalletAdapter } from "../../base/adapter";
+import { Chain } from "types";
+import { providers } from "./providers";
 
 export const adapter = (config?: object) => {
 	const { info, mount, unmount, update, connection } = useWallet();
@@ -22,8 +21,8 @@ export const adapter = (config?: object) => {
 						chain,
 					};
 					update(w, chain);
-					wallet.on('disconnect', disconnect);
 					localStorage.setItem("wallet", JSON.stringify(w));
+					wallet.on('disconnect', disconnect);
 					return w;
 				}
 			});

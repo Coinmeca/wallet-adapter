@@ -32,6 +32,7 @@ export interface Providers {
 export interface Provider {
     name: string;
     logo?: string;
+    website?: string;
     url?: string;
     adapter: (config?: any) => EvmBaseWalletAdapter | SvmBaseWalletAdapter | BaseWalletAdapter;
 }

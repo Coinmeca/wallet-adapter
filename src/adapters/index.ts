@@ -1,4 +1,4 @@
-import * as ethereum from './ethereum';
-import * as solana from './solana';
+import * as evm from './evm';
+import * as svm from './svm';
 
-export { ethereum, solana }
+export { evm, svm }

@@ -3,8 +3,8 @@ import { WalletConnectionError, WalletError, WalletNotConnectedError, WalletUser
 import type { Connection, Account, Signer, SendOptions, Transaction as Tx, TransactionSignature, PublicKey } from './module';
 import type { SupportedTransactionVersions, TransactionOrVersionedTransaction } from './transaction';
 import { Asset, Chain } from 'types';
-import { getNetworksById } from '../chains';
-import { formatChainId, parseChainId } from '../utils/lib';
+import { getNetworksById } from 'chains';
+import { formatChainId, parseChainId } from 'utils';
 
 export { EventEmitter };
 
@@ -200,8 +200,8 @@ export abstract class EvmBaseWalletAdapter<Name extends string = string> extends
             })
     }
 
-    protected _accountChanged(accounts: string[]) {
-        if (accounts.length > 0) this._accounts = accounts;
+    protected _accountChanged(accounts: string | string[]) {
+        if (accounts.length > 0) this._accounts = Array.isArray(accounts) ? accounts : [accounts];
     }
 
     protected _chainChanged(chain: number | string | Chain) {

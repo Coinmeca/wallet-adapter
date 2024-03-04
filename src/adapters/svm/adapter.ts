@@ -1,6 +1,6 @@
 import type { PublicKey } from '@solana/web3.js';
+import { SvmBaseWalletAdapter } from 'base/adapter';
 import { providers } from './providers';
-import { SvmBaseWalletAdapter } from '../../base/adapter';
 
 export const adapter = {
     connect: async (name: string, auto?: boolean) => {

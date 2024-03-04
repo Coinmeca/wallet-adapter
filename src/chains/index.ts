@@ -1,6 +1,5 @@
 import type { Chains, Chain } from 'types';
 import type { Cluster } from '@solana/web3.js';
-// import { Capitalize } from 'utils/Libs';
 
 export const chainlist: any = {
     ethereum: {
