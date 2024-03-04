@@ -62,11 +62,12 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
         }
     }
 
-
     get provider() {
         if (!this._provider) {
-            // this._provider = rainbowWallet({ projectId: this._config?.projectId || '', ...this._config }).createConnector();
-            this._provider = (window?.ethereum as any)?.providers?.find((p: any) => p?.isRainbow);
+            window.addEventListener('eip6963:announceProvider', (event: any) => {
+                if (event?.detail?.info?.name === 'Rainbow') this._provider = event.detail.provider
+            });
+            window.dispatchEvent(new Event('eip6963:requestProvider'));
         }
         return this._provider;
     }
@@ -128,9 +129,5 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }
-    }
-
-    async sendTransaction(): Promise<void> {
-
     }
 }

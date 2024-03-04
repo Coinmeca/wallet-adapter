@@ -29,7 +29,7 @@ export interface WalletStoreAction {
 export const useWallet = create<WalletStore & WalletStoreAction>((set) => ({
     ...initial,
     mount: (wallet: WalletStore) => set((state: WalletStore & WalletStoreAction) => ({ ...state, ...wallet, info: wallet, })),
-    update: (wallet: Wallet, chain?: Chain) => set((state: WalletStore & WalletStoreAction) => ({ ...state, info: wallet, provider: wallet.provider, address: wallet.address, ...(chain && chain) })),
+    update: (wallet: Wallet, chain?: Chain) => set((state: WalletStore & WalletStoreAction) => ({ ...state, info: { ...state.info, ...wallet }, provider: wallet?.provider ? wallet.provider : state?.info?.provider, address: wallet.address, ...(chain && chain) })),
     unmount: () => set((state: WalletStore & WalletStoreAction) => ({ ...state, info: initial.info, provider: initial.provider, address: initial.address })),
     connection: (chain: Chain) => set((state: WalletStore & WalletStoreAction) => ({ ...state, chain })),
     initialize: () => set((state: WalletStore & WalletStoreAction) => ({ ...state, ...initial })),

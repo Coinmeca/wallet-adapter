@@ -1,19 +1,21 @@
 import { WalletAdapter } from "core/adapter";
+import { WalletLoadError } from "core/errors";
 import { getNetworksById } from "chains";
 import { useWallet, type WalletStore } from "states";
 import { Chain } from "types";
 import { providers } from "./providers";
+import { parseChainId } from "../../utils";
 
 export const adapter = (config?: object) => {
 	const { info, mount, unmount, update, connection } = useWallet();
 
-	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | void> => {
+	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | string | void> => {
 		name = name?.replaceAll(" ", "");
 		const wallet = providers[name]?.adapter(config) as WalletAdapter;
 		const chain = getNetworksById(chainId);
 		try {
 			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {
-			await wallet.connect(chain).then(() => {
+			const result = await wallet.connect(chain).then(() => {
 				if (wallet.connected && wallet.address) {
 					const w: WalletStore = {
 						provider: wallet.name,
@@ -22,8 +24,12 @@ export const adapter = (config?: object) => {
 					};
 					update(w, chain);
 					localStorage.setItem("wallet", JSON.stringify(w));
+					wallet.on('chainChanged', (chainId) => connection(getNetworksById(parseChainId(chainId))));
+					wallet.on('accountsChanged', (accounts) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
 					wallet.on('disconnect', disconnect);
 					return w;
+				} else {
+					throw new WalletLoadError();
 				}
 			});
 			// }
@@ -51,7 +57,7 @@ export const adapter = (config?: object) => {
 					break;
 				}
 			}
-			return undefined;
+			return msg;
 		}
 	};
 
@@ -63,7 +69,7 @@ export const adapter = (config?: object) => {
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
 			localStorage.removeItem("wallet");
-			wallet.off('disconnect');
+			wallet.off('disconnect', disconnect);
 			unmount();
 			return true;
 		} catch (error) {

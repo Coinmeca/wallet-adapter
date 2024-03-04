@@ -19,12 +19,12 @@ export interface WalletConfig {
     }
 }
 export interface WalletAdapterEvents {
-    connect(address?: string | Account, effect?: ({ chainId }: { chainId: string }) => void): void;
-    disconnect(effect?: (chainId: string) => void): void;
-    error(error: WalletError): void;
+    connect({ chainId }?: { chainId: string }): any;
+    disconnect(chainId?: string): any;
+    error(error: WalletError): any;
     readyStateChange(readyState: WalletReadyState): void;
-    chainChanged(effect?: (chainId: string) => void): void;
-    accountsChanged(effect?: (accounts: string[] | Account[]) => void): void;
+    chainChanged(chainId: string): any;
+    accountsChanged(accounts: string[] | Account[]): any;
 }
 
 export interface WalletAdapterProps<Name extends string = string> {

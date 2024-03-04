@@ -124,8 +124,4 @@ export class EvmAdapter extends WalletAdapter<WalletName<"Phantom">> {
             throw new WalletDisconnectionError(e?.toString());
         }
     }
-
-    async sendTransaction(): Promise<void> {
-
-    }
 }

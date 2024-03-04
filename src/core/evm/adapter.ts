@@ -119,4 +119,9 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
                 throw new WalletSendTransactionError(error);
             });
     }
+
+    async signature(requests: any[]): Promise<string[]> {
+        requests = Array.isArray(requests) ? requests : [requests];
+        return await Promise.all(requests.map(async (params) => await this.provider.request({ method: "eth_signTypedData_v4", params })))
+    }
 }
