@@ -1,10 +1,10 @@
 import type { PublicKey } from '@solana/web3.js';
-import { SvmBaseWalletAdapter } from 'base/adapter';
+import { WalletAdapter } from 'core/adapter';
 import { providers } from './providers';
 
 export const adapter = {
     connect: async (name: string, auto?: boolean) => {
-        const wallet = providers[name].adapter() as SvmBaseWalletAdapter;
+        const wallet = providers[name].adapter() as WalletAdapter;
         try {
             if (!wallet.address) {
                 await wallet.connect();
@@ -58,7 +58,7 @@ export const adapter = {
         const name = localStorage.getItem('wallet');
 
         if (!name) return;
-        const wallet = providers[name].adapter() as SvmBaseWalletAdapter;
+        const wallet = providers[name].adapter() as WalletAdapter;
 
         try {
             if (wallet.address) {

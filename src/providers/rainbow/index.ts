@@ -1,35 +1,31 @@
 ﻿import {
-    BaseWalletAdapter,
-    EventEmitter,
-    EvmBaseWalletAdapter,
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
-    SendTransactionOptions,
     WalletName,
     WalletReadyState,
-} from "base/adapter";
+    WalletConfig
+} from "core/adapter";
 import {
     WalletNetworkError,
     WalletAccountError,
-    WalletDisconnectedError,
     WalletDisconnectionError,
     WalletNotConnectedError,
     WalletNotReadyError,
     WalletAddressError,
-    WalletError,
-} from "base/errors";
-import type { WalletConfig, Provider } from "base/adapter";
+} from "core/errors";
+import type { Provider } from "core/evm/module";
+import { WalletAdapter } from "core/evm/adapter";
 import type { Chain } from "types";
-import type { Wallet } from "@rainbow-me/rainbowkit";
-
-import { type RainbowWalletOptions } from "@rainbow-me/rainbowkit/dist/wallets/walletConnectors/rainbowWallet/rainbowWallet";
 import { isMobile } from "states";
+
+import type { Wallet } from "@rainbow-me/rainbowkit";
+import type { RainbowWalletOptions } from "@rainbow-me/rainbowkit/dist/wallets/walletConnectors/rainbowWallet/rainbowWallet";
 
 export const RainbowWalletName = "Rainbow" as WalletName<"Rainbow">;
 export interface RainbowProvider extends Provider, Wallet { }
 export interface RainbowWalletAdapterConfig extends WalletConfig, RainbowWalletOptions { }
 
-export class RainbowWalletAdapter extends EvmBaseWalletAdapter<"Rainbow"> {
+export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
 
     name = RainbowWalletName;
 

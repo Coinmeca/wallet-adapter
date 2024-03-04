@@ -1,10 +1,10 @@
 ﻿import {
-    EvmBaseWalletAdapter,
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
     WalletName,
     WalletReadyState,
-} from "base/adapter";
+    WalletConfig
+} from "core/adapter";
 import {
     WalletNetworkError,
     WalletAccountError,
@@ -14,12 +14,14 @@ import {
     WalletAddressError,
     WalletChangePlatform,
     WalletRequestError,
-} from "base/errors";
-import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
+} from "core/errors";
+import { WalletAdapter } from "core/evm/adapter";
+import type { Provider, RequestArguments } from "core/evm/module";
 import type { Chain } from "types";
+import { isMobile } from "states";
+
 import type { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import { isMobile } from "states";
 
 export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
@@ -29,7 +31,7 @@ export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: Co
 export interface CoinbaseWalletMobileAapter {
     method: string;
 }
-export class CoinbaseWalletAdapter extends EvmBaseWalletAdapter<WalletName<"CoinbaseWallet">> {
+export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWallet">> {
 
     name = CoinbaseWalletName;
 

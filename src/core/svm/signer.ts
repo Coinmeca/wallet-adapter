@@ -1,15 +1,9 @@
-import type { Connection, TransactionSignature } from './module';
-
-import {
-    SvmBaseWalletAdapter,
-    type SendTransactionOptions,
-    type WalletAdapter,
-    type WalletAdapterProps,
-} from './adapter';
-import { WalletSendTransactionError, WalletSignTransactionError } from './errors';
+import { WalletSendTransactionError, WalletSignTransactionError } from 'core/errors';
+import { WalletAdapter, Wallet, WalletAdapterProps } from './adapter';
+import type { Connection, SendTransactionOptions, TransactionSignature } from './module';
 import { isVersionedTransaction, type TransactionOrVersionedTransaction } from './transaction';
 
-export interface SignerWalletAdapterProps<Name extends string = string> extends SvmBaseWalletAdapter<Name> {
+export interface SignerWalletAdapterProps<Name extends string = string> extends WalletAdapter<Name> {
     signTransaction<T extends TransactionOrVersionedTransaction<this['supportedTransactionVersions']>>(
         transaction: T
     ): Promise<T>;
@@ -18,10 +12,10 @@ export interface SignerWalletAdapterProps<Name extends string = string> extends 
     ): Promise<T[]>;
 }
 
-export type SignerWalletAdapter<Name extends string = string> = WalletAdapter<Name> & SignerWalletAdapterProps<Name>;
+export type SignerWalletAdapter<Name extends string = string> = Wallet<Name> & SignerWalletAdapterProps<Name>;
 
 export abstract class BaseSignerWalletAdapter<Name extends string = string>
-    extends SvmBaseWalletAdapter<Name>
+    extends WalletAdapter<Name>
     implements SignerWalletAdapter<Name>
 {
     async sendTransaction(
@@ -115,11 +109,11 @@ export abstract class BaseSignerWalletAdapter<Name extends string = string>
     }
 }
 
-export interface MessageSignerWalletAdapterProps<Name extends string = string> extends WalletAdapterProps<Name> {
+export interface MessageSignerWalletAdapterProps<Name extends string = string> extends Wallet<Name> {
     signMessage(message: Uint8Array): Promise<Uint8Array>;
 }
 
-export type MessageSignerWalletAdapter<Name extends string = string> = WalletAdapter<Name> &
+export type MessageSignerWalletAdapter<Name extends string = string> = Wallet<Name> &
     MessageSignerWalletAdapterProps<Name>;
 
 export abstract class BaseMessageSignerWalletAdapter<Name extends string = string>
@@ -133,7 +127,7 @@ export interface SignInMessageSignerWalletAdapterProps<Name extends string = str
     // signIn(input?: SolanaSignInInput): Promise<SolanaSignInOutput>;
 }
 
-export type SignInMessageSignerWalletAdapter<Name extends string = string> = WalletAdapter<Name> &
+export type SignInMessageSignerWalletAdapter<Name extends string = string> = Wallet<Name> &
     SignInMessageSignerWalletAdapterProps<Name>;
 
 export abstract class BaseSignInMessageSignerWalletAdapter<Name extends string = string>

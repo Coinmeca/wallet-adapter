@@ -1,4 +1,4 @@
-import { BaseWalletAdapter, EvmBaseWalletAdapter, SvmBaseWalletAdapter } from "../base/adapter";
+import { BaseWalletAdapter, EvmWalletAdapter, SvmWalletAdapter } from "../base/adapter";
 
 export interface NativeCurrency {
     symbol: string;
@@ -34,7 +34,7 @@ export interface Provider {
     logo?: string;
     website?: string;
     url?: string;
-    adapter: (config?: any) => EvmBaseWalletAdapter | SvmBaseWalletAdapter | BaseWalletAdapter;
+    adapter: (config?: any) => EvmWalletAdapter | SvmWalletAdapter | BaseWalletAdapter;
 }
 
 export interface Adapter {

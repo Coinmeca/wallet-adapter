@@ -29,5 +29,5 @@
         "typeRoots": ["src/types"]
     },
     "include": ["src", "**/*.ts"],
-    "exclude": ["node_modules", "dist", "hardhat.config.ts"]
+    "exclude": ["node_modules", "dist"]
 }

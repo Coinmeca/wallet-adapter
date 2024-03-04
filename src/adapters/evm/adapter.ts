@@ -1,4 +1,4 @@
-import { EvmBaseWalletAdapter } from "base/adapter";
+import { WalletAdapter } from "core/adapter";
 import { getNetworksById } from "chains";
 import { useWallet, type WalletStore } from "states";
 import { Chain } from "types";
@@ -9,7 +9,7 @@ export const adapter = (config?: object) => {
 
 	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | void> => {
 		name = name?.replaceAll(" ", "");
-		const wallet = providers[name]?.adapter(config) as EvmBaseWalletAdapter;
+		const wallet = providers[name]?.adapter(config) as WalletAdapter;
 		const chain = getNetworksById(chainId);
 		try {
 			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {

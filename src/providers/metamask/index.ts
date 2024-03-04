@@ -1,10 +1,9 @@
 ﻿import {
-    EvmBaseWalletAdapter,
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
     WalletName,
-    WalletReadyState,
-} from "base/adapter";
+    WalletReadyState, WalletConfig
+} from "core/adapter";
 import {
     WalletNetworkError,
     WalletAccountError,
@@ -14,8 +13,9 @@ import {
     WalletAddressError,
     WalletUserReject,
     WalletChangePlatform,
-} from "base/errors";;
-import type { Provider, ProviderMessage, WalletConfig } from "base/adapter";
+} from "core/errors";
+import type { Provider, ProviderMessage } from "core/evm/module";
+import { WalletAdapter } from "core/evm/adapter";
 import type { Asset, Chain } from "types";
 import { formatChainId } from "utils";
 import { isMobile } from "states";
@@ -35,7 +35,7 @@ export interface MetaMaskWalletAdapterConfig extends WalletConfig {
     }
 }
 
-export class MetaMaskWalletAdapter extends EvmBaseWalletAdapter<"MetaMask"> {
+export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 
     name = MetaMaskWalletName;
 

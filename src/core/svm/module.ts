@@ -2,6 +2,21 @@ import { Buffer } from 'buffer';
 import { Agent } from 'http';
 import { Agent as Agent$1 } from 'https';
 import * as nodeFetch from 'node-fetch';
+import type { Wallet, WalletAdapter } from './adapter';
+import type { MessageSignerWalletAdapter, SignerWalletAdapter, SignInMessageSignerWalletAdapter } from './signer';
+
+export type Adapter =
+    | Wallet
+    | WalletAdapter
+    | SignerWalletAdapter
+    | MessageSignerWalletAdapter
+    | SignInMessageSignerWalletAdapter;
+
+export enum WalletAdapterNetwork {
+    Mainnet = 'mainnet-beta',
+    Testnet = 'testnet',
+    Devnet = 'devnet',
+}
 
 export interface Struct {
     constructor(properties: any): any;
@@ -9,10 +24,12 @@ export interface Struct {
     decode(data: Buffer): any;
     decodeUnchecked(data: Buffer): any;
 }
+
 export interface Enum extends Struct {
     enum: string;
     constructor(properties: any): any;
 }
+
 export const SCHEMA: Map<Function, any> = new Map();
 
 /**
@@ -3912,6 +3929,10 @@ export interface BpfLoader {
         elf: Buffer | Uint8Array | Array<number>,
         loaderProgramId: PublicKey
     ): Promise<boolean>;
+}
+
+export interface SendTransactionOptions extends SendOptions {
+    signers?: string[] | Signer[];
 }
 
 export interface SendTransactionError extends Error {

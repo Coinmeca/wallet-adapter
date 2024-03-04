@@ -1,10 +1,10 @@
 ﻿import {
-    EvmBaseWalletAdapter,
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
     WalletName,
     WalletReadyState,
-} from "base/adapter";
+    WalletConfig
+} from "core/adapter";
 import {
     WalletNetworkError,
     WalletAccountError,
@@ -12,14 +12,15 @@ import {
     WalletNotConnectedError,
     WalletNotReadyError,
     WalletAddressError,
-} from "base/errors";
-import type { WalletConfig, Provider, RequestArguments } from "base/adapter";
+} from "core/errors";
+import type { Provider } from "core/evm/module";
+import { WalletAdapter } from "core/evm/adapter";
 import type { Chain } from "types";
 
 export const PhantomWalletName = "Phantom" as WalletName<"Phantom">;
 export interface PhantomProvider extends Provider { }
 
-export class EvmAdapter extends EvmBaseWalletAdapter<WalletName<"Phantom">> {
+export class EvmAdapter extends WalletAdapter<WalletName<"Phantom">> {
 
     name = PhantomWalletName;
 
