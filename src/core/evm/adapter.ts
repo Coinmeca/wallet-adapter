@@ -9,6 +9,7 @@ import { ProviderMessage, RequestArguments, Transaction } from './module';
 export interface WalletAdapterProps<Name extends string = string> extends Omit<Core.WalletAdapterProps<Name>, 'sendTransaction'> {
     connect(chain?: number | string | Chain): Promise<void>;
     disconnect(): Promise<void>;
+    chain(chain: number | string | Chain): Promise<void>;
     sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void>;
 }
 

@@ -58,7 +58,7 @@ export const adapter = (config?: object) => {
 	const disconnect = async (): Promise<boolean> => {
 		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
 		if (!name) return false;
-		const wallet = providers[name].adapter(config);
+		const wallet = providers[name].adapter(config) as WalletAdapter;
 
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
@@ -96,7 +96,7 @@ export const adapter = (config?: object) => {
 	const switchChain = async (chain: number | string | Chain) => {
 		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
 		if (!name) return false;
-		const wallet = providers[name].adapter(providers[name].url);
+		const wallet = providers[name].adapter(providers[name].url) as WalletAdapter;
 
 		try {
 			chain = (typeof chain === "number" ? getNetworksById(chain) : chain) as Chain;

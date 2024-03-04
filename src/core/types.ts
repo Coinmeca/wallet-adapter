@@ -1,10 +1,10 @@
-import type { BaseWalletAdapter, WalletAdapter } from './adapter';
+import type { Wallet, WalletAdapter } from './adapter';
 import type { Adapter as EvmWalletAdapter } from './evm/module';
 import type { Adapter as SvmWalletAdapter } from './svm/module';
 
 export type Adapter =
+    | Wallet
     | WalletAdapter
-    | BaseWalletAdapter
     | EvmWalletAdapter
     | SvmWalletAdapter
 

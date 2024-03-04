@@ -37,7 +37,7 @@ export interface WalletAdapterProps<Name extends string = string> {
     autoConnect(): Promise<any>;
     connect(): Promise<any>;
     disconnect(): Promise<any>;
-    sendTransaction(): Promise<any>;
+    // sendTransaction(): Promise<any>;
 }
 
 export type Wallet<Name extends string = string> = WalletAdapterProps<Name> & EventEmitter<WalletAdapterEvents>;
@@ -78,7 +78,7 @@ export enum WalletReadyState {
 
 export abstract class WalletAdapter<Name extends string = string>
     extends EventEmitter<WalletAdapterEvents>
-    implements WalletAdapter<Name>
+    implements Wallet<Name>
 {
     abstract name: WalletName<Name>;
 
