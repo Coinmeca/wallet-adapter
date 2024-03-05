@@ -26,7 +26,7 @@ export const adapter = (config?: object) => {
 				localStorage.setItem("wallet", JSON.stringify(w));
 				wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId)) || { id: parseChainId(chainId) } as Chain));
 				wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
-				wallet.on('disconnect', () => disconnect());
+				wallet.on('disconnect', disconnect);
 				return w;
 			} else {
 				console.error("Wallet Already Connected");
@@ -42,9 +42,9 @@ export const adapter = (config?: object) => {
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
 			localStorage.removeItem("wallet");
-			wallet.off('chainChanged');
-			wallet.off('accountsChanged');
-			wallet.off('disconnect');
+			wallet.off('chainChanged', () => { });
+			wallet.off('accountsChanged', () => { });
+			wallet.off('disconnect', disconnect);
 			unmount();
 			return true;
 		} catch (error) {

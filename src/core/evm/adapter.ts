@@ -138,7 +138,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
     on(listener: string, handler: Function | Promise<any>) {
         this.provider.on(listener, handler);
     }
-    off(listener: string, handler?: Function | Promise<any>) {
+    off(listener: string, handler: Function | Promise<any>) {
         this.provider.off(listener, handler);
     }
 }
