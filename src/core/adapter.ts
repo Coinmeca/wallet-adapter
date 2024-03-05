@@ -118,7 +118,7 @@ export abstract class WalletAdapter<Name extends string = string>
 
     abstract on(listener: string, handler: Function | Promise<any>): void;
 
-    abstract off(listener: string, handler: Function | Promise<any>): void;
+    abstract off(listener: string, handler?: Function | Promise<any>): void;
 }
 
 export function scopePollingDetectionStrategy(detect: () => boolean): void {

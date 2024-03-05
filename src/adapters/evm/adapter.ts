@@ -1,5 +1,4 @@
 import { WalletAdapter } from "core/adapter";
-import { WalletLoadError, WalletNotReadyError } from "core/errors";
 import { getNetworksById } from "chains";
 import { useWallet, type WalletStore } from "states";
 import { Chain } from "types";
@@ -15,24 +14,23 @@ export const adapter = (config?: object) => {
 		const c: Chain | undefined = getNetworksById(parseChainId(chain));
 		try {
 			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) throw new WalletNotReadyError();
-			await wallet.connect(chain).then(() => {
-				if (wallet.connected && wallet.address) {
-					const w: WalletStore = {
-						name: name,
-						provider: wallet.provider,
-						address: wallet.address,
-						chain: c,
-					};
-					update(w, c);
-					localStorage.setItem("wallet", JSON.stringify(w));
-					wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId))));
-					wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
-					wallet.on('disconnect', disconnect);
-					return w;
-				} else {
-					console.error("Wallet Already Connected");
-				}
-			});
+			await wallet.connect(c);
+			if (wallet.connected && wallet.address) {
+				const w: WalletStore = {
+					name: name,
+					provider: wallet.provider,
+					address: wallet.address,
+					chain: c,
+				};
+				update(w, c);
+				localStorage.setItem("wallet", JSON.stringify(w));
+				wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId))));
+				wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
+				wallet.on('disconnect', disconnect);
+				return w;
+			} else {
+				console.error("Wallet Already Connected");
+			};
 		} catch (error: any) {
 			console.error("Wallet Connecting Error: ", error);
 		}
@@ -44,7 +42,9 @@ export const adapter = (config?: object) => {
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
 			localStorage.removeItem("wallet");
-			wallet.off('disconnect', disconnect);
+			wallet.off('chainChanged');
+			wallet.off('accountsChanged');
+			wallet.off('disconnect');
 			unmount();
 			return true;
 		} catch (error) {
