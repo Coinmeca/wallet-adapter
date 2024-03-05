@@ -24,8 +24,8 @@ export const adapter = (config?: object) => {
 				};
 				update(w, c);
 				localStorage.setItem("wallet", JSON.stringify(w));
-				wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId)) || { id: parseChainId(chainId) } as Chain));
-				wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
+				wallet.on('chainChanged', chainChanged);
+				wallet.on('accountsChanged', accountsChanged);
 				wallet.on('disconnect', disconnect);
 				return w;
 			} else {
@@ -42,8 +42,8 @@ export const adapter = (config?: object) => {
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
 			localStorage.removeItem("wallet");
-			wallet.off('chainChanged', () => { });
-			wallet.off('accountsChanged', () => { });
+			wallet.off('chainChanged', chainChanged);
+			wallet.off('accountsChanged', accountsChanged);
 			wallet.off('disconnect', disconnect);
 			unmount();
 			return true;
@@ -68,6 +68,9 @@ export const adapter = (config?: object) => {
 			return false;
 		}
 	};
+
+	const chainChanged = (chainId: string) => connection(getNetworksById(parseChainId(chainId)) || { id: parseChainId(chainId) } as Chain);
+	const accountsChanged = (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string });
 
 	return { connect, disconnect, switchChain };
 };
