@@ -87,6 +87,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
     }
 
     async connect(chain?: number | string | Chain): Promise<void> {
+        let account = undefined;
         try {
             if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
             // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
@@ -122,6 +123,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
             });
         }
         this._connecting = false;
+        return account;
     }
 
     async disconnect() {

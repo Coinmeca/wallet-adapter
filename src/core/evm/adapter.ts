@@ -7,7 +7,7 @@ import { formatChainId, parseChainId } from 'utils';
 import { ProviderMessage, RequestArguments, Transaction } from './module';
 
 export interface WalletAdapterProps<Name extends string = string> extends Omit<Core.WalletAdapterProps<Name>, 'sendTransaction'> {
-    connect(chain?: number | string | Chain): Promise<void>;
+    connect(chain?: number | string | Chain): Promise<string | string[] | undefined | void>;
     disconnect(): Promise<void>;
     chain(chain: number | string | Chain): Promise<Chain | null>;
     sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void>;
@@ -31,14 +31,17 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
         if (c) {
             chain = getNetworksById(parseChainId(c)) as Chain;
             await this.provider?.request({
-                method: "wallet_addEthereumChain",
+                method: "wallet_switchEthereumChain",
                 params: [{
-                    chainId: "0x" + chain?.id?.toString(16),
-                    ...(chain?.name && { chainName: chain?.name }),
-                    ...(chain?.rpc && { rpcUrls: chain?.rpc }),
-                    ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
-                    ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
+                    chainId: formatChainId(chain)
                 }]
+                // params: [{
+                //     chainId: "0x" + chain?.id?.toString(16),
+                //     ...(chain?.name && { chainName: chain?.name }),
+                //     ...(chain?.rpc && { rpcUrls: chain?.rpc }),
+                //     ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
+                //     ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
+                // }]
             }).then((success: any) => { if (success) this._chainChanged(c) });
         } else {
             await this.provider?.request({ method: 'eth_chainId' }).then((chainId: string) => this._chainChanged(chainId));

@@ -72,6 +72,7 @@ export class EvmAdapter extends WalletAdapter<WalletName<"Phantom">> {
     }
 
     async connect(chain?: number | string | Chain): Promise<void> {
+        let account = undefined;
         try {
             // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
 
@@ -106,6 +107,7 @@ export class EvmAdapter extends WalletAdapter<WalletName<"Phantom">> {
             });
         }
         this._connecting = false;
+        return account;
     }
 
     async disconnect(): Promise<void> {

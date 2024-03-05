@@ -7,12 +7,19 @@ export const chainlist: any = {
             id: 1,
             name: 'Ethereum',
             rpc: [
-                // "Safe" URLs
-                'https://api.mycryptoapi.com/eth',
-                'https://cloudflare-eth.com',
-                // "Fallback" URLs
-                'https://rpc.ankr.com/eth',
-                'https://eth-mainnet.public.blastapi.io'
+                "https://eth.llamarpc.com",
+                "https://endpoints.omniatech.io/v1/eth/mainnet/public",
+                "https://ethereum-rpc.publicnode.com		",
+                "https://1rpc.io/eth",
+                "https://rpc.mevblocker.io",
+                "https://rpc.flashbots.net",
+                "https://eth-pokt.nodies.app",
+                "https://rpc.payload.de",
+                "https://api.zmok.io/mainnet/oaen6dy8ff6hju9k",
+                "https://eth.meowrpc.com	",
+                "https://eth.drpc.org",
+                "https://eth.merkle.io",
+                "https://rpc.tornadoeth.cash/eth",
             ],
             nativeCurrency: {
                 "symbol": "ETH",
@@ -327,8 +334,13 @@ export function getNetworkByName(name: string) {
     return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.name === name);
 }
 
-export function getNetworksById(id: number) {
-    return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.id === id);
+export function getNetworksById(id: number): Chain | undefined {
+    return id ? [
+        ...(Object.values(chainlist))?.flatMap((c) => c)
+            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c),
+        ...(Object.values(chainlist))?.flatMap((c) => c)
+            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c).map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c)
+    ].filter((c: any) => c?.id).find((c: any) => c?.id === id) as Chain : undefined;
 }
 
 export function getNetworks(type: 'mainnet' | 'testnet' | 'devnet') {

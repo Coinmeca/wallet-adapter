@@ -1,5 +1,5 @@
 import { WalletAdapter } from "core/adapter";
-import { WalletLoadError } from "core/errors";
+import { WalletLoadError, WalletNotReadyError } from "core/errors";
 import { getNetworksById } from "chains";
 import { useWallet, type WalletStore } from "states";
 import { Chain } from "types";
@@ -7,64 +7,39 @@ import { providers } from "./providers";
 import { parseChainId } from "../../utils";
 
 export const adapter = (config?: object) => {
-	const { info, mount, unmount, update, connection } = useWallet();
+	const { name, provider, chain, mount, unmount, update, connection } = useWallet();
 
-	const connect = async (chainId: number, name: string, auto?: boolean): Promise<WalletStore | string | void> => {
+	const connect = async (chain: number | string | Chain, name?: string, auto?: boolean): Promise<WalletStore | void> => {
 		name = name?.replaceAll(" ", "");
-		const wallet = providers[name]?.adapter(config) as WalletAdapter;
-		const chain = getNetworksById(chainId);
+		const wallet: WalletAdapter = (name ? providers[name]?.adapter(config) : provider);
+		const c: Chain | undefined = getNetworksById(parseChainId(chain));
 		try {
-			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) {
-			const result = await wallet.connect(chain).then(() => {
+			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) throw new WalletNotReadyError();
+			await wallet.connect(chain).then(() => {
 				if (wallet.connected && wallet.address) {
 					const w: WalletStore = {
-						provider: wallet.name,
+						name: name,
+						provider: wallet.provider,
 						address: wallet.address,
-						chain,
+						chain: c,
 					};
-					update(w, chain);
+					update(w, c);
 					localStorage.setItem("wallet", JSON.stringify(w));
 					wallet.on('chainChanged', (chainId: string) => connection(getNetworksById(parseChainId(chainId))));
 					wallet.on('accountsChanged', (accounts: string | string[]) => update({ address: (Array.isArray(accounts) ? accounts[0] : accounts) as string }));
 					wallet.on('disconnect', disconnect);
 					return w;
 				} else {
-					throw new WalletLoadError();
+					console.error("Wallet Already Connected");
 				}
 			});
-			// }
 		} catch (error: any) {
-			let msg = "";
-			switch (error) {
-				case "WalletTimeoutError": {
-					msg = `Trying to connect wallet session was time out.`;
-					break;
-				}
-				case "WalletWindowClosedError": {
-					msg = `Trying to connect wallet has been stopped by user.`;
-					break;
-				}
-				case "WalletNotInstalledError": {
-					msg = `The ${wallet.name} is not installed yet.`;
-					break;
-				}
-				case "WalletNotFoundError": {
-					msg = `Cannot find wallet information about ${wallet.name}.`;
-					break;
-				}
-				default: {
-					msg = "An unknown error occurred while in connecting a wallet.";
-					break;
-				}
-			}
-			return msg;
+			console.error("Wallet Connecting Error: ", error);
 		}
 	};
 
 	const disconnect = async (): Promise<boolean> => {
-		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
-		if (!name) return false;
-		const wallet = providers[name].adapter(config) as WalletAdapter;
+		const wallet = (provider ? providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config) : provider) as WalletAdapter;
 
 		try {
 			if (wallet.connected || wallet.address) await wallet.disconnect();
@@ -73,65 +48,23 @@ export const adapter = (config?: object) => {
 			unmount();
 			return true;
 		} catch (error) {
-			let msg = "";
-			switch (error) {
-				case "WalletTimeoutError": {
-					msg = `Trying to disconnect wallet session was time out.`;
-					break;
-				}
-				case "WalletWindowClosedError": {
-					msg = `Trying to disconnect wallet has been stopped by user.`;
-					break;
-				}
-				case "WalletNotInstalledError": {
-					msg = `The ${wallet.name} is not installed yet.`;
-					break;
-				}
-				case "WalletNotFoundError": {
-					msg = `Cannot find wallet information about ${wallet.name}.`;
-					break;
-				}
-				default: {
-					msg = "An unknown error occurred while in disconnecting a wallet.";
-				}
-			}
+			console.error("Wallet Disconnecting Error: ", error);
 			return false;
 		}
 	};
 
-	const switchChain = async (chain: number | string | Chain) => {
-		const name = info?.provider || JSON.parse(localStorage.getItem("wallet") || "")?.name;
-		if (!name) return false;
-		const wallet = providers[name].adapter(providers[name].url) as WalletAdapter;
+	const switchChain = async (c: number | string | Chain) => {
+		const wallet = (provider ? providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config) : provider) as WalletAdapter;
 
 		try {
-			chain = (typeof chain === "number" ? getNetworksById(chain) : chain) as Chain;
-			await wallet.chain(chain);
-			connection(chain);
+			c = getNetworksById(parseChainId(c)) as Chain;
+			if (c?.id !== chain?.id) {
+				await wallet.chain(c);
+				connection(c);
+			}
 		} catch (error) {
 			let msg = "";
-			console.log("Wallet Disconnecting Error: ", error);
-			switch (error) {
-				case "WalletTimeoutError": {
-					msg = `Trying to disconnect wallet session was time out.`;
-					break;
-				}
-				case "WalletWindowClosedError": {
-					msg = `Trying to disconnect wallet has been stopped by user.`;
-					break;
-				}
-				case "WalletNotInstalledError": {
-					msg = `The ${wallet.name} is not installed yet.`;
-					break;
-				}
-				case "WalletNotFoundError": {
-					msg = `Cannot find wallet information about ${wallet.name}.`;
-					break;
-				}
-				default: {
-					msg = "An unknown error occurred while in disconnecting a wallet.";
-				}
-			}
+			console.error("Wallet Chain Switching Error: ", error);
 			return false;
 		}
 	};

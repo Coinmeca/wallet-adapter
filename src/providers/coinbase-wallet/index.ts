@@ -93,6 +93,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
     }
 
     async connect(chain?: number | string | Chain): Promise<void> {
+        let account = undefined;
         try {
             if (isMobile() && !this.mobileRequest) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.href}?cb_wallet=?method=eth_requestAccounts`;
             if (!this.provider) throw new WalletNotReadyError();
@@ -111,6 +112,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
                         this.provider.on("accountsChanged", this._accountChanged);
                         this.provider.on("disconnect", this.disconnect);
 
+                        account = accounts[0];
                         this.provider.emit('connect', accounts[0]);
                     })
                     .catch(() => {
@@ -127,6 +129,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
             });
         }
         this._connecting = false;
+        return account;
     }
 
     async disconnect(): Promise<void> {
