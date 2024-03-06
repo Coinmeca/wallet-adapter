@@ -16,7 +16,7 @@ import {
 import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
 import type { Chain } from "types";
-import { isMobile } from "states";
+import { isMobile } from "utils";
 
 import type { Wallet } from "@rainbow-me/rainbowkit";
 import type { RainbowWalletOptions } from "@rainbow-me/rainbowkit/dist/wallets/walletConnectors/rainbowWallet/rainbowWallet";
@@ -81,7 +81,7 @@ export class RainbowWalletAdapter extends WalletAdapter<"Rainbow"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://metamask.app.link/dapp/${window.location}`;
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://rnbwapp.com/wc?uri=${window.location.host + window.location.pathname}`;
 
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
