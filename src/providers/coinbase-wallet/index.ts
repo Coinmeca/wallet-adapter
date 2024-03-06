@@ -23,7 +23,7 @@ import type { CoinbaseWalletProviderOptions } from "@coinbase/wallet-sdk/dist/pr
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
 import _ from 'lodash';
 
-export const CoinbaseWalletName = "CoinbaseWallet" as WalletName<"CoinbaseWallet">;
+export const CoinbaseWalletName = "Coinbase Wallet" as WalletName<"Coinbase Wallet">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
     request<T>(args: RequestArguments): Promise<T>;
 }
@@ -31,7 +31,7 @@ export interface CoinbaseWalletAdapterConfig extends WalletConfig { options?: Co
 export interface CoinbaseWalletMobileAdapter {
     method: string;
 }
-export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWallet">> {
+export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wallet">> {
 
     name = CoinbaseWalletName;
 
