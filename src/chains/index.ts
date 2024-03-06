@@ -71,70 +71,6 @@ export const chainlist: any = {
             }
         }
     },
-    arbitrum: {
-        mainnet: <Chain>{
-            id: 42161,
-            name: 'Arbitrum One',
-            logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-            rpc: [
-                "https://rpc.arb1.arbitrum.gateway.fm",
-                "https://endpoints.omniatech.io/v1/arbitrum/one/public",
-                "https://arbitrum-one.public.blastapi.io",
-                "wss://arbitrum-one.publicnode.com"
-            ],
-        },
-        testnet: {
-            goerli: {
-                id: 421613,
-                name: "Arbitrum Goerli",
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    "wss://arbitrum-goerli.publicnode.com",
-                    "https://api.zan.top/node/v1/arb/goerli/public",
-                    "https://goerli-rollup.arbitrum.io/rpc",
-                    "https://arbitrum-goerli.blockpi.network/v1/rpc/public",
-                    "https://rpc.goerli.arbitrum.gateway.fm",
-                    "https://arbitrum-goerli.public.blastapi.io",
-                    "https://arbitrum-goerli.publicnode.com",
-                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public"
-                ],
-                nativeCurrency: {
-                    "symbol": "ETH",
-                    "decimals": 18
-                }
-            },
-            sepolia: {
-                id: 421614,
-                name: "Arbitrum Sepolia Testnet",
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
-                explorer: ["https://sepolia.arbiscan.io/"],
-                nativeCurrency: {
-                    symbol: 'ETH',
-                    decimals: 18
-                },
-            },
-            runkeby: <Chain>{
-                id: 421611,
-                name: 'Arbitrum Rinkeby',
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    // "Safe" URLs
-                    'https://rinkeby.arbitrum.io/rpc'
-                ],
-            },
-            testnet: <Chain>{
-                id: 421613,
-                name: 'Arbitrum Testnet',
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    // "Safe" URLs
-                    'https://goerli-rollup.arbitrum.io/rpc'
-                ],
-                explorer: ['https://goerli.arbiscan.io/'],
-            }
-        }
-    },
     optimism: {
         mainnet: <Chain>{
             id: 10,
@@ -169,6 +105,46 @@ export const chainlist: any = {
                     'https://goerli.optimism.io'
                 ]
             }
+        }
+    },
+    bnb: {
+        mainnet: <Chain>{
+            id: 56,
+            name: 'BNB Smart Chain',
+            logo: 'https://coinmeca-web3.vercel.app/56/logo.svg',
+            rpc: [
+                "https://binance.llamarpc.com",
+                "https://rpc.ankr.com/bsc",
+                "https://1rpc.io/bnb",
+                "https://bsc-dataseed1.ninicoin.io",
+                "https://bscrpc.com",
+                "https://bsc-dataseed4.bnbchain.org",
+                "https://bsc.rpc.blxrbdn.com",
+                "https://bsc-dataseed3.defibit.io",
+                "https://bsc-dataseed.bnbchain.org",
+                "https://bsc-dataseed2.defibit.io",
+                "https://bsc-dataseed2.bnbchain.org",
+                "https://binance.nodereal.io",
+                "https://bsc.publicnode.com",
+                "https://koge-rpc-bsc.48.club",
+                "https://bsc.meowrpc.com",
+                "https://rpc-bsc.48.club",
+                "https://bsc-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
+                "https://bsc-mainnet.public.blastapi.io",
+                "https://bsc-dataseed3.bnbchain.org",
+                "https://bsc-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf",
+                "https://bsc-dataseed1.defibit.io",
+                "https://bsc-dataseed4.ninicoin.io",
+                "https://bsc-dataseed1.bnbchain.org",
+                "https://bsc.blockpi.network/v1/rpc/public",
+                "https://bsc-dataseed4.defibit.io",
+                "https://api.zan.top/node/v1/bsc/mainnet/public",
+                "https://bsc-dataseed3.ninicoin.io",
+                "https://bsc-pokt.nodies.app",
+                "https://bsc-dataseed2.ninicoin.io",
+                "https://endpoints.omniatech.io/v1/bsc/mainnet/public",
+                "wss://bsc.publicnode.com"
+            ]
         }
     },
     polygon: {
@@ -240,6 +216,97 @@ export const chainlist: any = {
             }
         }
     },
+    base: {
+        mainnet: {
+            id: 8453,
+            name: "Base",
+            logo: 'https://coinmeca-web3.vercel.app/8453/logo.svg',
+            rpc: [
+                "wss://base.publicnode.com",
+                "wss://base.gateway.tenderly.co",
+                "https://base.llamarpc.com",
+                "https://base-pokt.nodies.app",
+                "https://base.blockpi.network/v1/rpc/public",
+                "https://base.gateway.tenderly.co",
+                "https://gateway.tenderly.co/public/base",
+                "https://base-mainnet.public.blastapi.io",
+                "https://rpc.notadegen.com/base",
+                "https://base.publicnode.com",
+                "https://endpoints.omniatech.io/v1/base/mainnet/public",
+                "https://developer-access-mainnet.base.org",
+                "https://mainnet.base.org",
+                "https://base.meowrpc.com"
+            ],
+            nativeCurrency: {
+                symbol: "ETH",
+                decimals: 18
+            }
+        }
+    },
+    arbitrum: {
+        mainnet: <Chain>{
+            id: 42161,
+            name: 'Arbitrum One',
+            logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
+            rpc: [
+                "https://rpc.arb1.arbitrum.gateway.fm",
+                "https://endpoints.omniatech.io/v1/arbitrum/one/public",
+                "https://arbitrum-one.public.blastapi.io",
+                "wss://arbitrum-one.publicnode.com"
+            ],
+        },
+        testnet: {
+            goerli: {
+                id: 421613,
+                name: "Arbitrum Goerli",
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
+                rpc: [
+                    "wss://arbitrum-goerli.publicnode.com",
+                    "https://api.zan.top/node/v1/arb/goerli/public",
+                    "https://goerli-rollup.arbitrum.io/rpc",
+                    "https://arbitrum-goerli.blockpi.network/v1/rpc/public",
+                    "https://rpc.goerli.arbitrum.gateway.fm",
+                    "https://arbitrum-goerli.public.blastapi.io",
+                    "https://arbitrum-goerli.publicnode.com",
+                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public"
+                ],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
+            },
+            sepolia: {
+                id: 421614,
+                name: "Arbitrum Sepolia Testnet",
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
+                rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
+                explorer: ["https://sepolia.arbiscan.io/"],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                },
+            },
+            runkeby: <Chain>{
+                id: 421611,
+                name: 'Arbitrum Rinkeby',
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
+                rpc: [
+                    // "Safe" URLs
+                    'https://rinkeby.arbitrum.io/rpc'
+                ],
+            },
+            testnet: <Chain>{
+                id: 421613,
+                name: 'Arbitrum Testnet',
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
+                rpc: [
+                    // "Safe" URLs
+                    'https://goerli-rollup.arbitrum.io/rpc'
+                ],
+                explorer: ['https://goerli.arbiscan.io/'],
+            }
+        }
+    },
     celo: {
         mainnet: <Chain>{
             id: 42220,
@@ -259,46 +326,6 @@ export const chainlist: any = {
             }
         }
     },
-    bsc: {
-        mainnet: <Chain>{
-            id: 56,
-            name: 'BNB Chain',
-            logo: 'https://coinmeca-web3.vercel.app/56/logo.svg',
-            rpc: [
-                "https://binance.llamarpc.com",
-                "https://rpc.ankr.com/bsc",
-                "https://1rpc.io/bnb",
-                "https://bsc-dataseed1.ninicoin.io",
-                "https://bscrpc.com",
-                "https://bsc-dataseed4.bnbchain.org",
-                "https://bsc.rpc.blxrbdn.com",
-                "https://bsc-dataseed3.defibit.io",
-                "https://bsc-dataseed.bnbchain.org",
-                "https://bsc-dataseed2.defibit.io",
-                "https://bsc-dataseed2.bnbchain.org",
-                "https://binance.nodereal.io",
-                "https://bsc.publicnode.com",
-                "https://koge-rpc-bsc.48.club",
-                "https://bsc.meowrpc.com",
-                "https://rpc-bsc.48.club",
-                "https://bsc-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
-                "https://bsc-mainnet.public.blastapi.io",
-                "https://bsc-dataseed3.bnbchain.org",
-                "https://bsc-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf",
-                "https://bsc-dataseed1.defibit.io",
-                "https://bsc-dataseed4.ninicoin.io",
-                "https://bsc-dataseed1.bnbchain.org",
-                "https://bsc.blockpi.network/v1/rpc/public",
-                "https://bsc-dataseed4.defibit.io",
-                "https://api.zan.top/node/v1/bsc/mainnet/public",
-                "https://bsc-dataseed3.ninicoin.io",
-                "https://bsc-pokt.nodies.app",
-                "https://bsc-dataseed2.ninicoin.io",
-                "https://endpoints.omniatech.io/v1/bsc/mainnet/public",
-                "wss://bsc.publicnode.com"
-            ]
-        }
-    },
     avalanche: {
         mainnet: {
             id: 43114,
@@ -313,6 +340,19 @@ export const chainlist: any = {
                 logo: 'https://coinmeca-web3.vercel.app/43114/logo.svg',
                 rpc: ['https://api.avax-test.network/ext/bc/C/rpc'],
                 explorer: ['https://testnet.snowtrace.io/']
+            }
+        }
+    },
+    berachain: {
+        testnet: {
+            id: 80085,
+            name: "Berachain Artio",
+            logo: 'https://coinmeca-web3.vercel.app/80085/logo.svg',
+            rpc: ["https://artio.rpc.berachain.com/"],
+            explorer: ["https://artio.beratrail.io/"],
+            nativeCurrency: {
+                symbol: "BERA",
+                decimals: 18
             }
         }
     },

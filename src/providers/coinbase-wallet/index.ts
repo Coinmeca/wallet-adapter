@@ -83,7 +83,9 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
     }
 
     get mobileRequest() {
-        return Object.fromEntries(new URLSearchParams(Object.fromEntries(new URLSearchParams(location.search))?.cb_wallet))?.method;
+        const cb_wallet = location.search?.split('cb_wallet%3F');
+        const request = cb_wallet?.find(c => c.includes("method%3D"))?.split("%3D");
+        return request ? { method: request } : cb_wallet ? {} : undefined;
     }
 
     async autoConnect(): Promise<void> {
@@ -98,8 +100,6 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
             if (isMobile() && !this.mobileRequest) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.href}%3Fcb_wallet%3Fmethod%3Deth_requestAccounts`;
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
-            // await this.detect();
-            // if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
             this._connecting = true;
             try {

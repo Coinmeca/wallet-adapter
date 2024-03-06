@@ -83,15 +83,9 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 	async connect(chain?: number | string | Chain): Promise<void> {
 		let account = undefined;
 		try {
-			if (isMobile() && !window?.navigator.userAgent.includes(this.name))
-				window.location.href = `dapp://${window.location.href}`;
-			// if (isMobile() && !window?.navigator.userAgent.includes(this.name))
-			// window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
-
+			if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
 			if (!this.provider) throw new WalletNotReadyError();
 			if (this.connected || this.connecting) return;
-			// await this.detect();
-			// if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
 			this._connecting = true;
 			try {
