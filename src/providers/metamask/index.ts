@@ -20,7 +20,7 @@ import detectEthereumProvider from "@metamask/detect-provider";
 export const MetaMaskWalletName = "MetaMask" as WalletName<"MetaMask">;
 type MetaMaskProviderProps = typeof detectEthereumProvider;
 
-export interface MetaMaskProvider extends Provider, MetaMaskProviderProps {}
+export interface MetaMaskProvider extends Provider, MetaMaskProviderProps { }
 export interface MetaMaskWalletAdapterConfig extends WalletConfig {
 	options?: {
 		mustBeMetaMask?: boolean | undefined;
@@ -84,7 +84,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 		let account = undefined;
 		try {
 			if (isMobile() && !window?.navigator.userAgent.includes(this.name))
-				window.location.href = `dapp://${window.location.host + window.location.pathname}`;
+				window.location.href = `dapp://${window.location.href}`;
 			// if (isMobile() && !window?.navigator.userAgent.includes(this.name))
 			// window.location.href = `https://metamask.app.link/dapp/${window.location.host + window.location.pathname}`;
 

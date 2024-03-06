@@ -95,7 +95,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"CoinbaseWal
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            if (isMobile() && !this.mobileRequest) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.href}?cb_wallet=?method=eth_requestAccounts`;
+            if (isMobile() && !this.mobileRequest) window.location.href = `https://go.cb-w.com/dapp?cb_url=${window.location.href}%3Fcb_wallet%3Fmethod%3Deth_requestAccounts`;
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
             // await this.detect();
