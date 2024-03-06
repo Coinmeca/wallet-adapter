@@ -3,14 +3,16 @@ import { Agent } from 'http';
 import { Agent as Agent$1 } from 'https';
 import * as nodeFetch from 'node-fetch';
 import type { Wallet, WalletAdapter } from './adapter';
-import type { MessageSignerWalletAdapter, SignerWalletAdapter, SignInMessageSignerWalletAdapter } from './signer';
+import type { BaseMessageSignerWalletAdapter, BaseSignerWalletAdapter, MessageSignerWalletAdapter, SignerWalletAdapter, SignInMessageSignerWalletAdapter } from './signer';
 
 export type Adapter =
     | Wallet
     | WalletAdapter
     | SignerWalletAdapter
+    | BaseSignerWalletAdapter
     | MessageSignerWalletAdapter
-    | SignInMessageSignerWalletAdapter;
+    | BaseMessageSignerWalletAdapter
+    | SignInMessageSignerWalletAdapter
 
 export enum WalletAdapterNetwork {
     Mainnet = 'mainnet-beta',

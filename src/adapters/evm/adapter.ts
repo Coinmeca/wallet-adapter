@@ -1,35 +1,31 @@
 import { WalletAdapter } from "core/adapter";
 import { getNetworksById } from "chains";
 import { useWallet, type WalletStore } from "states";
+import { parseChainId } from "utils";
 import { Chain } from "types";
 import { providers } from "./providers";
-import { parseChainId } from "../../utils";
 
 export const adapter = (config?: object) => {
 	const { name, provider, chain, mount, unmount, update, connection } = useWallet();
 
 	const connect = async (chain: number | string | Chain, name: string, auto?: boolean): Promise<WalletStore | void> => {
-		name = name?.replaceAll(" ", "");
 		const wallet = providers[name]?.adapter(config) as WalletAdapter;
 		const c: Chain | undefined = getNetworksById(parseChainId(chain));
+		if (!wallet) console.error("Wallet Provider Not Found")
+		if (wallet.connected && wallet.address) console.error("Wallet Already Connected");
 		try {
-			// if (!wallet.connected || !wallet.address || wallet.address?.length === 0 || (wallet.address?.length > 0 && !wallet.address[0])) throw new WalletNotReadyError();
 			await wallet.connect(c);
-			if (wallet.connected && wallet.address) {
-				const w: WalletStore = {
-					name: name,
-					address: wallet.address,
-					chain: c,
-				};
-				update({ ...w, provider: wallet.provider }, c);
-				localStorage.setItem("wallet", JSON.stringify(w));
-				wallet.on("chainChanged", chainChanged);
-				wallet.on("accountsChanged", accountsChanged);
-				wallet.on("disconnect", disconnect);
-				return w;
-			} else {
-				console.error("Wallet Already Connected");
-			}
+			const w: WalletStore = {
+				name: name,
+				address: wallet.address,
+				chain: c,
+			};
+			wallet.on("chainChanged", chainChanged);
+			wallet.on("accountsChanged", accountsChanged);
+			wallet.on("disconnect", disconnect);
+			localStorage.setItem("wallet", JSON.stringify(w));
+			update({ ...w, provider: wallet.provider }, c);
+			return w;
 		} catch (error: any) {
 			console.error("Wallet Connecting Error: ", error);
 		}
@@ -37,9 +33,10 @@ export const adapter = (config?: object) => {
 
 	const disconnect = async (): Promise<boolean> => {
 		const wallet = (provider || providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config)) as WalletAdapter;
-
+		if (!wallet) console.error("Wallet Provider Not Found");
+		if (!wallet.connected || !wallet.address) console.error("Wallet Already Disconnected");
 		try {
-			if (wallet.connected || wallet.address) await wallet.disconnect();
+			await wallet.disconnect();
 			localStorage.removeItem("wallet");
 			wallet.off("chainChanged", chainChanged);
 			wallet.off("accountsChanged", accountsChanged);
@@ -54,7 +51,8 @@ export const adapter = (config?: object) => {
 
 	const switchChain = async (c: number | string | Chain) => {
 		const wallet = (provider ? providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config) : provider) as WalletAdapter;
-
+		if (!wallet) console.error("Wallet Provider Not Found")
+		if (!wallet.connected || !wallet.address) console.error("Wallet Already Disconnected");
 		try {
 			c = getNetworksById(parseChainId(c)) as Chain;
 			if (c?.id !== chain?.id) {

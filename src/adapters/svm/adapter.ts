@@ -1,100 +1,50 @@
-import type { PublicKey } from '@solana/web3.js';
 import { WalletAdapter } from 'core/adapter';
+import { type WalletStore, useWallet } from 'states';
+import { Chain } from 'types';
 import { providers } from './providers';
 
-export const adapter = {
-    connect: async (name: string, auto?: boolean) => {
-        const wallet = providers[name].adapter() as WalletAdapter;
-        try {
-            if (!wallet.address) {
-                await wallet.connect();
-                const publicKey: string = wallet.address.toBase58();
-                if (wallet.connected && publicKey) {
-                    // adapter.on('ready', onReady);
-                    // adapter.on('connect', onConnect);
-                    // adapter.on('disconnect', onDisconnect);
-                    // adapter.on('error', onError);
+export const adapter = (config?: object) => {
+    const { name, provider, chain, mount, unmount, update, connection } = useWallet();
 
-                    // localStorage.setItem('walletName', JSON.stringify(name));
-                    localStorage.setItem('wallet', wallet.name);
-                    return {
-                        provider: name,
-                        publicKey: <PublicKey>wallet.address,
-                        address: publicKey,
-                        ...providers[name]
-                    };
-                }
-            }
-            // return () => {};
-        } catch (error) {
-            let msg = '';
-            console.log('Wallet Connecting Error: \n', error);
-            switch (error) {
-                case 'WalletTimeoutError': {
-                    msg = `Trying to connect wallet session was time out.`;
-                    break;
-                }
-                case 'WalletWindowClosedError': {
-                    msg = `Trying to connect wallet has been stopped by user.`;
-                    break;
-                }
-                case 'WalletNotInstalledError': {
-                    msg = `The ${wallet.name} is not installed yet.`;
-                    break;
-                }
-                case 'WalletNotFoundError': {
-                    msg = `Cannot find wallet information about ${wallet.name}.`;
-                    break;
-                }
-                default: {
-                    msg = 'An unknown error occurred while in connecting a wallet.';
-                    break;
-                }
-            }
-            return undefined;
+    const connect = async (chain: number | string | Chain, name: string, auto?: boolean): Promise<WalletStore | void> => {
+        const wallet = providers[name]?.adapter(config) as WalletAdapter;
+        if (!wallet) console.error("Wallet Provider Not Found")
+        if (wallet.connected && wallet.address) console.error("Wallet Already Connected");
+        try {
+            await wallet.connect(chain);
+            const w: WalletStore = {
+                name: name,
+                address: wallet.address.toBase58(),
+                // chain: c,
+            };
+            // adapter.on('ready', onReady);
+            // adapter.on('connect', onConnect);
+            // adapter.on('disconnect', onDisconnect);
+            // adapter.on('error', onError);
+
+            localStorage.setItem("wallet", JSON.stringify(w));
+            update({ ...w, provider: wallet.provider });
+            return w;
+        } catch (error: any) {
+            console.error("Wallet Connecting Error: ", error);
         }
-    },
-    disconnect: async () => {
-        const name = localStorage.getItem('wallet');
+    };
 
-        if (!name) return;
-        const wallet = providers[name].adapter() as WalletAdapter;
-
+    const disconnect = async (): Promise<boolean> => {
+        const wallet = (provider || providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config)) as WalletAdapter;
+        if (!wallet) console.error("Wallet Provider Not Found");
+        if (!wallet.connected || !wallet.address) console.error("Wallet Already Disconnected");
         try {
-            if (wallet.address) {
-                await wallet.disconnect();
-                const publicKey = wallet.address;
-                if (!publicKey && !wallet.connected) {
-                    // localStorage.removeItem('walletName');
-                    localStorage.removeItem('wallet');
-                    wallet.disconnect();
-                }
-            }
+            await wallet.disconnect();
+
+            localStorage.removeItem("wallet");
+            unmount();
+            return true;
         } catch (error) {
-            let msg = ''
-            console.log('Wallet Disconnecting Error: ', error);
-            switch (error) {
-                case 'WalletTimeoutError': {
-                    msg = `Trying to disconnect wallet session was time out.`;
-                    break;
-                }
-                case 'WalletWindowClosedError': {
-                    msg = `Trying to disconnect wallet has been stopped by user.`;
-                    break;
-                }
-                case 'WalletNotInstalledError': {
-                    msg = `The ${wallet.name} is not installed yet.`;
-                    break;
-                }
-                case 'WalletNotFoundError': {
-                    msg = `Cannot find wallet information about ${wallet.name}.`;
-                    break;
-                }
-                default: {
-                    msg = 'An unknown error occurred while in disconnecting a wallet.';
-                }
-            }
-            return undefined;
+            console.error("Wallet Disconnecting Error: ", error);
+            return false;
         }
     }
+
+    return { connect, disconnect };
 }

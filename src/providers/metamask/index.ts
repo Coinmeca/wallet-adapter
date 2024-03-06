@@ -9,11 +9,10 @@ import {
 	WalletUserReject,
 	WalletChangePlatform,
 } from "core/errors";
-import type { Provider, ProviderMessage } from "core/evm/module";
+import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
-import type { Asset, Chain } from "types";
-import { formatChainId } from "utils";
-import { isMobile } from "states";
+import type { Chain } from "types";
+import { isMobile } from "utils";
 
 import detectEthereumProvider from "@metamask/detect-provider";
 
