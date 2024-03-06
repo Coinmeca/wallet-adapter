@@ -62,7 +62,6 @@ export const adapter = (config?: object) => {
 				connection(c);
 			}
 		} catch (error) {
-			let msg = "";
 			console.error("Wallet Chain Switching Error: ", error);
 			return false;
 		}

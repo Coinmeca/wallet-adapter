@@ -6,20 +6,18 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 1,
             name: 'Ethereum',
+            logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
             rpc: [
-                "https://eth.llamarpc.com",
-                "https://endpoints.omniatech.io/v1/eth/mainnet/public",
-                "https://ethereum-rpc.publicnode.com		",
+                "https://ethereum.publicnode.com",
+                "https://virginia.rpc.blxrbdn.com",
+                "https://uk.rpc.blxrbdn.com",
+                "https://singapore.rpc.blxrbdn.com",
+                "https://rpc.ankr.com/eth",
+                "https://mainnet.gateway.tenderly.co",
+                "https://gateway.tenderly.co/public/mainnet",
                 "https://1rpc.io/eth",
-                "https://rpc.mevblocker.io",
-                "https://rpc.flashbots.net",
-                "https://eth-pokt.nodies.app",
-                "https://rpc.payload.de",
-                "https://api.zmok.io/mainnet/oaen6dy8ff6hju9k",
-                "https://eth.meowrpc.com	",
-                "https://eth.drpc.org",
-                "https://eth.merkle.io",
-                "https://rpc.tornadoeth.cash/eth",
+                "https://endpoints.omniatech.io/v1/eth/mainnet/public",
+                "wss://mainnet.gateway.tenderly.co"
             ],
             nativeCurrency: {
                 "symbol": "ETH",
@@ -30,6 +28,7 @@ export const chainlist: any = {
             ropsten: <Chain>{
                 id: 3,
                 name: 'Ropsten',
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: ['https://rpc.ankr.com/eth_ropsten'],
                 nativeCurrency: {
                     "symbol": "ETH",
@@ -39,13 +38,19 @@ export const chainlist: any = {
             rinkeby: <Chain>{
                 id: 4,
                 name: 'Rinkeby',
-                rpc: ['https://rinkeby-light.eth.linkpool.io/'],
-                logo: 'https://assets-global.website-files.com/5f973c970bea5548ad4287ef/61e70d05f3c7146ab79e66bb_ethereum-eth.svg'
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+                rpc: [
+                    'https://rinkeby-light.eth.linkpool.io/'
+                ],
             },
             goerli: <Chain>{
                 id: 5,
                 name: 'Goerli',
-                rpc: ['https://rpc.goerli.mudit.blog/', 'https://rpc.ankr.com/eth_goerli'],
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+                rpc: [
+                    'https://rpc.goerli.mudit.blog/',
+                    'https://rpc.ankr.com/eth_goerli'
+                ],
                 nativeCurrency: {
                     "symbol": "ETH",
                     "decimals": 18
@@ -54,10 +59,9 @@ export const chainlist: any = {
             kovan: <Chain>{
                 id: 42,
                 name: 'Kovan',
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
-                    // "Safe" URLs
                     'https://kovan.poa.network',
-                    // "Fallback" URLs
                     'https://eth-kovan.public.blastapi.io'
                 ],
                 nativeCurrency: {
@@ -71,19 +75,19 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 42161,
             name: 'Arbitrum One',
+            logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
             rpc: [
-                // "Safe" URLs
-                'https://arbitrum-mainnet.infura.io',
-                'https://arb1.arbitrum.io/rpc',
-                // "Fallback" URLs
-                'https://arbitrum.public-rpc.com'
+                "https://rpc.arb1.arbitrum.gateway.fm",
+                "https://endpoints.omniatech.io/v1/arbitrum/one/public",
+                "https://arbitrum-one.public.blastapi.io",
+                "wss://arbitrum-one.publicnode.com"
             ],
-            logo: 'https://l2beat.com/icons/arbitrum.png'
         },
         testnet: {
             goerli: {
                 id: 421613,
                 name: "Arbitrum Goerli",
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
                     "wss://arbitrum-goerli.publicnode.com",
                     "https://api.zan.top/node/v1/arb/goerli/public",
@@ -102,6 +106,7 @@ export const chainlist: any = {
             sepolia: {
                 id: 421614,
                 name: "Arbitrum Sepolia Testnet",
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
                 explorer: ["https://sepolia.arbiscan.io/"],
                 nativeCurrency: {
@@ -112,21 +117,21 @@ export const chainlist: any = {
             runkeby: <Chain>{
                 id: 421611,
                 name: 'Arbitrum Rinkeby',
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
                     // "Safe" URLs
                     'https://rinkeby.arbitrum.io/rpc'
                 ],
-                logo: 'https://l2beat.com/icons/arbitrum.png'
             },
             testnet: <Chain>{
                 id: 421613,
                 name: 'Arbitrum Testnet',
+                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
                     // "Safe" URLs
                     'https://goerli-rollup.arbitrum.io/rpc'
                 ],
                 explorer: ['https://goerli.arbiscan.io/'],
-                logo: 'https://l2beat.com/icons/arbitrum.png'
             }
         }
     },
@@ -134,20 +139,33 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 10,
             name: 'Optimism',
+            logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
             rpc: [
-                // "Safe" URLs
-                'https://mainnet.optimism.io/',
-                // "Fallback" URLs
-                'https://rpc.ankr.com/optimism',
-                'https://optimism-mainnet.infura.io'
+                "https://optimism.llamarpc.com",
+                "https://optimism.blockpi.network/v1/rpc/public",
+                "https://optimism.drpc.org",
+                "https://optimism-mainnet.public.blastapi.io",
+                "https://rpc.optimism.gateway.fm",
+                "https://mainnet.optimism.io",
+                "https://optimism.meowrpc.com",
+                "https://rpc.tornadoeth.cash/optimism",
+                "https://optimism-rpc.publicnode.com",
+                "https://rpc.ankr.com/optimism",
+                "https://op-pokt.nodies.app",
+                "https://api.zan.top/node/v1/opt/mainnet/public",
+                "https://optimism.gateway.tenderly.co",
+                "https://gateway.tenderly.co/public/optimism",
+                "https://endpoints.omniatech.io/v1/op/mainnet/public",
+                "wss://optimism-rpc.publicnode.com",
+                "wss://optimism.gateway.tenderly.co"
             ]
         },
         devnet: {
             goerli: <Chain>{
                 id: 420,
                 name: 'Optimism Goerli',
+                logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
                 rpc: [
-                    // "Safe" URLs
                     'https://goerli.optimism.io'
                 ]
             }
@@ -157,16 +175,22 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 137,
             name: 'Polygon',
+            logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
             rpc: [
-                // "Safe" URLs
-                'https://polygon-rpc.com/',
-                'https://rpc-mainnet.matic.network',
-                'https://matic-mainnet.chainstacklabs.com',
-                'https://rpc-mainnet.maticvigil.com',
-                'https://rpc-mainnet.matic.quiknode.pro',
-                'https://matic-mainnet-full-rpc.bwarelabs.com'
+                "https://polygon-rpc.com",
+                "https://polygon-pokt.nodies.app",
+                "https://rpc.ankr.com/polygon",
+                "https://polygon.blockpi.network/v1/rpc/public",
+                "https://polygon.rpc.blxrbdn.com",
+                "https://rpc-mainnet.matic.quiknode.pro",
+                "https://polygon-mainnet.public.blastapi.io",
+                "https://polygon-bor.publicnode.com",
+                "https://polygon-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf",
+                "https://gateway.tenderly.co/public/polygon",
+                "https://polygon.gateway.tenderly.co",
+                "https://polygon.meowrpc.com",
+                "wss://polygon-bor.publicnode.com"
             ],
-            logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp',
             nativeCurrency: {
                 symbol: 'MATIC',
                 decimals: 18
@@ -176,8 +200,8 @@ export const chainlist: any = {
             mumbai: <Chain>{
                 id: 80001,
                 name: 'Polygon Mumbai',
+                logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
                 rpc: [
-                    // "Safe" URLs
                     "https://rpc.ankr.com/polygon_mumbai",
                     "https://polygon-mumbai-bor.publicnode.com",
                     "https://polygon-mumbai.blockpi.network/v1/rpc/public",
@@ -193,30 +217,25 @@ export const chainlist: any = {
                     decimals: 18
                 },
                 explorer: ['https://mumbai.polygonscan.com/'],
-                logo: 'https://altcoinsbox.com/wp-content/uploads/2023/03/matic-logo.webp'
             },
         },
-        localnet: <Chain>{
-            id: 999999,
-            name: 'Polygon Localnet',
-            rpc: ['127.0.0.1:3000']
-        }
     },
     polygon_zkevm: {
         mainnet: <Chain>{
             id: 1101,
             name: 'Polygon zkEVM',
+            logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
             rpc: [
-                // "Safe" URLs
                 'https://zkevm-rpc.com'
             ],
-            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAJ1BMVEVHcEx7P+R7P+R7P+R7P+R7P+V7P+R7PuR7P+R7P+R7P+Z7P+R7P+Wom7PeAAAADXRSTlMAH7P/o22SP+3LFX5Vbg7mjAAAALBJREFUeAFjIBYwKhsJoAg4GxubIPODjR3YjE0R/ArjiQwMK43bITwwEyI8C8JnM7aGaUwA05NNGE7vXgDEDM6WID6PsQCrsbEBCDMaHwAKsJgycJrsMAdhhmAHoACTDQOnOQQyHFZAEwiGCvBshECGyVABGFhkDBYwdTaGAYgAgmsSDBHQgmmB2mIJNxQqYIrhDmQBDKdjeA7q/Wq49zEDCDMIMQMZEQ3oEYUZlUQCAHdePrGmeAqLAAAAAElFTkSuQmCC'
         },
         testnet: {
             testnet: <Chain>{
                 id: 1442,
                 name: 'Polygon zkEVM Testnet',
-                rpc: ['https://rpc.public.zkevm-test.net'],
+                rpc: [
+                    'https://rpc.public.zkevm-test.net'
+                ],
                 logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgBAMAAACBVGfHAAAAJ1BMVEVHcEx7P+R7P+R7P+R7P+R7P+V7P+R7PuR7P+R7P+R7P+Z7P+R7P+Wom7PeAAAADXRSTlMAH7P/o22SP+3LFX5Vbg7mjAAAALBJREFUeAFjIBYwKhsJoAg4GxubIPODjR3YjE0R/ArjiQwMK43bITwwEyI8C8JnM7aGaUwA05NNGE7vXgDEDM6WID6PsQCrsbEBCDMaHwAKsJgycJrsMAdhhmAHoACTDQOnOQQyHFZAEwiGCvBshECGyVABGFhkDBYwdTaGAYgAgmsSDBHQgmmB2mIJNxQqYIrhDmQBDKdjeA7q/Wq49zEDCDMIMQMZEQ3oEYUZlUQCAHdePrGmeAqLAAAAAElFTkSuQmCC'
             }
         }
@@ -226,8 +245,7 @@ export const chainlist: any = {
             id: 42220,
             name: 'Celo',
             rpc: [
-                // "Safe" URLs
-                `https://forno.celo.org`
+                'https://forno.celo.org'
             ]
         },
         testnet: {
@@ -235,8 +253,7 @@ export const chainlist: any = {
                 id: 44787,
                 name: 'Celo Alfajores',
                 rpc: [
-                    // "Safe" URLs
-                    `https://alfajores-forno.celo-testnet.org`
+                    'https://alfajores-forno.celo-testnet.org'
                 ],
                 logo: 'https://stakingcrypto.info/static/assets/coins/celo-logo.png'
             }
@@ -246,22 +263,55 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 56,
             name: 'BNB Chain',
-            rpc: ['https://bsc-dataseed.binance.org/']
+            logo: 'https://coinmeca-web3.vercel.app/56/logo.svg',
+            rpc: [
+                "https://binance.llamarpc.com",
+                "https://rpc.ankr.com/bsc",
+                "https://1rpc.io/bnb",
+                "https://bsc-dataseed1.ninicoin.io",
+                "https://bscrpc.com",
+                "https://bsc-dataseed4.bnbchain.org",
+                "https://bsc.rpc.blxrbdn.com",
+                "https://bsc-dataseed3.defibit.io",
+                "https://bsc-dataseed.bnbchain.org",
+                "https://bsc-dataseed2.defibit.io",
+                "https://bsc-dataseed2.bnbchain.org",
+                "https://binance.nodereal.io",
+                "https://bsc.publicnode.com",
+                "https://koge-rpc-bsc.48.club",
+                "https://bsc.meowrpc.com",
+                "https://rpc-bsc.48.club",
+                "https://bsc-mainnet.nodereal.io/v1/64a9df0874fb4a93b9d0a3849de012d3",
+                "https://bsc-mainnet.public.blastapi.io",
+                "https://bsc-dataseed3.bnbchain.org",
+                "https://bsc-mainnet.rpcfast.com?api_key=xbhWBI1Wkguk8SNMu1bvvLurPGLXmgwYeC4S6g2H7WdwFigZSmPWVZRxrskEQwIf",
+                "https://bsc-dataseed1.defibit.io",
+                "https://bsc-dataseed4.ninicoin.io",
+                "https://bsc-dataseed1.bnbchain.org",
+                "https://bsc.blockpi.network/v1/rpc/public",
+                "https://bsc-dataseed4.defibit.io",
+                "https://api.zan.top/node/v1/bsc/mainnet/public",
+                "https://bsc-dataseed3.ninicoin.io",
+                "https://bsc-pokt.nodies.app",
+                "https://bsc-dataseed2.ninicoin.io",
+                "https://endpoints.omniatech.io/v1/bsc/mainnet/public",
+                "wss://bsc.publicnode.com"
+            ]
         }
     },
     avalanche: {
         mainnet: {
             id: 43114,
             name: 'Avalanche C-chain',
+            logo: 'https://coinmeca-web3.vercel.app/43114/logo.svg',
             rpc: ['https://avalanche-mainnet.infura.io'],
-            logo: 'https://cryptologos.cc/logos/avalanche-avax-logo.png'
         },
         testnet: {
             fuji: <Chain>{
                 id: 43113,
                 name: 'Avalanche Fuji',
+                logo: 'https://coinmeca-web3.vercel.app/43114/logo.svg',
                 rpc: ['https://api.avax-test.network/ext/bc/C/rpc'],
-                logo: 'https://cryptologos.cc/logos/avalanche-avax-logo.png',
                 explorer: ['https://testnet.snowtrace.io/']
             }
         }
@@ -271,16 +321,16 @@ export const chainlist: any = {
             id: 101,
             name: 'Solana',
             type: <Cluster>'mainnet-beta',
+            logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
             rpc: ['https://api.mainnet-beta.solana.com'],
-            logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png'
         },
         testnet: {
             testnet: <Chain>{
                 id: 102,
                 name: 'Solana Testnet',
                 type: <Cluster>'testnet',
+                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
                 rpc: [''],
-                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png'
             }
         },
         devnet: {
@@ -288,8 +338,8 @@ export const chainlist: any = {
                 id: 103,
                 name: 'Solana Devnet',
                 type: <Cluster>'devnet',
+                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
                 rpc: ['https://api.devnet.solana.com/'],
-                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png'
             }
         }
     }
