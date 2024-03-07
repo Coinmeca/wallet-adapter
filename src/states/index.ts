@@ -1,7 +1,7 @@
 ﻿import { create } from "zustand";
 import { Chain } from "types";
 
-const initial: WalletStore = {
+const initial: WalletStore & WalletAction = {
     name: undefined,
     provider: undefined,
     address: undefined,
@@ -20,7 +20,6 @@ export interface Wallet {
 export interface WalletStore extends Wallet {
     chain?: Chain;
 }
-
 export interface WalletAction {
     connect?: (chain: number | string | Chain, name: string, auto?: boolean) => Promise<WalletStore | void>;
     disconnect?: () => Promise<boolean>;
