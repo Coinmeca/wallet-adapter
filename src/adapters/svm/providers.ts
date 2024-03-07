@@ -21,14 +21,14 @@ export const providers: Providers = {
 	Phantom: {
 		name: 'Phantom',
 		website: 'https://phantom.app',
-		url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
+		url: 'https://chromewebstore.google.com/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
 		// adapter: (config?) => new PhantomWalletAdapter.svm.Adapter();
 		adapter: (config?) => new PhantomWalletAdapter(config) as any,
 	},
 	'Coinbase Wallet': {
 		name: 'Coinbase Wallet',
 		website: 'https://www.coinbase.com/wallet',
-		url: 'https://www.coinbase.com/wallet/downloads',
+		url: 'https://chromewebstore.google.com/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad',
 		// adapter: (config?) => new PhantomWalletAdapter.svm.Adapter();
 		adapter: (config?) => new CoinbaseWalletAdapter(config) as any,
 	},

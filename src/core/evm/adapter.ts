@@ -31,17 +31,14 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
         if (c) {
             chain = getNetworksById(parseChainId(c)) as Chain;
             await this.provider?.request({
-                method: "wallet_switchEthereumChain",
+                method: "wallet_addEthereumChain",
                 params: [{
-                    chainId: formatChainId(chain)
+                    chainId: formatChainId(chain?.id),
+                    ...(chain?.name && { chainName: chain?.name }),
+                    ...(chain?.rpc && { rpcUrls: chain?.rpc }),
+                    ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
+                    ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
                 }]
-                // params: [{
-                //     chainId: "0x" + chain?.id?.toString(16),
-                //     ...(chain?.name && { chainName: chain?.name }),
-                //     ...(chain?.rpc && { rpcUrls: chain?.rpc }),
-                //     ...(chain?.explorer && { blockExplorerUrls: chain?.explorer }),
-                //     ...(chain?.nativeCurrency && { nativeCurrency: chain?.nativeCurrency }),
-                // }]
             }).then((success: any) => { if (success) this._chainChanged(c) });
         } else {
             await this.provider?.request({ method: 'eth_chainId' }).then((chainId: string) => this._chainChanged(chainId));
