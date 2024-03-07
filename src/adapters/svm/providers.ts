@@ -25,6 +25,13 @@ export const providers: Providers = {
 		// adapter: (config?) => new PhantomWalletAdapter.svm.Adapter();
 		adapter: (config?) => new PhantomWalletAdapter(config) as any,
 	},
+	'Coinbase Wallet': {
+		name: 'Coinbase Wallet',
+		website: 'https://www.coinbase.com/wallet',
+		url: 'https://www.coinbase.com/wallet/downloads',
+		// adapter: (config?) => new PhantomWalletAdapter.svm.Adapter();
+		adapter: (config?) => new PhantomWalletAdapter(config) as any,
+	},
 	Solflare: {
 		name: 'Solflare',
 		website: 'https://solflare.com',

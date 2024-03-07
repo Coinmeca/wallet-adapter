@@ -291,19 +291,8 @@ export const chainlist: any = {
                 name: 'Arbitrum Rinkeby',
                 logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
-                    // "Safe" URLs
                     'https://rinkeby.arbitrum.io/rpc'
                 ],
-            },
-            testnet: <Chain>{
-                id: 421613,
-                name: 'Arbitrum Testnet',
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    // "Safe" URLs
-                    'https://goerli-rollup.arbitrum.io/rpc'
-                ],
-                explorer: ['https://goerli.arbiscan.io/'],
             }
         }
     },
@@ -345,14 +334,16 @@ export const chainlist: any = {
     },
     berachain: {
         testnet: {
-            id: 80085,
-            name: "Berachain Artio",
-            logo: 'https://coinmeca-web3.vercel.app/80085/logo.svg',
-            rpc: ["https://artio.rpc.berachain.com/"],
-            explorer: ["https://artio.beratrail.io/"],
-            nativeCurrency: {
-                symbol: "BERA",
-                decimals: 18
+            artio: {
+                id: 80085,
+                name: "Berachain Artio",
+                logo: 'https://coinmeca-web3.vercel.app/80085/logo.svg',
+                rpc: ["https://artio.rpc.berachain.com/"],
+                explorer: ["https://artio.beratrail.io/"],
+                nativeCurrency: {
+                    symbol: "BERA",
+                    decimals: 18
+                }
             }
         }
     },
@@ -421,7 +412,12 @@ export function getChainNames(type: 'mainnet' | 'testnet' | 'devnet') {
 }
 
 export function getNetworkByName(name: string) {
-    return Object.values([(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => c), ...(Object.values(chainlist) as any)?.flatMap((chains: any) => chains).map((types: any) => Object.values(types as any)).flatMap((networks: any) => networks)?.flatMap((c: any) => Object.values(c).flatMap((c) => c))]).find((f) => f?.name === name);
+    return name ? [
+        ...(Object.values(chainlist))?.flatMap((c) => c)
+            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c),
+        ...(Object.values(chainlist))?.flatMap((c) => c)
+            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c).map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c)
+    ].find((f: any) => f?.name === name) as Chain : undefined;
 }
 
 export function getNetworksById(id: number): Chain | undefined {
@@ -430,7 +426,7 @@ export function getNetworksById(id: number): Chain | undefined {
             .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c),
         ...(Object.values(chainlist))?.flatMap((c) => c)
             .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c).map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c)
-    ].filter((c: any) => c?.id).find((c: any) => c?.id === id) as Chain : undefined;
+    ].find((c: any) => c?.id === id) as Chain : undefined;
 }
 
 export function getNetworks(type: 'mainnet' | 'testnet' | 'devnet') {
