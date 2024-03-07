@@ -1,3 +1,4 @@
+import { Chain } from '@rainbow-me/rainbowkit';
 import * as evm from './evm';
 import * as svm from './svm';
 

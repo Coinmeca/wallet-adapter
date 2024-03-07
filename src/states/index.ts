@@ -1,15 +1,23 @@
 ﻿import { create } from "zustand";
 import { Chain } from "types";
 
-const initial: WalletStore & WalletAction = {
-    name: undefined,
-    provider: undefined,
-    address: undefined,
-    chain: undefined,
-    connect: undefined,
-    disconnect: undefined,
-    switchChain: undefined,
-};
+export type ConnectArgs =
+    | [undefined]
+    | [undefined, undefined]
+    | [undefined, undefined, undefined]
+    | [undefined, boolean]
+    | [number, boolean]
+    | [string, boolean]
+    | [Chain, boolean]
+    | [number, string]
+    | [string, string]
+    | [Chain, string]
+    | [number, undefined, boolean]
+    | [string, undefined, boolean]
+    | [Chain, undefined, boolean]
+    | [number, string, boolean]
+    | [string, string, boolean]
+    | [Chain, string, boolean]
 
 export interface Wallet {
     name?: string;
@@ -21,9 +29,9 @@ export interface WalletStore extends Wallet {
     chain?: Chain;
 }
 export interface WalletAction {
-    connect?: (chain: number | string | Chain, name: string, auto?: boolean) => Promise<WalletStore | void>;
-    disconnect?: () => Promise<boolean>;
-    switchChain?: (c: number | string | Chain) => Promise<Chain | undefined>;
+    connect: (...args: ConnectArgs) => Promise<WalletStore | undefined>;
+    disconnect: () => Promise<boolean>;
+    switchChain: (c: number | string | Chain) => Promise<Chain | undefined>;
 }
 export interface WalletStoreAction extends WalletAction {
     mount: (wallet: WalletStore) => void;
@@ -32,6 +40,16 @@ export interface WalletStoreAction extends WalletAction {
     connection: (chain?: Chain) => void;
     initialize: () => void;
 }
+
+const initial: WalletStore & WalletAction = {
+    name: undefined,
+    provider: undefined,
+    address: undefined,
+    chain: undefined,
+    connect: async () => { console.error('Provider Not Found'); return undefined },
+    disconnect: async () => { console.error('Provider Not Found'); return false },
+    switchChain: async () => { console.error('Provider Not Found'); return undefined },
+};
 
 export const useWallet = create<WalletStore & WalletStoreAction>((set) => ({
     ...initial,

@@ -1,5 +1,4 @@
 import { Adapter } from "core/types";
-
 export interface NativeCurrency {
     symbol: string;
     decimals: number;
