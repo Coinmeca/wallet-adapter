@@ -6,8 +6,10 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 1,
             name: 'Ethereum',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
             rpc: [
+                "https://mainnet.infura.io/v3/",
                 "https://ethereum.publicnode.com",
                 "https://virginia.rpc.blxrbdn.com",
                 "https://uk.rpc.blxrbdn.com",
@@ -28,6 +30,7 @@ export const chainlist: any = {
             ropsten: <Chain>{
                 id: 3,
                 name: 'Ropsten',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: ['https://rpc.ankr.com/eth_ropsten'],
                 nativeCurrency: {
@@ -38,6 +41,7 @@ export const chainlist: any = {
             rinkeby: <Chain>{
                 id: 4,
                 name: 'Rinkeby',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
                     'https://rinkeby-light.eth.linkpool.io/'
@@ -46,6 +50,7 @@ export const chainlist: any = {
             goerli: <Chain>{
                 id: 5,
                 name: 'Goerli',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
                     'https://rpc.goerli.mudit.blog/',
@@ -59,6 +64,7 @@ export const chainlist: any = {
             kovan: <Chain>{
                 id: 42,
                 name: 'Kovan',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
                     'https://kovan.poa.network',
@@ -75,8 +81,10 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 10,
             name: 'Optimism',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
             rpc: [
+                "https://optimism-mainnet.infura.io",
                 "https://optimism.llamarpc.com",
                 "https://optimism.blockpi.network/v1/rpc/public",
                 "https://optimism.drpc.org",
@@ -100,6 +108,7 @@ export const chainlist: any = {
             goerli: <Chain>{
                 id: 420,
                 name: 'Optimism Goerli',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
                 rpc: [
                     'https://goerli.optimism.io'
@@ -111,8 +120,10 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 56,
             name: 'BNB Smart Chain',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/56/logo.svg',
             rpc: [
+                "https://bsc-dataseed.binance.org/",
                 "https://binance.llamarpc.com",
                 "https://rpc.ankr.com/bsc",
                 "https://1rpc.io/bnb",
@@ -151,8 +162,10 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 137,
             name: 'Polygon',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
             rpc: [
+                "https://polygon-mainnet.infura.io",
                 "https://polygon-rpc.com",
                 "https://polygon-pokt.nodies.app",
                 "https://rpc.ankr.com/polygon",
@@ -176,6 +189,7 @@ export const chainlist: any = {
             mumbai: <Chain>{
                 id: 80001,
                 name: 'Polygon Mumbai',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
                 rpc: [
                     "https://rpc.ankr.com/polygon_mumbai",
@@ -200,6 +214,7 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 1101,
             name: 'Polygon zkEVM',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/137/logo.svg',
             rpc: [
                 'https://zkevm-rpc.com'
@@ -209,6 +224,7 @@ export const chainlist: any = {
             testnet: <Chain>{
                 id: 1442,
                 name: 'Polygon zkEVM Testnet',
+                base: 'evm',
                 rpc: [
                     'https://rpc.public.zkevm-test.net'
                 ],
@@ -220,6 +236,7 @@ export const chainlist: any = {
         mainnet: {
             id: 8453,
             name: "Base",
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/8453/logo.svg',
             rpc: [
                 "wss://base.publicnode.com",
@@ -247,8 +264,10 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 42161,
             name: 'Arbitrum One',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
             rpc: [
+                "https://arbitrum-mainnet.infura.io",
                 "https://rpc.arb1.arbitrum.gateway.fm",
                 "https://endpoints.omniatech.io/v1/arbitrum/one/public",
                 "https://arbitrum-one.public.blastapi.io",
@@ -259,16 +278,17 @@ export const chainlist: any = {
             goerli: {
                 id: 421613,
                 name: "Arbitrum Goerli",
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
-                    "wss://arbitrum-goerli.publicnode.com",
                     "https://api.zan.top/node/v1/arb/goerli/public",
                     "https://goerli-rollup.arbitrum.io/rpc",
                     "https://arbitrum-goerli.blockpi.network/v1/rpc/public",
                     "https://rpc.goerli.arbitrum.gateway.fm",
                     "https://arbitrum-goerli.public.blastapi.io",
                     "https://arbitrum-goerli.publicnode.com",
-                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public"
+                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
+                    "wss://arbitrum-goerli.publicnode.com",
                 ],
                 nativeCurrency: {
                     "symbol": "ETH",
@@ -277,9 +297,13 @@ export const chainlist: any = {
             },
             sepolia: {
                 id: 421614,
-                name: "Arbitrum Sepolia Testnet",
+                name: "Arbitrum Sepolia",
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: ["https://sepolia-rollup.arbitrum.io/rpc", "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"],
+                rpc: [
+                    "https://sepolia-rollup.arbitrum.io/rpc",
+                    "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"
+                ],
                 explorer: ["https://sepolia.arbiscan.io/"],
                 nativeCurrency: {
                     symbol: 'ETH',
@@ -289,6 +313,7 @@ export const chainlist: any = {
             runkeby: <Chain>{
                 id: 421611,
                 name: 'Arbitrum Rinkeby',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
                 rpc: [
                     'https://rinkeby.arbitrum.io/rpc'
@@ -300,6 +325,8 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 42220,
             name: 'Celo',
+            base: 'evm',
+            logo: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxuczp4b2RtPSJodHRwOi8vd3d3LmNvcmVsLmNvbS9jb3JlbGRyYXcvb2RtLzIwMDMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjUwMCAyNTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAwIDI1MDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkNGRjUyO30KCS5zdDF7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7fQo8L3N0eWxlPgo8ZyBpZD0iTGF5ZXJfeDAwMjBfMSI+Cgk8ZyBpZD0iXzE5NDI3OTI1NDQ3MzYiPgoJCTxjaXJjbGUgY2xhc3M9InN0MCIgY3g9IjEyNTAiIGN5PSIxMjUwIiByPSIxMjUwIj48L2NpcmNsZT4KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTk0OS4zLDU0Ni4ySDU1MC43djE0MDcuN2gxMzk4Ljd2LTQ5MS40aC0yMzIuMWMtODAsMTc5LjMtMjYwLjEsMzA0LjEtNDY2LjIsMzA0LjEgICAgYy0yODQuMSwwLTUxNC4yLTIzMy42LTUxNC4yLTUxNy41YzAtMjg0LDIzMC4xLTUxNS42LDUxNC4yLTUxNS42YzIxMC4xLDAsMzkwLjIsMTI4LjksNDcwLjIsMzEyLjFoMjI4LjFWNTQ2LjJ6Ij48L3BhdGg+Cgk8L2c+CjwvZz4KPC9zdmc+Cg==',
             rpc: [
                 'https://forno.celo.org'
             ]
@@ -308,10 +335,11 @@ export const chainlist: any = {
             alfajores: <Chain>{
                 id: 44787,
                 name: 'Celo Alfajores',
+                base: 'evm',
+                logo: 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxuczp4b2RtPSJodHRwOi8vd3d3LmNvcmVsLmNvbS9jb3JlbGRyYXcvb2RtLzIwMDMiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMjUwMCAyNTAwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTAwIDI1MDA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7ZmlsbDojRkNGRjUyO30KCS5zdDF7ZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7fQo8L3N0eWxlPgo8ZyBpZD0iTGF5ZXJfeDAwMjBfMSI+Cgk8ZyBpZD0iXzE5NDI3OTI1NDQ3MzYiPgoJCTxjaXJjbGUgY2xhc3M9InN0MCIgY3g9IjEyNTAiIGN5PSIxMjUwIiByPSIxMjUwIj48L2NpcmNsZT4KCQk8cGF0aCBjbGFzcz0ic3QxIiBkPSJNMTk0OS4zLDU0Ni4ySDU1MC43djE0MDcuN2gxMzk4Ljd2LTQ5MS40aC0yMzIuMWMtODAsMTc5LjMtMjYwLjEsMzA0LjEtNDY2LjIsMzA0LjEgICAgYy0yODQuMSwwLTUxNC4yLTIzMy42LTUxNC4yLTUxNy41YzAtMjg0LDIzMC4xLTUxNS42LDUxNC4yLTUxNS42YzIxMC4xLDAsMzkwLjIsMTI4LjksNDcwLjIsMzEyLjFoMjI4LjFWNTQ2LjJ6Ij48L3BhdGg+Cgk8L2c+CjwvZz4KPC9zdmc+Cg==',
                 rpc: [
                     'https://alfajores-forno.celo-testnet.org'
                 ],
-                logo: 'https://stakingcrypto.info/static/assets/coins/celo-logo.png'
             }
         }
     },
@@ -319,16 +347,34 @@ export const chainlist: any = {
         mainnet: {
             id: 43114,
             name: 'Avalanche C-chain',
+            base: 'evm',
             logo: 'https://coinmeca-web3.vercel.app/43114/logo.svg',
-            rpc: ['https://avalanche-mainnet.infura.io'],
+            rpc: [
+                'https://avalanche-mainnet.infura.io',
+                "https://avalanche.public-rpc.com",
+                "https://rpc.ankr.com/avalanche",
+                "https://avalanche.blockpi.network/v1/rpc/public",
+                "https://api.avax.network/ext/bc/C/rpc",
+                "https://endpoints.omniatech.io/v1/avax/mainnet/public",
+                "https://avax-pokt.nodies.app/ext/bc/C/rpc",
+                "https://ava-mainnet.public.blastapi.io/ext/bc/C/rpc",
+                "https://1rpc.io/avax/c",
+                "https://avalanche-c-chain.publicnode.com",
+                "https://avax.meowrpc.com",
+                "https://avalanche.api.onfinality.io/public/ext/bc/C/rpc",
+                "wss://avalanche-c-chain.publicnode.com"
+            ],
         },
         testnet: {
             fuji: <Chain>{
                 id: 43113,
                 name: 'Avalanche Fuji',
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/43114/logo.svg',
                 rpc: ['https://api.avax-test.network/ext/bc/C/rpc'],
-                explorer: ['https://testnet.snowtrace.io/']
+                explorer: [
+                    'https://testnet.snowtrace.io/'
+                ]
             }
         }
     },
@@ -337,9 +383,14 @@ export const chainlist: any = {
             artio: {
                 id: 80085,
                 name: "Berachain Artio",
+                base: 'evm',
                 logo: 'https://coinmeca-web3.vercel.app/80085/logo.svg',
-                rpc: ["https://artio.rpc.berachain.com/"],
-                explorer: ["https://artio.beratrail.io/"],
+                rpc: [
+                    "https://artio.rpc.berachain.com/"
+                ],
+                explorer: [
+                    "https://artio.beratrail.io/"
+                ],
                 nativeCurrency: {
                     symbol: "BERA",
                     decimals: 18
@@ -351,26 +402,35 @@ export const chainlist: any = {
         mainnet: <Chain>{
             id: 101,
             name: 'Solana',
+            base: 'svm',
             type: <Cluster>'mainnet-beta',
-            logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
-            rpc: ['https://api.mainnet-beta.solana.com'],
+            logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjU2IiBmaWxsPSJibGFjayIvPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjI5OF8yOTUpIj4KPHBhdGggZD0iTTE1OC43ODEgMzE2LjI3OEMxNjAuNTE5IDMxNC41NCAxNjIuOTA5IDMxMy41MjYgMTY1LjQ0MyAzMTMuNTI2SDM5NS4yOTNDMzk5LjQ5MyAzMTMuNTI2IDQwMS41OTMgMzE4LjU5NiAzOTguNjI0IDMyMS41NjVMMzUzLjIxOSAzNjYuOTdDMzUxLjQ4MSAzNjguNzA4IDM0OS4wOTEgMzY5LjcyMSAzNDYuNTU3IDM2OS43MjFIMTE2LjcwN0MxMTIuNTA3IDM2OS43MjEgMTEwLjQwNyAzNjQuNjUyIDExMy4zNzYgMzYxLjY4M0wxNTguNzgxIDMxNi4yNzhaIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0xNTguNzgxIDE0Ni43NTJDMTYwLjU5MSAxNDUuMDE0IDE2Mi45ODEgMTQ0IDE2NS40NDMgMTQ0SDM5NS4yOTNDMzk5LjQ5MyAxNDQgNDAxLjU5MyAxNDkuMDY5IDM5OC42MjQgMTUyLjAzOEwzNTMuMjE5IDE5Ny40NDNDMzUxLjQ4MSAxOTkuMTgxIDM0OS4wOTEgMjAwLjE5NSAzNDYuNTU3IDIwMC4xOTVIMTE2LjcwN0MxMTIuNTA3IDIwMC4xOTUgMTEwLjQwNyAxOTUuMTI2IDExMy4zNzYgMTkyLjE1N0wxNTguNzgxIDE0Ni43NTJaIiBmaWxsPSJ1cmwoI3BhaW50MV9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0zNTMuMjE5IDIzMC45NzNDMzUxLjQ4MSAyMjkuMjM1IDM0OS4wOTEgMjI4LjIyMSAzNDYuNTU3IDIyOC4yMjFIMTE2LjcwN0MxMTIuNTA3IDIyOC4yMjEgMTEwLjQwNyAyMzMuMjkgMTEzLjM3NiAyMzYuMjU5TDE1OC43ODEgMjgxLjY2NEMxNjAuNTE5IDI4My40MDIgMTYyLjkwOSAyODQuNDE2IDE2NS40NDMgMjg0LjQxNkgzOTUuMjkzQzM5OS40OTMgMjg0LjQxNiA0MDEuNTkzIDI3OS4zNDcgMzk4LjYyNCAyNzYuMzc4TDM1My4yMTkgMjMwLjk3M1oiIGZpbGw9InVybCgjcGFpbnQyX2xpbmVhcl8yMjk4XzI5NSkiLz4KPC9nPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzIyOThfMjk1IiB4MT0iMzczLjMzNiIgeTE9IjExNi44NzYiIHgyPSIyMTQuMjYxIiB5Mj0iNDIxLjU2NyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfMjI5OF8yOTUiIHgxPSIzMDMuNzgiIHkxPSI4MC41NjIyIiB4Mj0iMTQ0LjcwNSIgeTI9IjM4NS4yNTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwRkZBMyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQzFGRkYiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDJfbGluZWFyXzIyOThfMjk1IiB4MT0iMzM4LjMzNiIgeTE9Ijk4LjYwNDEiIHgyPSIxNzkuMjYyIiB5Mj0iNDAzLjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIyOThfMjk1Ij4KPHJlY3Qgd2lkdGg9IjI4OCIgaGVpZ2h0PSIyMjUuNzIyIiBmaWxsPSJ3aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTEyIDE0NCkiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K',
+            rpc: [
+                'https://api.mainnet-beta.solana.com'
+            ],
         },
         testnet: {
             testnet: <Chain>{
                 id: 102,
                 name: 'Solana Testnet',
+                base: 'svm',
                 type: <Cluster>'testnet',
-                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
-                rpc: [''],
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjU2IiBmaWxsPSJibGFjayIvPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjI5OF8yOTUpIj4KPHBhdGggZD0iTTE1OC43ODEgMzE2LjI3OEMxNjAuNTE5IDMxNC41NCAxNjIuOTA5IDMxMy41MjYgMTY1LjQ0MyAzMTMuNTI2SDM5NS4yOTNDMzk5LjQ5MyAzMTMuNTI2IDQwMS41OTMgMzE4LjU5NiAzOTguNjI0IDMyMS41NjVMMzUzLjIxOSAzNjYuOTdDMzUxLjQ4MSAzNjguNzA4IDM0OS4wOTEgMzY5LjcyMSAzNDYuNTU3IDM2OS43MjFIMTE2LjcwN0MxMTIuNTA3IDM2OS43MjEgMTEwLjQwNyAzNjQuNjUyIDExMy4zNzYgMzYxLjY4M0wxNTguNzgxIDMxNi4yNzhaIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0xNTguNzgxIDE0Ni43NTJDMTYwLjU5MSAxNDUuMDE0IDE2Mi45ODEgMTQ0IDE2NS40NDMgMTQ0SDM5NS4yOTNDMzk5LjQ5MyAxNDQgNDAxLjU5MyAxNDkuMDY5IDM5OC42MjQgMTUyLjAzOEwzNTMuMjE5IDE5Ny40NDNDMzUxLjQ4MSAxOTkuMTgxIDM0OS4wOTEgMjAwLjE5NSAzNDYuNTU3IDIwMC4xOTVIMTE2LjcwN0MxMTIuNTA3IDIwMC4xOTUgMTEwLjQwNyAxOTUuMTI2IDExMy4zNzYgMTkyLjE1N0wxNTguNzgxIDE0Ni43NTJaIiBmaWxsPSJ1cmwoI3BhaW50MV9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0zNTMuMjE5IDIzMC45NzNDMzUxLjQ4MSAyMjkuMjM1IDM0OS4wOTEgMjI4LjIyMSAzNDYuNTU3IDIyOC4yMjFIMTE2LjcwN0MxMTIuNTA3IDIyOC4yMjEgMTEwLjQwNyAyMzMuMjkgMTEzLjM3NiAyMzYuMjU5TDE1OC43ODEgMjgxLjY2NEMxNjAuNTE5IDI4My40MDIgMTYyLjkwOSAyODQuNDE2IDE2NS40NDMgMjg0LjQxNkgzOTUuMjkzQzM5OS40OTMgMjg0LjQxNiA0MDEuNTkzIDI3OS4zNDcgMzk4LjYyNCAyNzYuMzc4TDM1My4yMTkgMjMwLjk3M1oiIGZpbGw9InVybCgjcGFpbnQyX2xpbmVhcl8yMjk4XzI5NSkiLz4KPC9nPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzIyOThfMjk1IiB4MT0iMzczLjMzNiIgeTE9IjExNi44NzYiIHgyPSIyMTQuMjYxIiB5Mj0iNDIxLjU2NyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfMjI5OF8yOTUiIHgxPSIzMDMuNzgiIHkxPSI4MC41NjIyIiB4Mj0iMTQ0LjcwNSIgeTI9IjM4NS4yNTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwRkZBMyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQzFGRkYiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDJfbGluZWFyXzIyOThfMjk1IiB4MT0iMzM4LjMzNiIgeTE9Ijk4LjYwNDEiIHgyPSIxNzkuMjYyIiB5Mj0iNDAzLjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIyOThfMjk1Ij4KPHJlY3Qgd2lkdGg9IjI4OCIgaGVpZ2h0PSIyMjUuNzIyIiBmaWxsPSJ3aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTEyIDE0NCkiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K',
+                rpc: [
+                    'https://api.testnet.solana.com/'
+                ],
             }
         },
         devnet: {
             devnet: <Chain>{
                 id: 103,
                 name: 'Solana Devnet',
+                base: 'svm',
                 type: <Cluster>'devnet',
-                logo: 'https://upload.wikimedia.org/wikipedia/en/b/b9/Solana_logo.png',
-                rpc: ['https://api.devnet.solana.com/'],
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjU2IiBmaWxsPSJibGFjayIvPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjI5OF8yOTUpIj4KPHBhdGggZD0iTTE1OC43ODEgMzE2LjI3OEMxNjAuNTE5IDMxNC41NCAxNjIuOTA5IDMxMy41MjYgMTY1LjQ0MyAzMTMuNTI2SDM5NS4yOTNDMzk5LjQ5MyAzMTMuNTI2IDQwMS41OTMgMzE4LjU5NiAzOTguNjI0IDMyMS41NjVMMzUzLjIxOSAzNjYuOTdDMzUxLjQ4MSAzNjguNzA4IDM0OS4wOTEgMzY5LjcyMSAzNDYuNTU3IDM2OS43MjFIMTE2LjcwN0MxMTIuNTA3IDM2OS43MjEgMTEwLjQwNyAzNjQuNjUyIDExMy4zNzYgMzYxLjY4M0wxNTguNzgxIDMxNi4yNzhaIiBmaWxsPSJ1cmwoI3BhaW50MF9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0xNTguNzgxIDE0Ni43NTJDMTYwLjU5MSAxNDUuMDE0IDE2Mi45ODEgMTQ0IDE2NS40NDMgMTQ0SDM5NS4yOTNDMzk5LjQ5MyAxNDQgNDAxLjU5MyAxNDkuMDY5IDM5OC42MjQgMTUyLjAzOEwzNTMuMjE5IDE5Ny40NDNDMzUxLjQ4MSAxOTkuMTgxIDM0OS4wOTEgMjAwLjE5NSAzNDYuNTU3IDIwMC4xOTVIMTE2LjcwN0MxMTIuNTA3IDIwMC4xOTUgMTEwLjQwNyAxOTUuMTI2IDExMy4zNzYgMTkyLjE1N0wxNTguNzgxIDE0Ni43NTJaIiBmaWxsPSJ1cmwoI3BhaW50MV9saW5lYXJfMjI5OF8yOTUpIi8+CjxwYXRoIGQ9Ik0zNTMuMjE5IDIzMC45NzNDMzUxLjQ4MSAyMjkuMjM1IDM0OS4wOTEgMjI4LjIyMSAzNDYuNTU3IDIyOC4yMjFIMTE2LjcwN0MxMTIuNTA3IDIyOC4yMjEgMTEwLjQwNyAyMzMuMjkgMTEzLjM3NiAyMzYuMjU5TDE1OC43ODEgMjgxLjY2NEMxNjAuNTE5IDI4My40MDIgMTYyLjkwOSAyODQuNDE2IDE2NS40NDMgMjg0LjQxNkgzOTUuMjkzQzM5OS40OTMgMjg0LjQxNiA0MDEuNTkzIDI3OS4zNDcgMzk4LjYyNCAyNzYuMzc4TDM1My4yMTkgMjMwLjk3M1oiIGZpbGw9InVybCgjcGFpbnQyX2xpbmVhcl8yMjk4XzI5NSkiLz4KPC9nPgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDBfbGluZWFyXzIyOThfMjk1IiB4MT0iMzczLjMzNiIgeTE9IjExNi44NzYiIHgyPSIyMTQuMjYxIiB5Mj0iNDIxLjU2NyIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8bGluZWFyR3JhZGllbnQgaWQ9InBhaW50MV9saW5lYXJfMjI5OF8yOTUiIHgxPSIzMDMuNzgiIHkxPSI4MC41NjIyIiB4Mj0iMTQ0LjcwNSIgeTI9IjM4NS4yNTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iIzAwRkZBMyIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQzFGRkYiLz4KPC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJwYWludDJfbGluZWFyXzIyOThfMjk1IiB4MT0iMzM4LjMzNiIgeTE9Ijk4LjYwNDEiIHgyPSIxNzkuMjYyIiB5Mj0iNDAzLjI5NSIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgo8c3RvcCBzdG9wLWNvbG9yPSIjMDBGRkEzIi8+CjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI0RDMUZGRiIvPgo8L2xpbmVhckdyYWRpZW50Pgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzIyOThfMjk1Ij4KPHJlY3Qgd2lkdGg9IjI4OCIgaGVpZ2h0PSIyMjUuNzIyIiBmaWxsPSJ3aGl0ZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTEyIDE0NCkiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K',
+                rpc: [
+                    'https://api.devnet.solana.com/'
+                ],
             }
         }
     }

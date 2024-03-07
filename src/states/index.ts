@@ -6,6 +6,9 @@ const initial: WalletStore = {
     provider: undefined,
     address: undefined,
     chain: undefined,
+    connect: undefined,
+    disconnect: undefined,
+    switchChain: undefined,
 };
 
 export interface Wallet {
@@ -18,7 +21,12 @@ export interface WalletStore extends Wallet {
     chain?: Chain;
 }
 
-export interface WalletStoreAction {
+export interface WalletAction {
+    connect?: (chain: number | string | Chain, name: string, auto?: boolean) => Promise<WalletStore | void>;
+    disconnect?: () => Promise<boolean>;
+    switchChain?: (c: number | string | Chain) => Promise<Chain | undefined>;
+}
+export interface WalletStoreAction extends WalletAction {
     mount: (wallet: WalletStore) => void;
     unmount: () => void;
     update: (wallet: Wallet, chain?: Chain) => void;

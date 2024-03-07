@@ -13,9 +13,12 @@ export interface Asset {
     image?: string;
 }
 
+export type ChainBase = 'evm' | 'svm'
+
 export interface Chain {
     id: number;
     name: string;
+    base: ChainBase;
     rpc: string[];
     nativeCurrency?: NativeCurrency;
     explorer?: string[];
@@ -30,7 +33,6 @@ export interface Providers {
 }
 
 export interface Provider {
-    base: 'evm' | 'svm';
     name: string;
     logo?: string;
     website?: string;

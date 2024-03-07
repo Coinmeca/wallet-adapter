@@ -34,9 +34,9 @@ export interface WalletAdapterProps<Name extends string = string> {
     connecting: boolean;
     connected: boolean;
 
-    autoConnect(): Promise<any>;
-    connect(): Promise<any>;
-    disconnect(): Promise<any>;
+    autoConnect(...args: any): Promise<any>;
+    connect(...args: any): Promise<any>;
+    disconnect(...args: any): Promise<any>;
     // sendTransaction(): Promise<any>;
 }
 

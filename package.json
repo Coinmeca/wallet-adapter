@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.38928",
+    "version": "0.1.392",
     "keywords": [
         "coinmeca",
         "web3",
@@ -19,7 +19,8 @@
         "watch": "tsc --watch",
         "build": "tsc --build && tsc-alias && tscp",
         "deploy": "npm publish",
-        "clean": "rimraf ./dist ./build ./tsconfig.tsbuildinfo ./node_modules/.cache"
+        "clean": "rimraf ./dist ./build ./tsconfig.tsbuildinfo ./node_modules/.cache",
+        "prebuild": "yarn clean"
     },
     "sideEffects": false,
     "main": "./dist/index.js",
@@ -52,7 +53,8 @@
             ],
             "*": [
                 "./dist/*",
-                "./dist/*/index"
+                "./dist/*/index",
+                "./dist/index"
             ]
         }
     },
