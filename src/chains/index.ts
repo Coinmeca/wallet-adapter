@@ -1,5 +1,4 @@
-import type { Chains, Chain } from 'types';
-import type { Cluster } from '@solana/web3.js';
+import type { Chains, Chain, ChainType } from 'types';
 
 export const chainlist: Chains = {
     ethereum: {
@@ -144,7 +143,7 @@ export const chainlist: Chains = {
             }
         },
     },
-    bnb: {
+    bsc: {
         mainnet: {
             id: 56,
             base: 'evm',
@@ -497,9 +496,7 @@ export const chainlist: Chains = {
                 rpc: [
                     'https://api.testnet.solana.com/'
                 ],
-            }
-        },
-        devnet: {
+            },
             devnet: {
                 id: 103,
                 name: 'Solana Devnet',
@@ -510,33 +507,24 @@ export const chainlist: Chains = {
                     'https://api.devnet.solana.com/'
                 ],
             }
-        }
+        },
     }
 };
 
-export function getChainByName(name: string, type: 'mainnet' | 'testnet' | 'devnet') {
-    const result = Object.keys(chainlist).filter((chain: string) => {
-        const c = chainlist[chain][type];
-        switch (type) {
-            case 'mainnet': {
-                if (typeof c === 'object') {
-                    return Object.values(c).find((c: any) => c.name === name);
-                } else if (c?.name == name) {
-                    return c;
-                }
-                break;
-            }
-            default: {
-                if (c)
-                    return Object.values(c).find((net: any) => {
-                        if (net.name === name) {
-                            return net;
-                        }
-                    });
-            }
+export function getChainByName(name: string): Chain | undefined {
+    const word = name.replaceAll(" ", ".").split('.');
+    switch (word.length) {
+        case 1: {
+            return chainlist[word[0]]['mainnet']
         }
-    });
-    return result[0] || '';
+        case 2: {
+            return chainlist[word[0]]['mainnet']
+        }
+        case 3: {
+            return (chainlist[word[0]] as any)[(word[1] !== 'testnet' && word[1] !== 'devnet') ? 'testnet' : word[1]][word[2]];
+        }
+    }
+    return undefined;
 }
 
 export function getChainNames(type: 'mainnet' | 'testnet' | 'devnet') {

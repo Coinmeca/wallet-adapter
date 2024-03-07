@@ -14,13 +14,14 @@ export interface Asset {
 }
 
 export type ChainBase = 'evm' | 'svm'
+export type ChainType = 'mainnet' | Cluster;
 
 export interface Chain {
     id: number;
     base: ChainBase;
     name: string;
     logo?: string;
-    type?: string | Cluster;
+    type?: ChainType;
     rpc: string[];
     explorer?: string[];
     nativeCurrency?: NativeCurrency;
