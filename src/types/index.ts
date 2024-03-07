@@ -1,3 +1,4 @@
+import { Cluster } from "@solana/web3.js";
 import { Adapter } from "core/types";
 export interface NativeCurrency {
     symbol: string;
@@ -16,15 +17,25 @@ export type ChainBase = 'evm' | 'svm'
 
 export interface Chain {
     id: number;
-    name: string;
     base: ChainBase;
+    name: string;
+    logo?: string;
+    type?: string | Cluster;
     rpc: string[];
-    nativeCurrency?: NativeCurrency;
     explorer?: string[];
+    nativeCurrency?: NativeCurrency;
 }
 
 export interface Chains {
-    [key: string]: Chain;
+    [key: string]: {
+        mainnet?: Chain;
+        testnet?: {
+            [key: string]: Chain | undefined;
+        }
+        devnet?: {
+            [key: string]: Chain | undefined;
+        }
+    };
 }
 
 export interface Providers {
