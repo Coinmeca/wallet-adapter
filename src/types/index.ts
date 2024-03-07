@@ -30,6 +30,7 @@ export interface Providers {
 }
 
 export interface Provider {
+    base: 'evm' | 'svm';
     name: string;
     logo?: string;
     website?: string;
