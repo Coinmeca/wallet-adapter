@@ -18,10 +18,11 @@ export const adapter = (config?: object): WalletAction => {
 
 				const wallet = name ? providers[name]?.adapter(config) : provider;
 				if (!wallet) throw new Error("Wallet Provider Not Found")
-				if (!(name ? wallet?.provider : provider)) {
-					window.open(providers[wallet.name].url, '_blank');
-					throw new Error("Wallet Not Found");
-				}
+				// Todo
+				// if (!(name ? wallet?.provider : provider)) {
+				// 	window.open(providers[wallet.name].url, '_blank');
+				// 	throw new Error("Wallet Not Found");
+				// }
 
 				await wallet.connect(chain);
 				if (!wallet?.connected || !wallet?.address) throw new Error("Wallet Connection Error");
