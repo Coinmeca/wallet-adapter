@@ -16,6 +16,7 @@ import {
 import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
 import type { Chain } from "types";
+import { isMobile } from "utils";
 
 export const PhantomWalletName = "Phantom" as WalletName<"Phantom">;
 export interface PhantomProvider extends Provider { }
@@ -57,14 +58,6 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
         }
     }
 
-    get provider() {
-        if (!this._provider) {
-            this._provider = (window?.ethereum as any)?.provider?.find((p: any) => p.isPhantom);
-        }
-        return this._provider;
-    }
-
-
     async autoConnect(): Promise<void> {
         if (this._state === WalletReadyState.Installed) {
             await this.connect();
@@ -74,7 +67,7 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            // if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://go.cb-w.com/dapp?cb_url=${this._config?.url}`;
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `https://phantom.app/ul/browse/${window.location.host + window.location.pathname}`;
 
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
@@ -93,18 +86,16 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
 
                         this.provider!.emit('connect', accounts[0]);
                     })
-                    .catch(() => {
-                        throw new WalletAddressError();
+                    .catch((error: any) => {
+                        throw new WalletAddressError(error?.message, error);
                     });
+
+                if (chain) await this.chain(chain);
             } catch (error: any) {
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
             this.provider?.emit("error", error);
-        } finally {
-            await this.chain(chain).catch((error) => {
-                throw new WalletNetworkError(error?.message, error);
-            });
         }
         this._connecting = false;
         return account;
@@ -115,11 +106,11 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
             this.provider!.off("chainChanged", this._chainChanged);
             this.provider!.off("accountsChanged", this._accountChanged);
             this.provider!.off("disconnect", this.disconnect);
+            this.provider!.emit("disconnect");
 
             this._provider = null;
             this._accounts = null;
 
-            this.provider!.emit("disconnect");
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }

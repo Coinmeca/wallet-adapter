@@ -18,36 +18,33 @@ import { WalletAdapter } from "core/evm/adapter";
 import type { Chain } from "types";
 import { isMobile } from "utils";
 
-// import type { Wallet } from "@Zerion-me/Zerionkit";
-// import type { ZerionWalletOptions } from "@Zerion-me/Zerionkit/dist/wallets/walletConnectors/ZerionWallet/ZerionWallet";
+export const TrustWalletName = "Trust Wallet" as WalletName<"Trust Wallet">;
+export interface TrustWalletProvider extends Provider { }
+export interface TrustWalletAdapterConfig extends WalletConfig { }
 
-export const ZerionWalletName = "Zerion" as WalletName<"Zerion">;
-export interface ZerionProvider extends Provider { }
-export interface ZerionWalletAdapterConfig extends WalletConfig { }
+export class TrustWalletAdapter extends WalletAdapter<"Trust Wallet"> {
 
-export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
+    name = TrustWalletName;
 
-    name = ZerionWalletName;
-
-    protected _config: ZerionWalletAdapterConfig | undefined;
+    protected _config: TrustWalletAdapterConfig | undefined;
     protected _state: WalletReadyState = WalletReadyState.NotDetected;
 
-    protected _provider: ZerionProvider | null;
+    protected _provider: TrustWalletProvider | null;
     protected _chain: Chain | null;
     protected _accounts: string[] | null;
 
-    constructor(config?: ZerionWalletAdapterConfig) {
+    constructor(config?: TrustWalletAdapterConfig) {
         super();
 
         this._provider = null;
         this._chain = null;
         this._accounts = null;
 
-        if (config) this._config = config as ZerionWalletAdapterConfig;
+        if (config) this._config = config as TrustWalletAdapterConfig;
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.provider.emit('readyStateChange', this._state);
+                // this.provider.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
@@ -55,7 +52,7 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
             scopePollingDetectionStrategy(() => {
                 if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.provider.emit('readyStateChange', this._state);
+                    // this.provider.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });
@@ -71,6 +68,8 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
+            // https://link.trustwallet.com/browser_enable
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `trust://${window.location.host + window.location.pathname}`;
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
             if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
@@ -86,17 +85,18 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
                         this.provider!.on("accountsChanged", this._accountChanged);
                         this.provider!.on("disconnect", this.disconnect);
 
-                        this.provider!.emit('connect', accounts[0]);
+                        // this.provider!.emit('connect', accounts[0]);
                     })
                     .catch((error: any) => {
                         throw new WalletAddressError(error?.message, error);
                     });
+
                 if (chain) await this.chain(chain);
             } catch (error: any) {
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
-            this.provider?.emit("error", error);
+            // this.provider?.emit("error", error);
         }
         this._connecting = false;
         return account;
@@ -111,7 +111,7 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
             this._provider = null;
             this._accounts = null;
 
-            this.provider!.emit("disconnect");
+            // this.provider!.emit("disconnect");
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }

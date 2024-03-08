@@ -120,7 +120,7 @@ export const chainlist: Chains = {
             id: 56,
             base: 'evm',
             name: 'BNB Smart Chain',
-            logo: 'https://coinmeca-web3.vercel.app/56/logo.svg',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcBAMAAACAI8KnAAAAKlBMVEVHcEzwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQqwMrdXAAAADnRSTlMAG564LYLx/23O4FYLQANehvgAAAEFSURBVHgBTNClQgVREADQWSsruMVXcBrulsh4xPuzWSi407BEwd3d+YPb0I/hKrxZPSt3BEQkFUFMpA5gy78yVhGHRpWcUtyaxdCCpI7dxGzDKg53Qjv/cUa8nISMBMo7DLhm6SABa2D3FcyBaMDVSkN1lFgH5s6S+jiZsyBZLLVkUbpzBTfIEmHE6nsF8Agli4hHADQCiuAlgLlR5wxwjmhZfCmWAqP0Ilb+SGhCPHIfJG+KdMSqpIiiz3itmCy4JLimPTF+JzRSshbAoBQtwCfPGGLZD1j7neiDdwrXuMXaBzPLd4h5et1N5OhyjK3ZqvNTkPHGlkqEv/gdR3p5AIKHiBQAFI5lv+lWG40AAAAASUVORK5CYII=',
             rpc: [
                 "https://bsc-dataseed.binance.org/",
                 "https://binance.llamarpc.com",
@@ -159,6 +159,32 @@ export const chainlist: Chains = {
                 symbol: 'BNB',
                 decimals: 18
             },
+        },
+        testnet: {
+            testnet: {
+                id: 97,
+                base: 'evm',
+                name: "BNB Smart Chain Testnet",
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcBAMAAACAI8KnAAAAKlBMVEVHcEzwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQrwuQqwMrdXAAAADnRSTlMAG564LYLx/23O4FYLQANehvgAAAEFSURBVHgBTNClQgVREADQWSsruMVXcBrulsh4xPuzWSi407BEwd3d+YPb0I/hKrxZPSt3BEQkFUFMpA5gy78yVhGHRpWcUtyaxdCCpI7dxGzDKg53Qjv/cUa8nISMBMo7DLhm6SABa2D3FcyBaMDVSkN1lFgH5s6S+jiZsyBZLLVkUbpzBTfIEmHE6nsF8Agli4hHADQCiuAlgLlR5wxwjmhZfCmWAqP0Ilb+SGhCPHIfJG+KdMSqpIiiz3itmCy4JLimPTF+JzRSshbAoBQtwCfPGGLZD1j7neiDdwrXuMXaBzPLd4h5et1N5OhyjK3ZqvNTkPHGlkqEv/gdR3p5AIKHiBQAFI5lv+lWG40AAAAASUVORK5CYII=',
+                rpc: [
+                    "https://data-seed-prebsc-2-s2.bnbchain.org:8545",
+                    "https://data-seed-prebsc-1-s1.bnbchain.org:8545",
+                    "https://data-seed-prebsc-2-s1.bnbchain.org:8545",
+                    "https://data-seed-prebsc-1-s2.bnbchain.org:8545",
+                    "https://bsc-testnet.blockpi.network/v1/rpc/public",
+                    "https://api.zan.top/node/v1/bsc/testnet/public",
+                    "https://public.stackup.sh/api/v1/node/bsc-testnet",
+                    "https://bsc-testnet-rpc.publicnode.com",
+                    "https://bsc-testnet.public.blastapi.io",
+                    "https://endpoints.omniatech.io/v1/bsc/testnet/public",
+                    "wss://bsc-testnet-rpc.publicnode.com",
+                ],
+                explorer: ['https://testnet.bscscan.com/'],
+                nativeCurrency: {
+                    symbol: 'tBNB',
+                    decimals: 18
+                },
+            }
         }
     },
     gnosis: {
@@ -271,7 +297,7 @@ export const chainlist: Chains = {
                 'https://zkevm-rpc.com'
             ],
             nativeCurrency: {
-                symbol: 'MATIC',
+                symbol: 'ETH',
                 decimals: 18
             },
         },
@@ -285,7 +311,7 @@ export const chainlist: Chains = {
                     'https://rpc.public.zkevm-test.net'
                 ],
                 nativeCurrency: {
-                    symbol: 'MATIC',
+                    symbol: 'ETH',
                     decimals: 18
                 },
             }
@@ -340,7 +366,7 @@ export const chainlist: Chains = {
             id: 8453,
             base: 'evm',
             name: "Base",
-            logo: 'https://coinmeca-web3.vercel.app/8453/logo.svg',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAxklEQVR4AWJwL/AhiBmC/psBcReg2DqwoBgGwji+RAd4U2SEN0YXeDs8IHSAdqFAl8gEt8T1wqk2LXc0+Yo/FP0RSXJSkkhijfRblILrXwb0qwArkkYXWEEfCzLK0mCCin0lblS4ggbWGq2XkTs13IHUEcwnUHcjd248ggyIirVvFFChgDMQjAXMQDAV8N+o5ABJj8XzFGUrPKhLsT4sOS8OemXTLEAwwg8+9GqDX9745wn/AONHDPwQhR8T8YOwf9SfWoz6GwrQB9oIu62tAAAAAElFTkSuQmCC',
             rpc: [
                 "wss://base.publicnode.com",
                 "wss://base.gateway.tenderly.co",
@@ -360,6 +386,20 @@ export const chainlist: Chains = {
             nativeCurrency: {
                 symbol: "ETH",
                 decimals: 18
+            }
+        },
+        testnet: {
+            sepolia: {
+                id: 84532,
+                base: 'evm',
+                name: 'Base Sepolia',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAxklEQVR4AWJwL/AhiBmC/psBcReg2DqwoBgGwji+RAd4U2SEN0YXeDs8IHSAdqFAl8gEt8T1wqk2LXc0+Yo/FP0RSXJSkkhijfRblILrXwb0qwArkkYXWEEfCzLK0mCCin0lblS4ggbWGq2XkTs13IHUEcwnUHcjd248ggyIirVvFFChgDMQjAXMQDAV8N+o5ABJj8XzFGUrPKhLsT4sOS8OemXTLEAwwg8+9GqDX9745wn/AONHDPwQhR8T8YOwf9SfWoz6GwrQB9oIu62tAAAAAElFTkSuQmCC',
+                rpc: ['https://sepolia.base.org'],
+                explorer: ['https://sepolia.basescan.org/'],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                }
             }
         }
     },

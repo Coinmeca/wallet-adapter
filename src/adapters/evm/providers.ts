@@ -1,5 +1,5 @@
 import { Provider, Providers } from "types";
-import { MetaMaskWalletAdapter, CoinbaseWalletAdapter, RainbowWalletAdapter, PhantomWalletAdapter } from "providers";
+import { MetaMaskWalletAdapter, CoinbaseWalletAdapter, RainbowWalletAdapter, PhantomWalletAdapter, ZerionWalletAdapter, TrustWalletAdapter } from "providers";
 
 const detect = (wallet: string) => ((global || new (window as any)()) as any)?.ethereum?.providers?.find((p: any) => p[`${wallet}`]);
 
@@ -16,7 +16,21 @@ export const providers: Providers = {
 		logo: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNTYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTI4IDU2YzE1LjQ2NCAwIDI4LTEyLjUzNiAyOC0yOFM0My40NjQgMCAyOCAwIDAgMTIuNTM2IDAgMjhzMTIuNTM2IDI4IDI4IDI4WiIgZmlsbD0iIzFCNTNFNCIvPjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNNyAyOGMwIDExLjU5OCA5LjQwMiAyMSAyMSAyMXMyMS05LjQwMiAyMS0yMVMzOS41OTggNyAyOCA3IDcgMTYuNDAyIDcgMjhabTE3LjIzNC02Ljc2NmEzIDMgMCAwIDAtMyAzdjcuNTMzYTMgMyAwIDAgMCAzIDNoNy41MzNhMyAzIDAgMCAwIDMtM3YtNy41MzNhMyAzIDAgMCAwLTMtM2gtNy41MzNaIiBmaWxsPSIjZmZmIi8+PC9zdmc+",
 		website: "https://www.coinbase.com/wallet",
 		url: 'https://chromewebstore.google.com/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad',
-		adapter: (config?: any) => new CoinbaseWalletAdapter(config),
+		adapter: (config?: any) => new CoinbaseWalletAdapter.evm(config),
+	},
+	'Trust Wallet': <Provider>{
+		name: "Trust Wallet",
+		logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAcCAMAAACj+uTiAAAAilBMVEVHcEwEF/8FAP8FAP8GC/8OS/QFBP8FAP8AcP9D+ZkYtt1E+5cFA/8EG/8PhO4DEf8AWP9C95wAbP8x3bVF/JVG/pIBNP8BKv9G+5ZH/JVF+pYEAP8CU/4Ajv8BNf8BRP8Afv8CHP8CKf8AY/8ED/8bvdYSsOMz4bEr1L487aQKpO8jycoEmvoYZOMYbsxeAAAAG3RSTlMANI/yGAjLaP79kS+9UZnh349nkdB4tc2XhtYXSrr5AAAA8klEQVQokW3S23KDIBCAYVARbdSkOfSESlRSNej7v14XEAXT/875YJhxF6E1TIvbAb0U0Thkc5pefcQ0Zqp5HMc0/fk+EHM6gNOmue97jdcvuEnZ1jwMg8V3T0oppcWdPKAFL778Qhrl4Aufnk+DUr75UlUToNKHL3WlMriTO2Rw2kmSJBYLT9qu6ywWKHel7IwBnlF03KQpVUYxQpkjnPPFTvC7sSN1zbnRsxpDvIqoVcpOekLbJdFCGnMz0mCVpmk1fizDJtkmjcJPYveA2KeEUHiMnM1xSMQOuG+xjCC/fFkg+s8uBiELg+gV9EJi5+sP+CM42THdUC0AAAAASUVORK5CYII=",
+		website: 'https://trustwallet.com/',
+		url: 'https://chromewebstore.google.com/detail/trust-wallet/egjidjbpglichdcondbcbdnbeeppgdph',
+		adapter: (config?: any) => new TrustWalletAdapter.evm(config),
+	},
+	Zerion: <Provider>{
+		name: "Zerion",
+		logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVHcEwkYe0kYe0kYe0kYe0kYe0kYe0kYe4kYe0SWu03bO+esfVjh/H////h5/wGVezJ1PqEn/OsvfdeUL6xAAAACXRSTlMAOIfD7v9gFuE1IrhZAAAAv0lEQVR4AX2TVwLDIAxDWcoGkd7/rh04GLp4v95DRrHOByB4Z80nU4ASJtMzL3hjmbuM+MIObGqd8RPJLPXWDqlb+sSLbe848OLVcyhxe+xILBNpN+ytx3r15CAQudoyUXDGo8IjiZEQvJQUVp6aVIpC4Ytb3IlKMzLHvJFcoUhabTeDUII2tEVhb6G+jsLUpiQEdy1hPWMjb/UwUpTxjbo+M0nkreMsZSc92dqg3GwZHnv0JuMHG7/m+KmHcngA6zASdhvGgR8AAAAASUVORK5CYII=",
+		website: "https://zerion.io/",
+		url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
+		adapter: (config?: any) => new ZerionWalletAdapter(config),
 	},
 	Rainbow: <Provider>{
 		name: "Rainbow",
@@ -24,13 +38,6 @@ export const providers: Providers = {
 		website: "https://rainbow.me",
 		url: 'https://chromewebstore.google.com/detail/rainbow/opfgelmcmbiajamepnmloijbpoleiama',
 		adapter: (config?: any) => new RainbowWalletAdapter(config),
-	},
-	Zerion: <Provider>{
-		name: "Zerion",
-		logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVHcEwkYe0kYe0kYe0kYe0kYe0kYe0kYe4kYe0SWu03bO+esfVjh/H////h5/wGVezJ1PqEn/OsvfdeUL6xAAAACXRSTlMAOIfD7v9gFuE1IrhZAAAAv0lEQVR4AX2TVwLDIAxDWcoGkd7/rh04GLp4v95DRrHOByB4Z80nU4ASJtMzL3hjmbuM+MIObGqd8RPJLPXWDqlb+sSLbe848OLVcyhxe+xILBNpN+ytx3r15CAQudoyUXDGo8IjiZEQvJQUVp6aVIpC4Ytb3IlKMzLHvJFcoUhabTeDUII2tEVhb6G+jsLUpiQEdy1hPWMjb/UwUpTxjbo+M0nkreMsZSc92dqg3GwZHnv0JuMHG7/m+KmHcngA6zASdhvGgR8AAAAASUVORK5CYII=",
-		website: "https://zerion.io/",
-		url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
-		adapter: (config?: any) => new PhantomWalletAdapter.evm(config),
 	},
 	Phantom: <Provider>{
 		name: "Phantom",

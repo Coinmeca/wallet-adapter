@@ -10,20 +10,20 @@ export const adapter = (config?: object): WalletAction => {
 
 	const actions = {
 		connect: async (...args: ConnectArgs) => {
+			const c = args[0] ? getNetworksById(parseChainId(args[0])) : chain as Chain | undefined;
+			const n = (args?.length > 1 && typeof args[1] === 'string') ? args[1] : undefined;
+			const a = (args?.length > 2 && typeof args[2] === 'boolean') ? args[2]
+				: (args?.length > 1 && typeof args[1] === 'boolean') ? args[1] : undefined;
+
+			const wallet = n ? providers[n]?.adapter(config) : provider;
+			if (!wallet) throw new Error("Wallet Provider Not Found")
+			// Todo
+			// if (!(name ? wallet?.provider : provider)) {
+			// 	window.open(providers[wallet.name].url, '_blank');
+			// 	throw new Error("Wallet Not Found");
+			// }
+
 			try {
-				const c = args[0] ? getNetworksById(parseChainId(args[0])) : chain as Chain | undefined;
-				const n = (args?.length > 1 && typeof args[1] === 'string') ? args[1] : undefined;
-				const a = (args?.length > 2 && typeof args[2] === 'boolean') ? args[2]
-					: (args?.length > 1 && typeof args[1] === 'boolean') ? args[1] : undefined;
-
-				const wallet = n ? providers[n]?.adapter(config) : provider;
-				if (!wallet) throw new Error("Wallet Provider Not Found")
-				// Todo
-				// if (!(name ? wallet?.provider : provider)) {
-				// 	window.open(providers[wallet.name].url, '_blank');
-				// 	throw new Error("Wallet Not Found");
-				// }
-
 				await wallet.connect(c);
 				if (!wallet?.connected || !wallet?.address) throw new Error("Wallet Connection Error");
 				const w: WalletStore = {

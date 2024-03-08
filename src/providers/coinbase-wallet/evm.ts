@@ -115,18 +115,16 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
                         account = accounts[0];
                         this.provider.emit('connect', accounts[0]);
                     })
-                    .catch(() => {
-                        throw new WalletAddressError();
+                    .catch((error: any) => {
+                        throw new WalletAddressError(error?.message, error);
                     });
+
+                if (chain) await this.chain(chain);
             } catch (error: any) {
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
             this.provider.emit("error", error);
-        } finally {
-            await this.chain(chain).catch((error) => {
-                throw new WalletNetworkError(error?.message, error);
-            });
         }
         this._connecting = false;
         return account;
@@ -137,11 +135,10 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
             this.provider.off("chainChanged", this._chainChanged);
             this.provider.off("accountsChanged", this._accountChanged);
             this.provider.off("disconnect", this.disconnect);
+            this.provider.emit("disconnect");
 
             this._provider = null;
             this._accounts = null;
-
-            this.provider.emit("disconnect");
         } catch (e) {
             throw new WalletDisconnectionError(e?.toString());
         }
