@@ -549,6 +549,7 @@ export const chainlist: Chains = {
                 id: 534351,
                 base: 'evm',
                 name: 'Scroll Sepolia',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAflBMVEVHcEwXBwYTAAUiExIjFxVwZV0rHxwGAgIBAAAfERAKAAAYCQrLv68WAACNgneonI8BAAD/+OP/9eCCd23two3//umRhnryx5H77dmwpJbj1cR5bmbguIbt38ydkYUkFhU9LiVQRkDWybjOwbHGoXZYTUfZsoJhVk/AtKWjhGAS31C8AAAAEHRSTlMApeEwJf4Oy+4/wWTod9lO/NSV9AAAANpJREFUKJG10duSgjAQRdGg3HRG7W5uUQyBIJb+/w8OMQJpdR7dr6s4SQUhvtlum/gF8UJr0Fnp121niyFDVnFMZwy6AlFKehJJ8hBu2EZETeYyxNBgAxLLyNUzTI94gnG1cCHDQJPFaTZr0EORDmqcbepnHOO9+nd27GBn68do3b9iuJz5Gaf3IcJ3PC2pX45Uglf0gl2pujY/P7rohOMwKAmXKrdVV1izM01rCn13mFfw4z0D9PZfzV+eYePtJtrgeGblurYr/0YisZfU021XMUMRbpZC8c3+AGdfHbhD7NFQAAAAAElFTkSuQmCC',
                 rpc: [
                     "https://scroll-sepolia.blockpi.network/v1/rpc/public",
                     "https://sepolia-rpc.scroll.io",

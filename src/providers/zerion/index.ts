@@ -65,7 +65,7 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
     get provider() {
         if (!this._provider) {
             window.addEventListener('eip6963:announceProvider', (event: any) => {
-                if (event?.detail?.info?.name === 'Zerion') this._provider = event.detail.provider
+                if (event?.detail?.info?.name === this.name) this._provider = event.detail.provider
             });
             window.dispatchEvent(new Event('eip6963:requestProvider'));
         }

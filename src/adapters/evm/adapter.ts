@@ -11,12 +11,12 @@ export const adapter = (config?: object): WalletAction => {
 	const actions = {
 		connect: async (...args: ConnectArgs) => {
 			try {
-				const chain = args[0] ? getNetworksById(parseChainId(args[0])) : args[0] as Chain | undefined;
-				const name = (args?.length > 1 && typeof args[1] === 'string') ? args[1] : undefined;
-				const auto = (args?.length > 2 && typeof args[2] === 'boolean') ? args[2]
+				const c = args[0] ? getNetworksById(parseChainId(args[0])) : chain as Chain | undefined;
+				const n = (args?.length > 1 && typeof args[1] === 'string') ? args[1] : undefined;
+				const a = (args?.length > 2 && typeof args[2] === 'boolean') ? args[2]
 					: (args?.length > 1 && typeof args[1] === 'boolean') ? args[1] : undefined;
 
-				const wallet = name ? providers[name]?.adapter(config) : provider;
+				const wallet = n ? providers[n]?.adapter(config) : provider;
 				if (!wallet) throw new Error("Wallet Provider Not Found")
 				// Todo
 				// if (!(name ? wallet?.provider : provider)) {
@@ -24,12 +24,12 @@ export const adapter = (config?: object): WalletAction => {
 				// 	throw new Error("Wallet Not Found");
 				// }
 
-				await wallet.connect(chain);
+				await wallet.connect(c);
 				if (!wallet?.connected || !wallet?.address) throw new Error("Wallet Connection Error");
 				const w: WalletStore = {
-					name: name,
+					name: n,
+					chain: c,
 					address: wallet.address,
-					chain,
 				};
 				wallet.on("chainChanged", chainChanged);
 				wallet.on("accountsChanged", accountsChanged);
@@ -38,8 +38,8 @@ export const adapter = (config?: object): WalletAction => {
 				update({
 					...w,
 					...actions,
-					provider: name ? wallet.provider : provider
-				}, chain);
+					provider: n ? wallet.provider : provider
+				}, c);
 				return w;
 			} catch (error: any) {
 				throw new Error(`Wallet Connecting Error: ${error}`);
