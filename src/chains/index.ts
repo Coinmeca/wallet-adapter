@@ -50,34 +50,6 @@ export const chainlist: Chains = {
                     "decimals": 18
                 }
             },
-            goerli: {
-                id: 5,
-                name: 'Goerli',
-                base: 'evm',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
-                rpc: [
-                    'https://rpc.goerli.mudit.blog/',
-                    'https://rpc.ankr.com/eth_goerli'
-                ],
-                nativeCurrency: {
-                    "symbol": "ETH",
-                    "decimals": 18
-                }
-            },
-            kovan: {
-                id: 42,
-                base: 'evm',
-                name: 'Kovan',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
-                rpc: [
-                    'https://kovan.poa.network',
-                    'https://eth-kovan.public.blastapi.io'
-                ],
-                nativeCurrency: {
-                    "symbol": "ETH",
-                    "decimals": 18
-                }
-            }
         }
     },
     optimism: {
@@ -189,6 +161,54 @@ export const chainlist: Chains = {
             },
         }
     },
+    gnosis: {
+        mainnet: {
+            id: 100,
+            base: 'evm',
+            name: 'Gnosis',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAKlBMVEU+aVdHcEw+aVc9Z1U+aVc+aVc9aFY+aVc+aVc9aFY9aFY+aVc9aFY9aFa0wS0JAAAADnRSTlP/AIIU7Mhh3LkuO5wfSHwab1sAAAD3SURBVCiRdZProoQgCIQHvGHq+7/uAdTWdjvzw4pPx0AEbVVOEYiJ6x3CemYFQCk2xvyAQYMyZmSITgofeAEp3GYUFF8bKsv0UAbGgkCjLzVgwQDwkzEQHObyQ52VrDAifVFnCZFQYfYnnZ6a9wW2X5WDznX2w4yk7+NwXp5Dc1BnddVZmy6mboBXtHZsuhm6xUzNcoZn5DnoKGYx11ZiTagbDdQFkak7Mg/MA2nUO81KDosm+HLExmL72n7CzY9VUcWhJOdXtfL9o0ie5Lus8FTeWfHzDO8w3G3yq+tosDd2tOZjv6M176ZeOTyb2lRZ7DrIcR3+APX8BR6lfT+rAAAAAElFTkSuQmCC',
+            rpc: [
+                "https://rpc.ankr.com/gnosis",
+                "https://gnosis-pokt.nodies.app",
+                "https://gnosis-mainnet.public.blastapi.io",
+                "https://gnosis.blockpi.network/v1/rpc/public",
+                "https://endpoints.omniatech.io/v1/gnosis/mainnet/public",
+                "https://gnosis.oat.farm",
+                "https://gnosis.drpc.org",
+                "https://gnosis-rpc.publicnode.com",
+                "https://1rpc.io/gnosis",
+                "https://rpc.gnosischain.com",
+                "https://rpc.tornadoeth.cash/gnosis",
+                "wss://gnosis-rpc.publicnode.com",
+                "wss://rpc.gnosischain.com/wss",
+            ],
+            explorer: [
+                'https://gnosisscan.io/'
+            ],
+            nativeCurrency: {
+                symbol: 'XDAI',
+                decimals: 18
+            }
+        },
+        testnet: {
+            chiado: {
+                id: 10200,
+                base: 'evm',
+                name: 'Gnosis Chiado',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAS1BMVEUAFCgAAh4ADiRfaHMAFCgAFCj///8AFCgAFCgAFCinrbPl5+oTJTj5+vptdn+Ql59OWGR/h5AfMEKboag1PkzX2966vsTr7e/Gy88bH7tKAAAACnRSTlP6////tP//rx2pnoS5tgAAAUFJREFUKJF9k9magyAMhQ0Zog37Ivr+TzrRgq2dJTcS/o9DQo7T8pj0rzHNy/S4MqVAQqlrY57GOQW6RsRYNQx8MbCe91ViZ29h0M5iM3tJ3qeymxbhDSrAbfVVviJZ/bohvCB41/IoRUFuzsOACgKlqwxJE4UzFagy5uCC7VRZSWRLnRC8YV22ToVtRbM5hCetNNOebTEnFWaKzTuxAIF1pxQ5n/RkmWOivR4Q4uowkdAtAIhmZkroVmlWIBpCJMe2uJRcseyO3OCArBrJLYEoSAXUFA8YV3LJ+oBVl6IrBm+To6fsUZCIekyNc+aW0ItwL0gfQoI32WHuC+qtHI9APZwbq/4I0nejH9Hs8/mkJPPJzDnS58hwu7M+0DHs21nzPmyhYpML3W1yGcyYu8H+teb88vinqb+mZf7jd9Bfyzf4jRhskFfflgAAAABJRU5ErkJggg==',
+                rpc: [
+                    'https://1rpc.io/gnosis'
+                ],
+                explorer: [
+                    'https://gnosis-chiado.blockscout.com/'
+                ],
+                nativeCurrency: {
+                    symbol: 'XDAI',
+                    decimals: 18
+                }
+            }
+        }
+    },
     polygon: {
         mainnet: {
             id: 137,
@@ -271,6 +291,50 @@ export const chainlist: Chains = {
             }
         }
     },
+    fantom: {
+        mainnet: {
+            id: 250,
+            base: 'evm',
+            name: 'Fantom Opera',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAb1BMVEUZaf8AY/8AX/8AYf+atf/e6P+guf8MZf8AW/+Nq//n7/+Hp/+Rr/8AVf+Xsv9ij//h6v8AXv9Uhv/d5v8scv/O2//I1v8ibf++z//Y4/85d/9JgP+5y/+rwf9nkv/R3v8pcP91m/9ci/+vxP/w9f8O9r57AAAAyElEQVR4AcXORQKEMAwF0CQdJqG4u3P/M44LtuZD9dXg7CCROqSLYVwVAuKaWExtiljadlxbrczzLwECoNh+GMVLpCTNAriHIC/Cco1VkWdEUEdVIrBGFK9omqKVoKMN8n2X1mkZ0A7eDwxbs+zSfotp4YkaXCVh0gUbjIYHkozdFhOcfK8172+GgwfNcxrvPojvFfTEoDYY3PGdDWZVF7yVpVgh+60ehB80aIuXqK6N3F8rMho1I8BKGSjLiyLvCXZz54wYzs0NEbAM+fJTno8AAAAASUVORK5CYII=',
+            rpc: [
+                "https://rpc.ftm.tools",
+                "https://fantom.blockpi.network/v1/rpc/public",
+                "https://fantom-mainnet.public.blastapi.io",
+                "https://fantom.drpc.org",
+                "https://rpc.fantom.gateway.fm",
+                "https://rpcapi.fantom.network",
+                "https://rpc3.fantom.network",
+                "https://fantom-pokt.nodies.app",
+                "https://rpc.fantom.network",
+                "https://rpc2.fantom.network",
+                "https://endpoints.omniatech.io/v1/fantom/mainnet/public",
+                "https://fantom-rpc.publicnode.com",
+                "wss://fantom-rpc.publicnode.com",
+            ],
+            explorer: ['https://ftmscan.com/'],
+            nativeCurrency: {
+                symbol: 'FTM',
+                decimals: 18,
+            }
+        },
+        testnet: {
+            sonic: {
+                id: 4002,
+                base: 'evm',
+                name: 'Fantom Sonic',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAb1BMVEUZaf8AY/8AX/8AYf+atf/e6P+guf8MZf8AW/+Nq//n7/+Hp/+Rr/8AVf+Xsv9ij//h6v8AXv9Uhv/d5v8scv/O2//I1v8ibf++z//Y4/85d/9JgP+5y/+rwf9nkv/R3v8pcP91m/9ci/+vxP/w9f8O9r57AAAAyElEQVR4AcXORQKEMAwF0CQdJqG4u3P/M44LtuZD9dXg7CCROqSLYVwVAuKaWExtiljadlxbrczzLwECoNh+GMVLpCTNAriHIC/Cco1VkWdEUEdVIrBGFK9omqKVoKMN8n2X1mkZ0A7eDwxbs+zSfotp4YkaXCVh0gUbjIYHkozdFhOcfK8172+GgwfNcxrvPojvFfTEoDYY3PGdDWZVF7yVpVgh+60ehB80aIuXqK6N3F8rMho1I8BKGSjLiyLvCXZz54wYzs0NEbAM+fJTno8AAAAASUVORK5CYII=',
+                rpc: [
+                    "https://fantom.api.onfinality.io/public",
+                ],
+                explorer: ['https://testnet.ftmscan.com/'],
+                nativeCurrency: {
+                    symbol: 'FTM',
+                    decimals: 18,
+                }
+            }
+        }
+    },
     base: {
         mainnet: {
             id: 8453,
@@ -318,26 +382,6 @@ export const chainlist: Chains = {
             },
         },
         testnet: {
-            goerli: {
-                id: 421613,
-                base: 'evm',
-                name: "Arbitrum Goerli",
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    "https://api.zan.top/node/v1/arb/goerli/public",
-                    "https://goerli-rollup.arbitrum.io/rpc",
-                    "https://arbitrum-goerli.blockpi.network/v1/rpc/public",
-                    "https://rpc.goerli.arbitrum.gateway.fm",
-                    "https://arbitrum-goerli.public.blastapi.io",
-                    "https://arbitrum-goerli.publicnode.com",
-                    "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
-                    "wss://arbitrum-goerli.publicnode.com",
-                ],
-                nativeCurrency: {
-                    "symbol": "ETH",
-                    "decimals": 18
-                }
-            },
             sepolia: {
                 id: 421614,
                 base: 'evm',
@@ -353,19 +397,6 @@ export const chainlist: Chains = {
                     decimals: 18
                 },
             },
-            runkeby: {
-                id: 421611,
-                base: 'evm',
-                name: 'Arbitrum Rinkeby',
-                logo: 'https://coinmeca-web3.vercel.app/42161/logo.svg',
-                rpc: [
-                    'https://rinkeby.arbitrum.io/rpc'
-                ],
-                nativeCurrency: {
-                    symbol: 'ETH',
-                    decimals: 18
-                },
-            }
         }
     },
     celo: {
@@ -466,12 +497,73 @@ export const chainlist: Chains = {
             id: 7777777,
             base: 'evm',
             name: 'Zora',
-            logo: '',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAxlBMVEVHcEw3HR1xQCNeOC1lTV1uQSpVNDJARIk4JkdXLR4yHCOcmuiinel9SihcMR+NkuZuheY/OGlKaMdGV6hNYbh7jOmGkOlNb9RGW7JHW69TcdImERctFRU/Zc5AWLM9atoqFiJIfPO7quswGy7ty+tdhfQ9b+Q/de1APXignu41IjtBS5nKsOn52+9LJRqQmO9vjPM+XsM7LFLgvuk7Gxc9MV6upOzVt+l6kPE/UKRqOiL/6vVhgupNduFTfu0/N2uFk+55Ryd8SkoSAAAAG3RSTlMA4+uFFjRe/v78PTji1MBe68/A6zC/g+iD/IZPjXSDAAABp0lEQVQokWXS6aKaMBQE4AAiYNXerSuCyKKsAkFBBIT7/i/VScSl7fz0cw6HEEJu+fj59qNrX759/0L+zfTdNLpLexrSIJh//Ysmr8rV0sC249ieTx42o36dr7s2S0s7roqiiu377FnYo7i9eENgV4WLFHE56sRRWXF3QTEu3CRJXLeKg+tkwcFUY73zstSu3KRpmoRV53xPKzyyqZsHNgkwZTsLT1g+NYcXQuTViPdnNnhoZQdD+0Ek/YYb7/S0bXpqf5MlmlRhC2Eu3mV8TxS7NyKsdIefAatmaVDaSBkMWdu9Ew2o9hGfC8UBBkGanmDGL6Id+EOv1Y0HRjLv0q3ziIgHfaxCOSMXmGEqZLlfoUr9UcHIbguLXomk8eoRmoOZb0EwXyLymVVvaqxZDCOHUZkQUTuMqtSmmbOYZqT0VGUHf95zDWnvK1FU13UUKf6RhlP2WRZcsZVKj72P9D3IEa4f+3NUxwlVlVKqqqFjWeM1kkfVLQt/QCxLX81ulwiqgZmPeRgmLzjDeQ7C09VkO4tgbc+jTf+787K0EM9ncSnJ95/+AL7bXf1cqXaUAAAAAElFTkSuQmCC',
             rpc: ['https://rpc.zora.energy'],
             explorer: ['https://explorer.zora.energy/'],
             nativeCurrency: {
                 symbol: 'ETH',
                 decimals: 18
+            }
+        },
+        testnet: {
+            sepolia: {
+                id: 999999999,
+                name: 'Zora Sepolia',
+                base: 'evm',
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzIzNThfMzIxKSI+CjxwYXRoIGQ9Ik00MCAyMEM0MCA4Ljk1NDMxIDMxLjA0NTcgMCAyMCAwQzguOTU0MzEgMCAwIDguOTU0MzEgMCAyMEMwIDMxLjA0NTcgOC45NTQzMSA0MCAyMCA0MEMzMS4wNDU3IDQwIDQwIDMxLjA0NTcgNDAgMjBaIiBmaWxsPSJ1cmwoI3BhaW50MF9yYWRpYWxfMjM1OF8zMjEpIi8+CjxwYXRoIGQ9Ik00MCAyMEM0MCA4Ljk1NDMgMzEuMDQ1NyAwIDIwIDBDOC45NTQzIDAgMCA4Ljk1NDMgMCAyMEMwIDMxLjA0NTcgOC45NTQzIDQwIDIwIDQwQzMxLjA0NTcgNDAgNDAgMzEuMDQ1NyA0MCAyMFoiIGZpbGw9InVybCgjcGFpbnQxX3JhZGlhbF8yMzU4XzMyMSkiLz4KPC9nPgo8ZGVmcz4KPHJhZGlhbEdyYWRpZW50IGlkPSJwYWludDBfcmFkaWFsXzIzNThfMzIxIiBjeD0iMCIgY3k9IjAiIHI9IjEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiBncmFkaWVudFRyYW5zZm9ybT0idHJhbnNsYXRlKDI1Ljk4MzUgOS43NDI5OSkgc2NhbGUoMzAuMTE2MykiPgo8c3RvcCBvZmZzZXQ9IjAuMTU2MjUiIHN0b3AtY29sb3I9IiNEQ0M4RDAiLz4KPHN0b3Agb2Zmc2V0PSIwLjMwMjA4MyIgc3RvcC1jb2xvcj0iIzc4QzhDRiIvPgo8c3RvcCBvZmZzZXQ9IjAuNDI3MDgzIiBzdG9wLWNvbG9yPSIjNEQ5NTlFIi8+CjxzdG9wIG9mZnNldD0iMC41NTcyOTIiIHN0b3AtY29sb3I9IiMzMDVFQjkiLz4KPHN0b3Agb2Zmc2V0PSIwLjc5Njg3NSIgc3RvcC1jb2xvcj0iIzMxMUYxMiIvPgo8c3RvcCBvZmZzZXQ9IjAuOTA2MjUiIHN0b3AtY29sb3I9IiM2ODQyMzIiLz4KPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMkQxQzEzIi8+CjwvcmFkaWFsR3JhZGllbnQ+CjxyYWRpYWxHcmFkaWVudCBpZD0icGFpbnQxX3JhZGlhbF8yMzU4XzMyMSIgY3g9IjAiIGN5PSIwIiByPSIxIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgyNS45ODM1IDkuNzQyOTkpIHNjYWxlKDMwLjExNjMpIj4KPHN0b3Agb2Zmc2V0PSIwLjA2NzcwODMiIHN0b3AtY29sb3I9IiNEQ0Y4Q0YiLz4KPHN0b3Agb2Zmc2V0PSIwLjI1IiBzdG9wLWNvbG9yPSIjRDRGNEFCIi8+CjxzdG9wIG9mZnNldD0iMC40NzM5NTgiIHN0b3AtY29sb3I9IiNBNEYwMjgiLz4KPHN0b3Agb2Zmc2V0PSIwLjg4MDIwOCIgc3RvcC1jb2xvcj0iIzFEQUM0NSIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM1MEM4NkIiLz4KPC9yYWRpYWxHcmFkaWVudD4KPGNsaXBQYXRoIGlkPSJjbGlwMF8yMzU4XzMyMSI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0id2hpdGUiLz4KPC9jbGlwUGF0aD4KPC9kZWZzPgo8L3N2Zz4K',
+                rpc: ['https://sepolia.rpc.zora.energy'],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                }
+            }
+        }
+    },
+    scroll: {
+        mainnet: {
+            id: 534352,
+            base: 'evm',
+            name: 'Scroll',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAflBMVEVHcEwXBwYTAAUiExIjFxVwZV0rHxwGAgIBAAAfERAKAAAYCQrLv68WAACNgneonI8BAAD/+OP/9eCCd23two3//umRhnryx5H77dmwpJbj1cR5bmbguIbt38ydkYUkFhU9LiVQRkDWybjOwbHGoXZYTUfZsoJhVk/AtKWjhGAS31C8AAAAEHRSTlMApeEwJf4Oy+4/wWTod9lO/NSV9AAAANpJREFUKJG10duSgjAQRdGg3HRG7W5uUQyBIJb+/w8OMQJpdR7dr6s4SQUhvtlum/gF8UJr0Fnp121niyFDVnFMZwy6AlFKehJJ8hBu2EZETeYyxNBgAxLLyNUzTI94gnG1cCHDQJPFaTZr0EORDmqcbepnHOO9+nd27GBn68do3b9iuJz5Gaf3IcJ3PC2pX45Uglf0gl2pujY/P7rohOMwKAmXKrdVV1izM01rCn13mFfw4z0D9PZfzV+eYePtJtrgeGblurYr/0YisZfU021XMUMRbpZC8c3+AGdfHbhD7NFQAAAAAElFTkSuQmCC',
+            rpc: [
+                "https://scroll-mainnet.chainstacklabs.com",
+                "https://scroll.blockpi.network/v1/rpc/public",
+                "https://scroll-mainnet.rpc.grove.city/v1/a7a7c8e2",
+                "https://scroll.drpc.org",
+                "https://scroll-mainnet.public.blastapi.io",
+                "https://rpc.ankr.com/scroll",
+                "https://rpc.scroll.io",
+                "https://rpc-scroll.icecreamswap.com",
+                "https://1rpc.io/scroll",
+            ],
+            explorer: [
+                'https://scroll.io/rollupscan'
+            ],
+            nativeCurrency: {
+                symbol: 'ETH',
+                decimals: 18
+            }
+        },
+        testnet: {
+            sepolia: {
+                id: 534351,
+                base: 'evm',
+                name: 'Scroll Sepolia',
+                rpc: [
+                    "https://scroll-sepolia.blockpi.network/v1/rpc/public",
+                    "https://sepolia-rpc.scroll.io",
+                    "https://scroll-testnet.rpc.grove.city/v1/a7a7c8e2",
+                    "https://rpc.ankr.com/scroll_sepolia_testnet",
+                    "https://scroll-testnet-public.unifra.io",
+                    "https://scroll-sepolia.drpc.org",
+                ],
+                explorer: [
+                    'https://sepolia.scrollscan.com/'
+                ],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                }
             }
         }
     },

@@ -25,9 +25,16 @@ export const providers: Providers = {
 		url: 'https://chromewebstore.google.com/detail/rainbow/opfgelmcmbiajamepnmloijbpoleiama',
 		adapter: (config?: any) => new RainbowWalletAdapter(config),
 	},
+	Zerion: <Provider>{
+		name: "Zerion",
+		logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAOVBMVEVHcEwkYe0kYe0kYe0kYe0kYe0kYe0kYe4kYe0SWu03bO+esfVjh/H////h5/wGVezJ1PqEn/OsvfdeUL6xAAAACXRSTlMAOIfD7v9gFuE1IrhZAAAAv0lEQVR4AX2TVwLDIAxDWcoGkd7/rh04GLp4v95DRrHOByB4Z80nU4ASJtMzL3hjmbuM+MIObGqd8RPJLPXWDqlb+sSLbe848OLVcyhxe+xILBNpN+ytx3r15CAQudoyUXDGo8IjiZEQvJQUVp6aVIpC4Ytb3IlKMzLHvJFcoUhabTeDUII2tEVhb6G+jsLUpiQEdy1hPWMjb/UwUpTxjbo+M0nkreMsZSc92dqg3GwZHnv0JuMHG7/m+KmHcngA6zASdhvGgR8AAAAASUVORK5CYII=",
+		website: "https://zerion.io/",
+		url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
+		adapter: (config?: any) => new PhantomWalletAdapter.evm(config),
+	},
 	Phantom: <Provider>{
 		name: "Phantom",
-		logo: "https://coinmeca-web3.vercel.app/wallets/Phantom/logo.svg",
+		logo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAXVBMVEX18v/28//39P/59v/x7v759//b1frAt/Wrn/KmmfGonPK3rfTRyviqnvLl4PytovLLw/fOx/jW0Pm8svWpnPLFvPailfHf2fvv6/79+//r5/25rvTp5f2xpvPHv/d84nSZAAAA7UlEQVR4Aa2RBZbEIBAFoRsSPpOO+8j9j7kRGOPt0ymcwlE/Rf8niFkZsqRSmLLcAf6S2WQWFQIR55wg509ny8q7CGr+cA3EvYDRL8c5jk6BP5Jv6eU6f7qLztBx4/uBo7N52M4XzOPEM6SLkgu4E8mXdayX6SWpjG6benXSd7KNirJ6O+de7bdBzSm37V0CSlIb2sCl9DpM7FMXb8KVpBLrMVPf4qryKvrBnkdtfeg8V/B32apaxbMGV/jjOx7A3XxKwZxBBIM1RcbBKZqwL9bfmIaqm6zSRB+fBQyGthpz7H/ZeVVxoRSt1Y/5Ay2oD2Ds/EUpAAAAAElFTkSuQmCC",
 		website: "https://phantom.app",
 		url: 'https://chrome.google.com/webstore/detail/phantom/bfnaelmomeimhlpmgjnjophhpkkoljpa',
 		adapter: (config?: any) => new PhantomWalletAdapter.evm(config),
