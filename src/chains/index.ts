@@ -25,31 +25,50 @@ export const chainlist: Chains = {
                 "decimals": 18
             }
         },
-        devnet: {
-            ropsten: {
-                id: 3,
+        testnet: {
+            holesky: {
+                id: 17000,
                 base: 'evm',
-                name: 'Ropsten',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
-                rpc: ['https://rpc.ankr.com/eth_ropsten'],
-                nativeCurrency: {
-                    "symbol": "ETH",
-                    "decimals": 18
-                }
-            },
-            rinkeby: {
-                id: 4,
-                base: 'evm',
-                name: 'Rinkeby',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+                name: 'Holesky',
                 rpc: [
-                    'https://rinkeby-light.eth.linkpool.io/'
+                    "https://ethereum-holesky.blockpi.network/v1/rpc/public",
+                    "https://rpc.holesky.ethpandaops.io",
+                    "https://ethereum-holesky-rpc.publicnode.com",
+                    "https://1rpc.io/holesky",
+                    "wss://ethereum-holesky-rpc.publicnode.com",
                 ],
                 nativeCurrency: {
                     "symbol": "ETH",
                     "decimals": 18
                 }
             },
+            sepolia: {
+                id: 11155111,
+                base: 'evm',
+                name: 'Sepolia',
+                rpc: [
+                    "https://api.zan.top/node/v1/eth/sepolia/public",
+                    "https://endpoints.omniatech.io/v1/eth/sepolia/public",
+                    "https://ethereum-sepolia.blockpi.network/v1/rpc/public",
+                    "https://eth-sepolia.public.blastapi.io",
+                    "https://public.stackup.sh/api/v1/node/ethereum-sepolia",
+                    "https://rpc.sepolia.ethpandaops.io",
+                    "https://gateway.tenderly.co/public/sepolia",
+                    "https://sepolia.gateway.tenderly.co",
+                    "https://rpc2.sepolia.org",
+                    "https://eth-sepolia-public.unifra.io",
+                    "https://eth-sepolia.api.onfinality.io/public",
+                    "https://rpc-sepolia.rockx.com",
+                    "https://ethereum-sepolia-rpc.publicnode.com",
+                    "https://1rpc.io/sepolia",
+                    "wss://ethereum-sepolia-rpc.publicnode.com",
+                    "wss://sepolia.gateway.tenderly.co",
+                ],
+                nativeCurrency: {
+                    "symbol": "ETH",
+                    "decimals": 18
+                }
+            }
         }
     },
     optimism: {
