@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.39998",
+    "version": "0.1.399991",
     "keywords": [
         "coinmeca",
         "web3",

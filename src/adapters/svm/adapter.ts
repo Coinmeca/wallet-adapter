@@ -1,4 +1,5 @@
 import { WalletAdapter } from 'core/adapter';
+import * as adapters from 'adapters';
 import { getNetworksById } from "chains";
 import { useWallet, type WalletAction, type WalletStore, type ConnectArgs } from "states";
 import { parseChainId } from "utils";
@@ -61,8 +62,27 @@ export const adapter = (config?: object): WalletAction => {
                 throw new Error(`Wallet Disconnecting Error: ${error}`);
             }
         },
-        switchChain: async () => {
-            return undefined
+        switchChain: async (c: number | string | Chain) => {
+            c = (typeof c === 'object' ? c : getNetworksById(parseChainId(c))) || c;
+            let wallet;
+            if (typeof c === 'object' && c?.base && c?.base !== 'evm') {
+                wallet = adapters[c?.base].providers[name || JSON.parse(localStorage.getItem("wallet") || "")].adapter(config);
+                if (!wallet) throw new Error("Wallet Provider Not Found");
+                await wallet.connect();
+            } else {
+                wallet = (provider || providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config)) as WalletAdapter;
+                if (!wallet) throw new Error("Wallet Provider Not Found");
+                try {
+                    c = getNetworksById(parseChainId(c)) as Chain;
+                    if (c?.id !== chain?.id) {
+                        await wallet.chain(c);
+                        connection(c);
+                    }
+                    return c;
+                } catch (error) {
+                    throw new Error(`Wallet Chain Switching Error: ${error}`);
+                }
+            }
         }
     }
 

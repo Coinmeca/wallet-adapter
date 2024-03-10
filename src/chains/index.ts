@@ -30,6 +30,7 @@ export const chainlist: Chains = {
                 id: 17000,
                 base: 'evm',
                 name: 'Holesky',
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
                     "https://ethereum-holesky.blockpi.network/v1/rpc/public",
                     "https://rpc.holesky.ethpandaops.io",
@@ -46,6 +47,7 @@ export const chainlist: Chains = {
                 id: 11155111,
                 base: 'evm',
                 name: 'Sepolia',
+                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
                 rpc: [
                     "https://api.zan.top/node/v1/eth/sepolia/public",
                     "https://endpoints.omniatech.io/v1/eth/sepolia/public",
@@ -76,7 +78,7 @@ export const chainlist: Chains = {
             id: 10,
             base: 'evm',
             name: 'Optimism',
-            logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAP1BMVEVHcEz/BCD/BCD/BCD/BCD/BCD/BCD/Ax//BCD/AyD/AyD/ABX//f3/AAH/gIb/5Ob/Xmf/QUz/HzH/s7b/zdBwbv+qAAAACnRSTlMAh2Dgwz8y+u0W66fO0wAAAMxJREFUKJF9k+0agiAMhSHJkO0MUO//WiNjmmU7P0B5n30ynFONPsSUYvCj+9atAVW8ndA0pJOG6WD39KO7wXY6XbGU3p6HazhseV6zlF45x38wttr3H6Jt2bZNo/OKUGQmKiKCfuRd6F8zc+aKta3cadCQyBnIK3jBzIV60IcaCmHNYKkLz92b6xELV2pmlZv3oimp22YJ4SoMQFnUhLA0G3k5PgoNeymohUCl0gH90YTeg48WjXb77MabV2Zftjkm9oDZo2kP9Z/n8ASkXBmW2axKlAAAAABJRU5ErkJggg==',
             rpc: [
                 "https://optimism-mainnet.infura.io",
                 "https://optimism.llamarpc.com",
@@ -107,7 +109,7 @@ export const chainlist: Chains = {
                 id: 420,
                 base: 'evm',
                 name: 'Optimism Goerli',
-                logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAP1BMVEVHcEz/BCD/BCD/BCD/BCD/BCD/BCD/Ax//BCD/AyD/AyD/ABX//f3/AAH/gIb/5Ob/Xmf/QUz/HzH/s7b/zdBwbv+qAAAACnRSTlMAh2Dgwz8y+u0W66fO0wAAAMxJREFUKJF9k+0agiAMhSHJkO0MUO//WiNjmmU7P0B5n30ynFONPsSUYvCj+9atAVW8ndA0pJOG6WD39KO7wXY6XbGU3p6HazhseV6zlF45x38wttr3H6Jt2bZNo/OKUGQmKiKCfuRd6F8zc+aKta3cadCQyBnIK3jBzIV60IcaCmHNYKkLz92b6xELV2pmlZv3oimp22YJ4SoMQFnUhLA0G3k5PgoNeymohUCl0gH90YTeg48WjXb77MabV2Zftjkm9oDZo2kP9Z/n8ASkXBmW2axKlAAAAABJRU5ErkJggg==',
                 rpc: [
                     'https://goerli.optimism.io'
                 ],
@@ -120,7 +122,7 @@ export const chainlist: Chains = {
                 id: 420,
                 base: 'evm',
                 name: 'Optimism Sepolia',
-                logo: 'https://coinmeca-web3.vercel.app/10/logo.svg',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAP1BMVEVHcEz/BCD/BCD/BCD/BCD/BCD/BCD/Ax//BCD/AyD/AyD/ABX//f3/AAH/gIb/5Ob/Xmf/QUz/HzH/s7b/zdBwbv+qAAAACnRSTlMAh2Dgwz8y+u0W66fO0wAAAMxJREFUKJF9k+0agiAMhSHJkO0MUO//WiNjmmU7P0B5n30ynFONPsSUYvCj+9atAVW8ndA0pJOG6WD39KO7wXY6XbGU3p6HazhseV6zlF45x38wttr3H6Jt2bZNo/OKUGQmKiKCfuRd6F8zc+aKta3cadCQyBnIK3jBzIV60IcaCmHNYKkLz92b6xELV2pmlZv3oimp22YJ4SoMQFnUhLA0G3k5PgoNeymohUCl0gH90YTeg48WjXb77MabV2Zftjkm9oDZo2kP9Z/n8ASkXBmW2axKlAAAAABJRU5ErkJggg==',
                 rpc: [
                     'https://sepolia.optimism.io'
                 ],
