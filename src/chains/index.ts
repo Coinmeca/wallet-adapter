@@ -6,7 +6,7 @@ export const chainlist: Chains = {
             id: 1,
             base: 'evm',
             name: 'Ethereum',
-            logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+            logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiB2aWV3Qm94PSIwIDAgMjUwMCAyNTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMzIxMl8yNzYwKSI+CjxwYXRoIGQ9Ik0xMjUwIDI1MDBDMTk0MC4zNiAyNTAwIDI1MDAgMTk0MC4zNiAyNTAwIDEyNTBDMjUwMCA1NTkuNjQ0IDE5NDAuMzYgMCAxMjUwIDBDNTU5LjY0NCAwIDAgNTU5LjY0NCAwIDEyNTBDMCAxOTQwLjM2IDU1OS42NDQgMjUwMCAxMjUwIDI1MDBaIiBmaWxsPSIjNjI3RUVBIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDMxMi41VjEwMDUuNDdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMzEyLjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAzMTIuNUw3MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxMDA1LjQ3VjMxMi41WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyODguOTEgMTcxNi4yNVYyMTg3LjExTDE4NzUgMTM3Ni4yNUwxMjg4LjkxIDE3MTYuMjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAyMTg3LjExVjE3MTYuMTdMNzAzLjEyNSAxMzc2LjI1TDEyODguOTEgMjE4Ny4xMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDE2MDcuMjdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMTAwNS42MlYxNjA3LjI3WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik03MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxNjA3LjI3VjEwMDUuNjJMNzAzLjEyNSAxMjY3LjE5WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42MDIiLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8zMjEyXzI3NjAiPgo8cmVjdCB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=',
             rpc: [
                 "https://mainnet.infura.io/v3/",
                 "https://ethereum.publicnode.com",
@@ -30,7 +30,7 @@ export const chainlist: Chains = {
                 id: 17000,
                 base: 'evm',
                 name: 'Holesky',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiB2aWV3Qm94PSIwIDAgMjUwMCAyNTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMzIxMl8yNzYwKSI+CjxwYXRoIGQ9Ik0xMjUwIDI1MDBDMTk0MC4zNiAyNTAwIDI1MDAgMTk0MC4zNiAyNTAwIDEyNTBDMjUwMCA1NTkuNjQ0IDE5NDAuMzYgMCAxMjUwIDBDNTU5LjY0NCAwIDAgNTU5LjY0NCAwIDEyNTBDMCAxOTQwLjM2IDU1OS42NDQgMjUwMCAxMjUwIDI1MDBaIiBmaWxsPSIjNjI3RUVBIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDMxMi41VjEwMDUuNDdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMzEyLjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAzMTIuNUw3MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxMDA1LjQ3VjMxMi41WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyODguOTEgMTcxNi4yNVYyMTg3LjExTDE4NzUgMTM3Ni4yNUwxMjg4LjkxIDE3MTYuMjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAyMTg3LjExVjE3MTYuMTdMNzAzLjEyNSAxMzc2LjI1TDEyODguOTEgMjE4Ny4xMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDE2MDcuMjdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMTAwNS42MlYxNjA3LjI3WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik03MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxNjA3LjI3VjEwMDUuNjJMNzAzLjEyNSAxMjY3LjE5WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42MDIiLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8zMjEyXzI3NjAiPgo8cmVjdCB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=',
                 rpc: [
                     "https://ethereum-holesky.blockpi.network/v1/rpc/public",
                     "https://rpc.holesky.ethpandaops.io",
@@ -47,7 +47,7 @@ export const chainlist: Chains = {
                 id: 11155111,
                 base: 'evm',
                 name: 'Sepolia',
-                logo: 'https://coinmeca-web3.vercel.app/1/logo.svg',
+                logo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiB2aWV3Qm94PSIwIDAgMjUwMCAyNTAwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMzIxMl8yNzYwKSI+CjxwYXRoIGQ9Ik0xMjUwIDI1MDBDMTk0MC4zNiAyNTAwIDI1MDAgMTk0MC4zNiAyNTAwIDEyNTBDMjUwMCA1NTkuNjQ0IDE5NDAuMzYgMCAxMjUwIDBDNTU5LjY0NCAwIDAgNTU5LjY0NCAwIDEyNTBDMCAxOTQwLjM2IDU1OS42NDQgMjUwMCAxMjUwIDI1MDBaIiBmaWxsPSIjNjI3RUVBIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDMxMi41VjEwMDUuNDdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMzEyLjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAzMTIuNUw3MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxMDA1LjQ3VjMxMi41WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTEyODguOTEgMTcxNi4yNVYyMTg3LjExTDE4NzUgMTM3Ni4yNUwxMjg4LjkxIDE3MTYuMjVaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjYwMiIvPgo8cGF0aCBkPSJNMTI4OC45MSAyMTg3LjExVjE3MTYuMTdMNzAzLjEyNSAxMzc2LjI1TDEyODguOTEgMjE4Ny4xMVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xMjg4LjkxIDE2MDcuMjdMMTg3NC42MSAxMjY3LjE5TDEyODguOTEgMTAwNS42MlYxNjA3LjI3WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC4yIi8+CjxwYXRoIGQ9Ik03MDMuMTI1IDEyNjcuMTlMMTI4OC45MSAxNjA3LjI3VjEwMDUuNjJMNzAzLjEyNSAxMjY3LjE5WiIgZmlsbD0id2hpdGUiIGZpbGwtb3BhY2l0eT0iMC42MDIiLz4KPC9nPgo8ZGVmcz4KPGNsaXBQYXRoIGlkPSJjbGlwMF8zMjEyXzI3NjAiPgo8cmVjdCB3aWR0aD0iMjUwMCIgaGVpZ2h0PSIyNTAwIiBmaWxsPSJ3aGl0ZSIvPgo8L2NsaXBQYXRoPgo8L2RlZnM+Cjwvc3ZnPgo=',
                 rpc: [
                     "https://api.zan.top/node/v1/eth/sepolia/public",
                     "https://endpoints.omniatech.io/v1/eth/sepolia/public",

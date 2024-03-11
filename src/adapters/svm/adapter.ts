@@ -65,8 +65,8 @@ export const adapter = (config?: object): WalletAction => {
         switchChain: async (c: number | string | Chain) => {
             c = (typeof c === 'object' ? c : getNetworksById(parseChainId(c))) || c;
             let wallet;
-            if (typeof c === 'object' && c?.base && c?.base !== 'evm') {
-                wallet = adapters[c?.base].providers[name || JSON.parse(localStorage.getItem("wallet") || "")].adapter(config);
+            if (typeof c === 'object' && c?.base && c?.base !== 'svm') {
+                wallet = (adapters[c?.base].providers[name || JSON.parse(localStorage.getItem("wallet") || "")] || adapters[c?.base].providers[0])?.adapter(config);
                 if (!wallet) throw new Error("Wallet Provider Not Found");
                 await wallet.connect();
             } else {
