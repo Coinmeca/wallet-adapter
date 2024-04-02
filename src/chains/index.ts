@@ -553,6 +553,47 @@ export const chainlist: Chains = {
             }
         }
     },
+    blast: {
+        mainnet: {
+            id: 81457,
+            base: 'evm',
+            name: 'Blast',
+            logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEVHcEwAAAAAAAAAAAAAAAAAAQcAAAAAAAAAAAAAAAAAAAAAAAA4NxZycRNZWBv+/hP//wLU1BmtrR+DgxjHxx7p6RwhXe+nAAAADHRSTlMATpbK7P8QpP+Q6h2+StNaAAAA5UlEQVR4AXTSBRLDMAwEQBnUXNj4/69WM4bwtmFRgE6UNpbZGq3oxW/AyfCjmxE34zV9wsN0KjLj1dzz8aHVmPBhus/3MJ4aLOtNbzJAYNvdjWcAgwRAcNjdw84AiBQA3qJY40lwLkEo0hAMkRccJGCF0GRQbW6P6PbSAYbsKUcCYih2X+pZ4ksO12HLZcE9YJOzsk5F78Zkzx2axe2hPW2DIpep7tGGdMuRDuIerUn1nJy6+qCFImo5F3mrAe1lLftZXlEN7XXzBfjyTf2HL8EQSnIEEy3BZE844xDOeoQzL8HsDwCQ1h/nenuvTQAAAABJRU5ErkJggg==',
+            rpc: [
+                "https://rpc.blast.io",
+                "https://rpc.ankr.com/blast",
+                "https://blast.din.dev/rpc",
+                "https://blastl2-mainnet.public.blastapi.io",
+                "https://blast.blockpi.network/v1/rpc/public",
+                "https://blast.gasswap.org",
+                "wss://blast.gasswap.org",
+            ],
+            explorer: ['https://blastscan.io'],
+            nativeCurrency: {
+                symbol: 'ETH',
+                decimals: 18
+            },
+        },
+        testnet: {
+            sepolia: {
+                id: 168587773,
+                base: 'evm',
+                name: 'Blast Sepolia Testnet',
+                logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEVHcEwAAAAAAAAAAAAAAAAAAQcAAAAAAAAAAAAAAAAAAAAAAAA4NxZycRNZWBv+/hP//wLU1BmtrR+DgxjHxx7p6RwhXe+nAAAADHRSTlMATpbK7P8QpP+Q6h2+StNaAAAA5UlEQVR4AXTSBRLDMAwEQBnUXNj4/69WM4bwtmFRgE6UNpbZGq3oxW/AyfCjmxE34zV9wsN0KjLj1dzz8aHVmPBhus/3MJ4aLOtNbzJAYNvdjWcAgwRAcNjdw84AiBQA3qJY40lwLkEo0hAMkRccJGCF0GRQbW6P6PbSAYbsKUcCYih2X+pZ4ksO12HLZcE9YJOzsk5F78Zkzx2axe2hPW2DIpep7tGGdMuRDuIerUn1nJy6+qCFImo5F3mrAe1lLftZXlEN7XXzBfjyTf2HL8EQSnIEEy3BZE844xDOeoQzL8HsDwCQ1h/nenuvTQAAAABJRU5ErkJggg==',
+                rpc: [
+                    "https://sepolia.blast.io",
+                    "https://blast-sepolia.drpc.org",
+                    "https://blast-sepolia.blockpi.network/v1/rpc/public",
+                    "wss://blast-sepolia.drpc.org",
+                ],
+                explorer: ['https://testnet.blastscan.io'],
+                nativeCurrency: {
+                    symbol: 'ETH',
+                    decimals: 18
+                },
+            }
+        }
+    },
     zora: {
         mainnet: {
             id: 7777777,
