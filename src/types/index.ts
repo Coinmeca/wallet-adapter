@@ -1,6 +1,7 @@
 import { Cluster } from "@solana/web3.js";
 import { Adapter } from "core/types";
 export interface NativeCurrency {
+    name: string;
     symbol: string;
     decimals: number;
 }
@@ -24,7 +25,7 @@ export interface Chain {
     type?: ChainType;
     rpc: string[];
     explorer?: string[];
-    nativeCurrency?: NativeCurrency;
+    nativeCurrency: NativeCurrency;
 }
 
 export interface Chains {
