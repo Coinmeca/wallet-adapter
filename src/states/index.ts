@@ -39,6 +39,7 @@ export interface WalletStoreAction extends WalletAction {
     update: (wallet: Wallet, chain?: Chain) => void;
     connection: (chain?: Chain) => void;
     initialize: () => void;
+    autoConnect: () => void;
 }
 
 const initial: WalletStore & WalletAction = {
@@ -56,6 +57,10 @@ export const useWallet = create<WalletStore & WalletStoreAction>((set) => ({
     mount: (wallet: WalletStore) => set((state: WalletStore & WalletStoreAction) => ({ ...wallet })),
     update: (wallet: Wallet, chain?: Chain) => set((state: WalletStore & WalletStoreAction) => ({ ...wallet, chain })),
     unmount: () => set(({ chain }: WalletStore & WalletStoreAction) => ({ ...initial, chain })),
+    autoConnect: () => set((state: WalletStore & WalletStoreAction) => {
+        const storedWallet = localStorage.getItem("wallet");
+        return { ...state, ...(storedWallet && JSON.parse(storedWallet)) };
+    }),
     connection: (chain?: Chain) => set((state: WalletStore & WalletStoreAction) => ({ ...state, chain })),
     initialize: () => set(() => ({ ...initial })),
 }));

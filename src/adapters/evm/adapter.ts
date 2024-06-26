@@ -50,11 +50,11 @@ export const adapter = (config?: object): WalletAction => {
 			const wallet = (provider || providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config)) as WalletAdapter;
 			if (!wallet) throw new Error("Wallet Provider Not Found");
 			try {
-				await wallet.disconnect();
 				localStorage.removeItem("wallet");
 				wallet.off("chainChanged", chainChanged);
 				wallet.off("accountsChanged", accountsChanged);
 				wallet.off("disconnect", actions.disconnect);
+				await wallet.disconnect();
 				unmount();
 				return true;
 			} catch (error) {
