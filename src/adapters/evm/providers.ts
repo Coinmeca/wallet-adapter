@@ -1,7 +1,7 @@
 import { CoinbaseWalletAdapter, MetaMaskWalletAdapter, PhantomWalletAdapter, RainbowWalletAdapter, TrustWalletAdapter, ZerionWalletAdapter } from "providers";
 import { Providers } from "types";
 
-const detect = (wallet: string) => ((new (window as any)()) as any)?.ethereum?.providers?.find((p: any) => p[`${wallet}`]);
+const detect = (wallet: string) => ((global || window) as any)?.ethereum?.providers?.find((p: any) => p[`${wallet}`]);
 
 export const providers: Providers = {
 	MetaMask: {
