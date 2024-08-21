@@ -1,9 +1,9 @@
-import { WalletAdapter } from 'core/adapter';
 import * as adapters from 'adapters';
-import { getNetworksById } from "chains";
-import { useWallet, type WalletAction, type WalletStore, type ConnectArgs } from "states";
-import { parseChainId } from "utils";
+import { getChainById } from "chains";
+import { WalletAdapter } from 'core/adapter';
+import { useWallet, type ConnectArgs, type WalletAction, type WalletStore } from "states";
 import { Chain } from 'types';
+import { parseChainId } from "utils";
 import { providers } from './providers';
 
 export const adapter = (config?: object): WalletAction => {
@@ -11,7 +11,7 @@ export const adapter = (config?: object): WalletAction => {
 
     const actions = {
         connect: async (...args: ConnectArgs) => {
-            const c = args[0] ? getNetworksById(parseChainId(args[0])) : chain as Chain | undefined;
+            const c = args[0] ? getChainById(parseChainId(args[0])) : chain as Chain | undefined;
             const n = (args?.length > 1 && typeof args[1] === 'string') ? args[1] : undefined;
             const a = (args?.length > 2 && typeof args[2] === 'boolean') ? args[2]
                 : (args?.length > 1 && typeof args[1] === 'boolean') ? args[1] : undefined;
@@ -63,7 +63,7 @@ export const adapter = (config?: object): WalletAction => {
             }
         },
         switchChain: async (c: number | string | Chain) => {
-            c = (typeof c === 'object' ? c : getNetworksById(parseChainId(c))) || c;
+            c = (typeof c === 'object' ? c : getChainById(parseChainId(c))) || c;
             let wallet;
             if (typeof c === 'object' && c?.base && c?.base !== 'svm') {
                 wallet = (adapters[c?.base].providers[name || JSON.parse(localStorage.getItem("wallet") || "")] || adapters[c?.base].providers[0])?.adapter(config);
@@ -73,7 +73,7 @@ export const adapter = (config?: object): WalletAction => {
                 wallet = (provider || providers[name || JSON.parse(localStorage.getItem("wallet") || "")?.name]?.adapter(config)) as WalletAdapter;
                 if (!wallet) throw new Error("Wallet Provider Not Found");
                 try {
-                    c = getNetworksById(parseChainId(c)) as Chain;
+                    c = getChainById(parseChainId(c)) as Chain;
                     if (c?.id !== chain?.id) {
                         await wallet.chain(c);
                         connection(c);

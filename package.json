@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.46",
+    "version": "0.1.47",
     "keywords": [
         "coinmeca",
         "web3",
@@ -73,11 +73,12 @@
         "@solana/wallet-adapter-wallets": "^0.19.25"
     },
     "devDependencies": {
-        "@solana/web3.js": "^1.90.1",
+        "@solana/web3.js": "^1.95.3",
         "@types/lodash": "^4.14.202",
         "tsc-alias": "^1.8.8",
         "tscp": "^1.0.0",
         "typescript": "^5.3.3",
         "typescript-cp": "^0.1.9"
-    }
+    },
+    "packageManager": "yarn@4.3.1"
 }

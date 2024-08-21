@@ -21,7 +21,7 @@ export function formatChainId(chain: number | string | Chain): string {
 }
 
 export const isMobile = () => {
-    const browser = () => ((global || new (window as any)()) as any)?.navigator?.userAgent || ((global || new (window as any)()) as any)?.navigator?.vendor; /*|| window?.opera*/
+    const browser = () => ((new (window as any)()) as any)?.navigator?.userAgent || ((new (window as any)()) as any)?.navigator?.vendor; /*|| window?.opera*/
     return (
         /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|modele|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
             browser()

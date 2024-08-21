@@ -1,8 +1,7 @@
+import { getChainById } from "chains";
 import * as Core from "core/adapter";
-import { EventEmitter } from "core/adapter";
-import { WalletAccountError, WalletAddressError, WalletConnectionError, WalletError, WalletSendTransactionError, WalletUserReject } from "core/errors";
+import { WalletAccountError, WalletAddressError, WalletConnectionError, WalletSendTransactionError, WalletUserReject } from "core/errors";
 import { Asset, Chain } from "types";
-import { getNetworksById } from "chains";
 import { formatChainId, parseChainId } from "utils";
 import { ProviderMessage, RequestArguments, Transaction } from "./module";
 
@@ -35,7 +34,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 	async chain(chain?: number | string | Chain): Promise<Chain | null> {
 		const c = chain;
 		if (c) {
-			chain = getNetworksById(parseChainId(c)) as Chain;
+			chain = getChainById(parseChainId(c)) as Chain;
 			await this.provider
 				?.request({
 					method: "wallet_addEthereumChain",
@@ -104,7 +103,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 	}
 
 	protected _chainChanged(chain: number | string | Chain) {
-		this._chain = getNetworksById(parseChainId(chain)) as Chain;
+		this._chain = getChainById(parseChainId(chain)) as Chain;
 	}
 
 	async sendTransaction(tx: Transaction | Transaction[], success?: Function | Promise<any>, failure?: Function | Promise<any>): Promise<void> {

@@ -1,4 +1,4 @@
-import type { Chains, Chain, ChainType } from "types";
+import type { Chain, Chains } from "types";
 
 export const chainlist: Chains = {
     ethereum: {
@@ -469,7 +469,8 @@ export const chainlist: Chains = {
                 logo: "https://coinmeca-web3.vercel.app/42161/logo.svg",
                 rpc: [
                     "https://sepolia-rollup.arbitrum.io/rpc",
-                    "https://arbitrum-sepolia.blockpi.network/v1/rpc/public"
+                    "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+                    "https://endpoints.omniatech.io/v1/arbitrum/sepolia/public",
                 ],
                 explorer: ["https://sepolia.arbiscan.io/"],
                 nativeCurrency: {
@@ -752,56 +753,29 @@ export const chainlist: Chains = {
     }
 };
 
-export function getChainByName(name: string): Chain | undefined {
-    const word = name.replaceAll(" ", ".").split(".");
-    switch (word.length) {
-        case 1: {
-            return chainlist[word[0]]["mainnet"]
-        }
-        case 2: {
-            return chainlist[word[0]]["mainnet"]
-        }
-        case 3: {
-            return (chainlist[word[0]] as any)[(word[1] !== "testnet" && word[1] !== "devnet") ? "testnet" : word[1]][word[2]];
-        }
-    }
-    return undefined;
-}
 
-export function getChainNames(type: "mainnet" | "testnet" | "devnet") {
-    return Object.keys(chainlist)
-        .filter((c: string) => {
-            if (chainlist[c][type]) return c;
-        })
-        .map((c: string) => {
-            return c?.split(" ")?.map((v: string) => [...v]?.map((n: string, i: number) => i === 0 ? n?.toUpperCase() : n).join(""));
-        }).flatMap((f) => f);
-}
-
-export function getNetworkByName(name: string) {
-    return name ? [
-        ...(Object.values(chainlist))?.flatMap((c) => c)
-            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c),
-        ...(Object.values(chainlist))?.flatMap((c) => c)
-            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c).map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c)
-    ].find((f: any) => f?.name === name) as Chain : undefined;
-}
-
-export function getNetworksById(id: number): Chain | undefined {
-    return id ? [
-        ...(Object.values(chainlist))?.flatMap((c) => c)
-            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c),
-        ...(Object.values(chainlist))?.flatMap((c) => c)
-            .map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c).map((c: any) => Object.values(c)).flatMap((c) => c).flatMap((c) => c)
-    ].find((c: any) => c?.id === id) as Chain : undefined;
-}
-
-export function getNetworks(type: "mainnet" | "testnet" | "devnet") {
+export function getChain(name: string): { mainnet?: Chain | undefined; testnet?: { [key: string]: Chain | undefined; } | undefined; devnet?: { [key: string]: Chain | undefined; } | undefined; } | undefined {
     return Object.values(chainlist)
-        .flatMap((c: any) => {
-            if (c[type]) return Object.values(c[type]);
-        })
-        .filter((c: any) => {
-            if (c) return c;
-        });
+        .find((network) => network?.mainnet?.name?.toLowerCase()?.includes(name))
 }
+
+export function getChainsByType(type: "mainnet" | "testnet" | "devnet"): Chain[] {
+    return Object.values(chainlist)
+        .flatMap((network) => type === 'mainnet' ? network[type] : typeof network?.[type] === 'object' ? Object.values(network?.[type]) : network?.[type]) // Access the network[type] object
+        .filter((network): network is Chain => Boolean(network));
+}
+
+export function getChainByName(name: string): Chain | undefined {
+    return Object.values(chainlist)
+        .flatMap(network => [network?.mainnet, ...(network?.testnet ? Object.values(network?.testnet) : [])])
+        .filter(f => f)
+        .find(f => f?.name?.toLowerCase()?.includes(name));
+}
+
+export function getChainById(id: number): Chain | undefined {
+    return Object.values(chainlist)
+        .flatMap(network => [network?.mainnet, ...(network?.testnet ? Object.values(network?.testnet) : [])])
+        .filter(f => f)
+        .find(f => f?.id === id);
+}
+
