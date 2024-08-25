@@ -1,17 +1,16 @@
 ﻿import {
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
+    WalletConfig,
     WalletName,
-    WalletReadyState,
-    WalletConfig
+    WalletReadyState
 } from "core/adapter";
 import {
-    WalletNetworkError,
     WalletAccountError,
+    WalletAddressError,
     WalletDisconnectionError,
     WalletNotConnectedError,
-    WalletNotReadyError,
-    WalletAddressError,
+    WalletNotReadyError
 } from "core/errors";
 import { WalletAdapter } from "core/evm/adapter";
 import type { Provider, RequestArguments } from "core/evm/module";
@@ -19,9 +18,8 @@ import type { Chain } from "types";
 import { isMobile } from "utils";
 
 import { CoinbaseWalletProvider } from "@coinbase/wallet-sdk";
-import type { CoinbaseWalletProviderOptions } from "@coinbase/wallet-sdk/dist/provider/CoinbaseWalletProvider";
 import { CoinbaseWalletSDK, type CoinbaseWalletSDKOptions } from "@coinbase/wallet-sdk/dist/CoinbaseWalletSDK";
-import _ from 'lodash';
+import type { CoinbaseWalletProviderOptions } from "@coinbase/wallet-sdk/dist/provider/CoinbaseWalletProvider";
 
 export const CoinbaseWalletName = "Coinbase Wallet" as WalletName<"Coinbase Wallet">;
 export interface CoinbaseProvider extends Provider, CoinbaseWalletProvider {
@@ -53,7 +51,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.provider.emit('readyStateChange', this._state);
+                this.provider?.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
@@ -61,7 +59,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
             scopePollingDetectionStrategy(() => {
                 if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.provider.emit('readyStateChange', this._state);
+                    this.provider?.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });
@@ -103,17 +101,18 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
 
             this._connecting = true;
             try {
-                await this.provider?.request({ method: "eth_requestAccounts" })
+                await this.provider
+                    ?.request({ method: "eth_requestAccounts" })
                     .then((accounts: any) => {
                         if (!accounts || accounts?.length === 0) throw new WalletAccountError();
                         this._accounts = accounts;
 
-                        this.provider.on("chainChanged", this._chainChanged);
-                        this.provider.on("accountsChanged", this._accountChanged);
-                        this.provider.on("disconnect", this.disconnect);
+                        this.provider!.on("chainChanged", this._chainChanged);
+                        this.provider!.on("accountsChanged", this._accountChanged);
+                        this.provider!.on("disconnect", this.disconnect);
 
                         account = accounts[0];
-                        this.provider.emit('connect', accounts[0]);
+                        this.provider!.emit('connect', accounts[0]);
                     })
                     .catch((error: any) => {
                         throw new WalletAddressError(error?.message, error);
@@ -124,7 +123,7 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
                 throw new WalletNotConnectedError(error?.message, error);
             }
         } catch (error: any) {
-            this.provider.emit("error", error);
+            this.provider?.emit("error", error);
         }
         this._connecting = false;
         return account;
@@ -132,10 +131,10 @@ export class CoinbaseWalletAdapter extends WalletAdapter<WalletName<"Coinbase Wa
 
     async disconnect(): Promise<void> {
         try {
-            this.provider.off("chainChanged", this._chainChanged);
-            this.provider.off("accountsChanged", this._accountChanged);
-            this.provider.off("disconnect", this.disconnect);
-            this.provider.emit("disconnect");
+            this.provider!.off("chainChanged", this._chainChanged);
+            this.provider!.off("accountsChanged", this._accountChanged);
+            this.provider!.off("disconnect", this.disconnect);
+            this.provider!.emit("disconnect");
 
             this._provider = null;
             this._accounts = null;

@@ -1,16 +1,13 @@
-﻿import { isIosAndRedirectable, scopePollingDetectionStrategy, WalletName, WalletReadyState, WalletConfig } from "core/adapter";
+﻿import { isIosAndRedirectable, scopePollingDetectionStrategy, WalletConfig, WalletName, WalletReadyState } from "core/adapter";
 import {
-	WalletNetworkError,
 	WalletAccountError,
+	WalletAddressError,
 	WalletDisconnectionError,
 	WalletNotConnectedError,
-	WalletNotReadyError,
-	WalletAddressError,
-	WalletUserReject,
-	WalletChangePlatform,
+	WalletNotReadyError
 } from "core/errors";
-import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
+import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
 import { isMobile } from "utils";
 
@@ -48,7 +45,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 		if (isIosAndRedirectable()) {
 			if (this.provider) {
 				this._state = WalletReadyState.Loadable;
-				this.provider.emit("readyStateChange", this._state);
+				this.provider?.emit("readyStateChange", this._state);
 			} else {
 				this._state = WalletReadyState.Unsupported;
 			}
@@ -56,7 +53,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 			scopePollingDetectionStrategy(() => {
 				if (this.provider) {
 					this._state = WalletReadyState.Installed;
-					this.provider.emit("readyStateChange", this._state);
+					this.provider?.emit("readyStateChange", this._state);
 					return true;
 				} else return false;
 			});
@@ -79,7 +76,7 @@ export class MetaMaskWalletAdapter extends WalletAdapter<"MetaMask"> {
 			this._connecting = true;
 			try {
 				await this.provider
-					.request({ method: "eth_requestAccounts" })
+					?.request({ method: "eth_requestAccounts" })
 					.then(async (accounts: any) => {
 						if (!accounts || accounts?.length === 0) throw new WalletAccountError();
 						this._accounts = accounts;

@@ -1,5 +1,5 @@
 import { WalletSendTransactionError, WalletSignTransactionError } from 'core/errors';
-import { WalletAdapter, Wallet, WalletAdapterProps } from './adapter';
+import { Wallet, WalletAdapter, WalletAdapterProps } from './adapter';
 import type { Connection, SendTransactionOptions, TransactionSignature } from './module';
 import { isVersionedTransaction, type TransactionOrVersionedTransaction } from './transaction';
 
@@ -16,8 +16,7 @@ export type SignerWalletAdapter<Name extends string = string> = Wallet<Name> & S
 
 export abstract class BaseSignerWalletAdapter<Name extends string = string>
     extends WalletAdapter<Name>
-    implements SignerWalletAdapter<Name>
-{
+    implements SignerWalletAdapter<Name> {
     async sendTransaction(
         transaction: TransactionOrVersionedTransaction<this['supportedTransactionVersions']>,
         connection: Connection,
@@ -74,7 +73,7 @@ export abstract class BaseSignerWalletAdapter<Name extends string = string>
             }
         } catch (error: any) {
             if (emit) {
-                this.provider.emit('error', error);
+                this.provider?.emit('error', error);
             }
             throw error;
         }
@@ -118,8 +117,7 @@ export type MessageSignerWalletAdapter<Name extends string = string> = Wallet<Na
 
 export abstract class BaseMessageSignerWalletAdapter<Name extends string = string>
     extends BaseSignerWalletAdapter<Name>
-    implements MessageSignerWalletAdapter<Name>
-{
+    implements MessageSignerWalletAdapter<Name> {
     abstract signMessage(message: Uint8Array): Promise<Uint8Array>;
 }
 
@@ -132,7 +130,6 @@ export type SignInMessageSignerWalletAdapter<Name extends string = string> = Wal
 
 export abstract class BaseSignInMessageSignerWalletAdapter<Name extends string = string>
     extends BaseMessageSignerWalletAdapter<Name>
-    implements SignInMessageSignerWalletAdapter<Name>
-{
+    implements SignInMessageSignerWalletAdapter<Name> {
     // abstract signIn(input?: SolanaSignInInput): Promise<SolanaSignInOutput>;
 }

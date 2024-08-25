@@ -1,20 +1,19 @@
 ﻿import {
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
+    WalletConfig,
     WalletName,
-    WalletReadyState,
-    WalletConfig
+    WalletReadyState
 } from "core/adapter";
 import {
-    WalletNetworkError,
     WalletAccountError,
+    WalletAddressError,
     WalletDisconnectionError,
     WalletNotConnectedError,
-    WalletNotReadyError,
-    WalletAddressError,
+    WalletNotReadyError
 } from "core/errors";
-import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
+import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
 import { isMobile } from "utils";
 
@@ -43,7 +42,7 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.provider.emit('readyStateChange', this._state);
+                this.provider?.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
@@ -51,7 +50,7 @@ export class PhantomWalletAdapter extends WalletAdapter<WalletName<"Phantom">> {
             scopePollingDetectionStrategy(() => {
                 if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.provider.emit('readyStateChange', this._state);
+                    this.provider?.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });

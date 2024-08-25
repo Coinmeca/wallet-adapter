@@ -1,22 +1,20 @@
 ﻿import {
     isIosAndRedirectable,
     scopePollingDetectionStrategy,
+    WalletConfig,
     WalletName,
-    WalletReadyState,
-    WalletConfig
+    WalletReadyState
 } from "core/adapter";
 import {
-    WalletNetworkError,
     WalletAccountError,
+    WalletAddressError,
     WalletDisconnectionError,
     WalletNotConnectedError,
-    WalletNotReadyError,
-    WalletAddressError,
+    WalletNotReadyError
 } from "core/errors";
-import type { Provider } from "core/evm/module";
 import { WalletAdapter } from "core/evm/adapter";
+import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
-import { isMobile } from "utils";
 
 // import type { Wallet } from "@Zerion-me/Zerionkit";
 // import type { ZerionWalletOptions } from "@Zerion-me/Zerionkit/dist/wallets/walletConnectors/ZerionWallet/ZerionWallet";
@@ -47,7 +45,7 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
         if (isIosAndRedirectable()) {
             if (this.provider) {
                 this._state = WalletReadyState.Loadable;
-                this.provider.emit('readyStateChange', this._state);
+                this.provider?.emit('readyStateChange', this._state);
             } else {
                 this._state = WalletReadyState.Unsupported;
             }
@@ -55,7 +53,7 @@ export class ZerionWalletAdapter extends WalletAdapter<"Zerion"> {
             scopePollingDetectionStrategy(() => {
                 if (this.provider) {
                     this._state = WalletReadyState.Installed;
-                    this.provider.emit('readyStateChange', this._state);
+                    this.provider?.emit('readyStateChange', this._state);
                     return true;
                 } else return false;
             });

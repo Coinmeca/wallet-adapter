@@ -86,7 +86,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 
 	protected async _accountChanged() {
 		await this.provider
-			.request({ method: "eth_requestAccounts" })
+			?.request({ method: "eth_requestAccounts" })
 			.then(async (accounts: any) => {
 				if (!accounts || accounts?.length === 0) throw new WalletAccountError();
 				this._accounts = accounts;
@@ -113,7 +113,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 			tx.map(
 				async (params) =>
 					await this.provider
-						.request({
+						?.request({
 							method: "eth_sendTransaction",
 							params,
 						})
@@ -143,7 +143,7 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 			requests.map(
 				async (r, id) =>
 					await this.provider
-						.request(r)
+						?.request(r)
 						.then(async (result: any) => {
 							result = {
 								jsonrpc: "2.0",
@@ -168,13 +168,13 @@ export abstract class WalletAdapter<Name extends string = string> extends Core.W
 
 	async signature(requests: any[]): Promise<string[]> {
 		requests = Array.isArray(requests) ? requests : [requests];
-		return await Promise.all(requests.map(async (params) => await this.provider.request({ method: "eth_signTypedData_v4", params })));
+		return await Promise.all(requests.map(async (params) => await this.provider?.request({ method: "eth_signTypedData_v4", params })));
 	}
 
 	on(listener: string, handler: Function | Promise<any>) {
-		this.provider.on(listener, handler);
+		this.provider?.on(listener, handler);
 	}
 	off(listener: string, handler: Function | Promise<any>) {
-		this.provider.off(listener, handler);
+		this.provider?.off(listener, handler);
 	}
 }
