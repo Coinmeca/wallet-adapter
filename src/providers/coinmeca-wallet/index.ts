@@ -66,7 +66,6 @@ export class CoinmecaWalletAdapter extends WalletAdapter<"Coinmeca Wallet"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `dapp://${window.location.host + window.location.pathname}`;
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
 
