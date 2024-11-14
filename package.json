@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.51",
+    "version": "0.1.53",
     "keywords": [
         "coinmeca",
         "web3",
@@ -80,5 +80,5 @@
         "typescript": "^5.3.3",
         "typescript-cp": "^0.1.9"
     },
-    "packageManager": "yarn@4.4.1"
+    "packageManager": "yarn@4.5.1"
 }

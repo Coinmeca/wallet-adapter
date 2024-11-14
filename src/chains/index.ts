@@ -761,7 +761,11 @@ export function getChain(name: string): { mainnet?: Chain | undefined; testnet?:
 
 export function getChainsByType(type: "mainnet" | "testnet" | "devnet"): Chain[] {
     return Object.values(chainlist)
-        .flatMap((network) => type === 'mainnet' ? network[type] : typeof network?.[type] === 'object' ? Object.values(network?.[type]) : network?.[type]) // Access the network[type] object
+        .flatMap((network) => typeof network[type] === 'object' && network[type] !== null
+            ? Object.values(network[type] as { [key: string]: Chain })
+            : Array.isArray(network[type])
+                ? network[type]
+                : network[type] ? [network[type]] : [])
         .filter((network): network is Chain => Boolean(network));
 }
 

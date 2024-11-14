@@ -11,7 +11,7 @@ import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
 import { isMobile } from "utils";
 
-export const CoinmecaWalletName = "CoinmecaWallet" as WalletName<"CoinmecaWallet">;
+export const CoinmecaWalletName = "Coinmeca Wallet" as WalletName<"Coinmeca Wallet">;
 
 export interface CoinmecaWalletProvider extends Provider { }
 export interface CoinmecaWalletAdapterConfig extends WalletConfig {
@@ -21,7 +21,7 @@ export interface CoinmecaWalletAdapterConfig extends WalletConfig {
     };
 }
 
-export class CoinmecaWalletAdapter extends WalletAdapter<"CoinmecaWallet"> {
+export class CoinmecaWalletAdapter extends WalletAdapter<"Coinmeca Wallet"> {
     name = CoinmecaWalletName;
 
     protected _config: CoinmecaWalletAdapterConfig | undefined;
