@@ -9,7 +9,6 @@ import {
 import { WalletAdapter } from "core/evm/adapter";
 import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
-import { isMobile } from "utils";
 
 export const CoinmecaWalletName = "Coinmeca Wallet" as WalletName<"Coinmeca Wallet">;
 
