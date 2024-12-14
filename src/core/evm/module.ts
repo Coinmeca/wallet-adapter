@@ -17,7 +17,7 @@ export enum WalletAdapterNetwork {
 
 export interface Provider extends EventEmitter {
     providers?: any[];
-    isConnected(): boolean;
+    // isConnected(): boolean;
     request<T>(args: RequestArguments): Promise<T>;
 };
 

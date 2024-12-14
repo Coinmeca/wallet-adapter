@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.56",
+    "version": "0.1.57",
     "keywords": [
         "coinmeca",
         "web3",
@@ -60,6 +60,7 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.23.8",
+        "@okxweb3/coin-ethereum": "^1.0.11",
         "eventemitter3": "^5.0.1",
         "lodash": "^4.17.21",
         "node-fetch": "^3.3.2",
