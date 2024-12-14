@@ -4,14 +4,15 @@
         "baseUrl": "src",
         "outDir": "dist",
         "target": "ESNext",
-        "module": "CommonJS",
-        "lib": ["dom", "dom.iterable", "ESNext"],
-        "allowJs": true,
+        "module": "ESNext",
+        "lib": ["dom", "dom.iterable", "esnext"],
         "skipLibCheck": true,
         "strict": true,
-        "forceConsistentCasingInFileNames": true,
+        "allowJs": true,
         "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
         "noEmit": false,
+        "noImplicitAny": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
         "resolveJsonModule": true,
@@ -20,14 +21,15 @@
         "incremental": true,
         "composite": true,
         "declaration": true,
-        "declarationDir": "dist",
         "declarationMap": true,
+        "declarationDir": "dist",
+        "sourceMap": true,
         "paths": {
             "": ["./*"],
             "~/*": ["./*"]
         },
-        "typeRoots": ["src/types"]
+        "typeRoots": ["src/types", "node_modules/@types"]
     },
-    "include": ["src", "**/*.ts"],
-    "exclude": ["node_modules", "dist"]
+    "include": ["src", "*.ts", "*.tsx"],
+    "exclude": ["node_modules", "**/.*/", "tsup.config.json", "tsup.config.ts", "dist", "build"]
 }

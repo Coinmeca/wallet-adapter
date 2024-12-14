@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.59",
+    "version": "0.1.62",
     "keywords": [
         "coinmeca",
         "web3",
@@ -59,7 +59,7 @@
         }
     },
     "dependencies": {
-        "@babel/runtime": "^7.23.8",
+        "@babel/runtime": "^7.26.0",
         "@okxweb3/coin-ethereum": "^1.0.11",
         "eventemitter3": "^5.0.1",
         "lodash": "^4.17.21",
@@ -70,15 +70,15 @@
         "@coinbase/wallet-sdk": "4.2.4",
         "@metamask/detect-provider": "^2.0.0",
         "@metamask/sdk": "0.31.2",
-        "@rainbow-me/rainbowkit": "^2.0.1",
-        "@solana/wallet-adapter-wallets": "^0.19.25"
+        "@rainbow-me/rainbowkit": "^2.2.1",
+        "@solana/wallet-adapter-wallets": "^0.19.32"
     },
     "devDependencies": {
         "@solana/web3.js": "2.0.0",
-        "@types/lodash": "^4.14.202",
-        "tsc-alias": "^1.8.8",
+        "@types/lodash": "^4.17.13",
+        "tsc-alias": "^1.8.10",
         "tscp": "^1.0.0",
-        "typescript": "^5.3.3",
+        "typescript": "^5.7.2",
         "typescript-cp": "^0.1.9"
     },
     "packageManager": "yarn@4.5.1"
