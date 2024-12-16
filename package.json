@@ -1,7 +1,7 @@
 {
     "name": "@coinmeca/wallet-adapter",
     "description": "Coinmeca wallet adapter for Multichain supporting.",
-    "version": "0.1.62",
+    "version": "0.1.63",
     "keywords": [
         "coinmeca",
         "web3",
@@ -23,27 +23,27 @@
         "prebuild": "yarn clean"
     },
     "sideEffects": false,
-    "main": "./dist/index.js",
+    "main": "./dist/index",
     "types": "./dist/index.d.ts",
-    "typings": "./dist/index.d.js",
+    "typings": "./dist/index.d",
     "files": [
         "./dist"
     ],
     "exports": {
-        ".": "./dist/index.js",
+        ".": "./dist/index",
         "./*": [
-            "./dist/*.js",
-            "./dist/*/index.js"
+            "./dist/*",
+            "./dist/*/index"
         ],
-        "./evm": "./dist/core/evm/index.js",
+        "./evm": "./dist/core/evm/index",
         "./evm/*": [
-            "./dist/core/evm/*.js",
-            "./dist/core/evm/*/index.js"
+            "./dist/core/evm/*",
+            "./dist/core/evm/*/index"
         ],
-        "./svm": "./dist/core/svm/index.js",
+        "./svm": "./dist/core/svm/index",
         "./svm/*": [
-            "./dist/core/svm/*.js",
-            "./dist/core/svm/*/index.js"
+            "./dist/core/svm/*",
+            "./dist/core/svm/*/index"
         ]
     },
     "typesVersions": {
@@ -74,7 +74,7 @@
         "@solana/wallet-adapter-wallets": "^0.19.32"
     },
     "devDependencies": {
-        "@solana/web3.js": "2.0.0",
+        "@solana/web3": "2.0.0",
         "@types/lodash": "^4.17.13",
         "tsc-alias": "^1.8.10",
         "tscp": "^1.0.0",

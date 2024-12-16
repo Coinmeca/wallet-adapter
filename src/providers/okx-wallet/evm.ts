@@ -17,11 +17,11 @@ import type { Provider } from "core/evm/module";
 import type { Chain } from "types";
 import { isMobile } from "utils";
 
-export const OkxWalletName = "Okx Wallet" as WalletName<"Okx Wallet">;
+export const OkxWalletName = "OKX Wallet" as WalletName<"OKX Wallet">;
 export interface OkxWalletProvider extends Provider { }
 export interface OkxWalletAdapterConfig extends WalletConfig { }
 
-export class OkxWalletAdapter extends WalletAdapter<"Okx Wallet"> {
+export class OkxWalletAdapter extends WalletAdapter<"OKX Wallet"> {
 
     name = OkxWalletName;
 
@@ -67,8 +67,7 @@ export class OkxWalletAdapter extends WalletAdapter<"Okx Wallet"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            // https://link.trustwallet.com/browser_enable
-            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `trust://${window.location.host + window.location.pathname}`;
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `okx://${window.location.host + window.location.pathname}`;
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
             if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
