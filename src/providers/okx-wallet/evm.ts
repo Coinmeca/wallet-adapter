@@ -67,7 +67,7 @@ export class OkxWalletAdapter extends WalletAdapter<"OKX Wallet"> {
     async connect(chain?: number | string | Chain): Promise<void> {
         let account = undefined;
         try {
-            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = `okx://${window.location.host + window.location.pathname}`;
+            if (isMobile() && !window?.navigator.userAgent.includes(this.name)) window.location.href = "https://www.okx.com/download?deeplink=" + encodeURIComponent("okx://wallet/dapp/url?dappUrl=" + encodeURIComponent(window.location.host + window.location.pathname));
             if (!this.provider) throw new WalletNotReadyError();
             if (this.connected || this.connecting) return;
             if (this._state !== WalletReadyState.Installed) throw new WalletNotReadyError();
